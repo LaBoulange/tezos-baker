@@ -61,6 +61,9 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} boot
 # Please refer to https://opentezos.com/baking/cli-baker/#set-up-using-ppa-with-octez-packages-from-serokell - Step 4 "Import your keys" 
 # and to https://opentezos.com/baking/cli-baker/#other-options-for-baking for more details
 
+# Also, add the public key of the payout account to fund it easily
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} add address $KEY_PAYOUT $TEZPAY_ACCOUNT_HASH
+
 #######################
 # Register as delegate  
 #######################

@@ -52,7 +52,7 @@ Before using this code, you should also have:
 ## Maintenance
 
 The `maintenance-cheat-sheet.sh` file includes the following sections:
-- Restart / reboot: Restart/Reboot: Instructions for when you need to restart, possibly due to reasons such as Linux distribution maintenance.
+- Restart/Reboot: Instructions for when you need to restart, possibly due to reasons such as Linux distribution maintenance.
 - Upgrade octez: Steps for updating when a new version of octez is released. This section also covers Tezos protocol upgrades.
 - Upgrade TezPay: Procedures for when a new version of TezPay is available.
 - Stake management: Guidelines on setting your baker's deposit limit and replenishing your payout account.
