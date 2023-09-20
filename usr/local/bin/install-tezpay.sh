@@ -1,0 +1,11 @@
+#!/bin/bash 
+
+. `which tezos-env.sh`
+
+cd $TEZPAY_RUN_DIR
+
+wget -q $TEZPAY_DOWNLOAD_URL -O $TEZPAY_INSTALL_SCRIPT
+sh $TEZPAY_INSTALL_SCRIPT
+rm $TEZPAY_INSTALL_SCRIPT
+
+mv tezpay $INSTALL_DIR
