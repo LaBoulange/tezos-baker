@@ -63,7 +63,7 @@ Don't execute this file as a script. Instead, copy and run the instructions of t
 
 ## Should you wish to support us
 
-This is not mandatory all all, but greatly appreciated!
+This is not mandatory at all, but greatly appreciated!
 
 You can send a donation:
 - to our baker's address: tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY
