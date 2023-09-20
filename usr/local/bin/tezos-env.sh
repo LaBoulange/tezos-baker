@@ -5,7 +5,7 @@
 ##################################
 
 export PROTOCOL="PtNairob"
-export PROTOCOL_VERSION="17.3-1"
+export PROTOCOL_VERSION="17.3-3"
 
 export OCTEZ_DOWNLOAD_URL="https://github.com/serokell/tezos-packaging/releases/download/v${PROTOCOL_VERSION}/binaries-${PROTOCOL_VERSION}.tar.gz"
 export ZCASH_DOWNLOAD_URL="https://raw.githubusercontent.com/zcash/zcash/master/zcutil/fetch-params.sh"
@@ -28,7 +28,7 @@ export CLIENT_LOG_FILE="/var/log/octez-client.log"
 
 export BAKER_ACCOUNT_HASH="tzXXXXXXXXXX: YOUR BAKER ADDRESS HASH"
 export BAKER_LOG_FILE="/var/log/octez-baker.log"
-export BAKER_VOTE_SWITCH="pass"
+export BAKER_LIQUIDITY_BAKING_SWITCH="pass"
 
 export ACCUSER_LOG_FILE="/var/log/octez-accuser.log"
 
