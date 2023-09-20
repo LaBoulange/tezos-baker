@@ -59,3 +59,12 @@ The `maintenance-cheat-sheet.sh` file includes the following sections:
 - Voting process: Help on how to vote at the various stages of the Tezos amendment and voting process (https://tezos.gitlab.io/active/voting.html).
 
 Don't execute this file as a script. Instead, copy and run the instructions of the section that interests you one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
+
+
+## Should you wish to support us
+
+This is not mandatory all all, but greatly appreciated!
+
+You can send a donation:
+- to our baker's address: tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY
+- or to its Tezos domain name: laboulange.tez
