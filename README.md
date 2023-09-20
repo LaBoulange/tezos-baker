@@ -19,7 +19,7 @@ Additionally, this code doesn't leverage all the options provided by octez and T
 
 ## Prerequisites
 
-This code is designed to run on a Linux platform.
+This code is designed to run on a x86_64 Linux platform.
 
 Hardware requirements:
 - 2 CPU cores
