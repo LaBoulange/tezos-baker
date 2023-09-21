@@ -126,9 +126,14 @@ cat<<EOF>config.hjson
 }
 EOF
 
-# Create Tezpay's payout key file
+# Create Tezpay's payout key file: replace the placeholder below by the unencrypted private key of your payout account.
+#
+# SECURITY WARNING: The payout account should only hold enough XTZ to pay your delegators. Since this key is stored 
+# unencrypted on your machine, an attacker with access to it could withdraw your funds. 
+# We strongly recommend using a more secure system, such as a Ledger or a remote signer, as soon as possible. 
+# For more information, see https://docs.tez.capital/tezpay/tutorials/how-to-setup/
 cat<<EOF>payout_wallet_private.key
-$TEZPAY_ACCOUNT_PRIVATE_KEY
+edskYYYYYYYYYY: YOUR PAYOUTS ACCOUNT PRIVATE KEY
 EOF
 
 chmod go-rwx payout_wallet_private.key
