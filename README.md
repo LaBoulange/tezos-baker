@@ -44,7 +44,6 @@ Before using this code, you should also have:
     - `BAKER_ACCOUNT_HASH`: The tzXXX address of your baker.
     - `BAKER_LIQUIDITY_BAKING_SWITCH`: The liquidity baking vote (off, on, or pass). See https://tezos.gitlab.io/active/liquidity_baking.html for more details.
     - `TEZPAY_ACCOUNT_HASH`: The tzYYY address of your payout account.
-    - `TEZPAY_ACCOUNT_PRIVATE_KEY`: The unencrypted private key of your payout account. SECURITY WARNING: This account should only hold enough XTZ to pay your delegators. Since this key is stored unencrypted on your machine, an attacker with access to it could withdraw your funds. We strongly recommend using a more secure system, such as a Ledger or a remote signer, as soon as possible. For more information, see https://docs.tez.capital/tezpay/tutorials/how-to-setup/
     - `TEZPAY_FEES`: The baking fee you wish to charge your delegators, ranging from 0 (0%) to 1 (100%).
 - Next, follow the step-by-step instructions in the `initial-setup.sh` file from this repository. Don't execute this file as a script. Instead, copy and run the instructions one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 

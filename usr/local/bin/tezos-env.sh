@@ -40,7 +40,6 @@ export TEZPAY_RUN_DIR="${DATA_DIR}/tezpay"
 export TEZPAY_DOWNLOAD_URL="https://raw.githubusercontent.com/alis-is/tezpay/main/install.sh"
 export TEZPAY_INSTALL_SCRIPT="/tmp/install.sh"
 export TEZPAY_ACCOUNT_HASH="tzYYYYYYYYYY: YOUR PAYOUTS ADDRESS HASH"
-export TEZPAY_ACCOUNT_PRIVATE_KEY="edskYYYYYYYYYY: YOUR PAYOUTS ACCOUNT PRIVATE KEY"
 export TEZPAY_FEES=0.1
 export TEZPAY_LOG_FILE="/var/log/tezpay.log"
 
