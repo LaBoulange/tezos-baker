@@ -70,8 +70,8 @@ Don't execute this file as a script. Instead, copy and run the instructions of t
 This is not mandatory at all, but greatly appreciated!
 
 You can send a donation:
-- to our baker's address: tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY
-- or to its Tezos domain name: laboulange.tez
+- to our baker's address: [tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY](https://tzkt.io/tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY/schedule)
+- or to its Tezos domain name: [laboulange.tez](https://tzkt.io/laboulange.tez/schedule)
 
 
 ## Contact
