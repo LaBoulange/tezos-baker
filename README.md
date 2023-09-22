@@ -72,3 +72,14 @@ This is not mandatory at all, but greatly appreciated!
 You can send a donation:
 - to our baker's address: tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY
 - or to its Tezos domain name: laboulange.tez
+
+
+## Contact
+
+Feel free to contact us with any questions or suggestions. We can be reached through the following channels:
+- MailChain: laboulange@mailchain
+- E-mail: la.boulange.tezos@gmail.com
+- Twitter: https://twitter.com/LaBoulangeTezos
+- Telegram: https://t.me/laboulangetezos
+
+We are also active in various Telegram and Discord groups related to Tezos.
