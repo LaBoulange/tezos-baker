@@ -77,7 +77,7 @@ You can send a donation:
 ## Contact
 
 Feel free to contact us with any questions or suggestions. We can be reached through the following channels:
-- MailChain: laboulange@mailchain
+- MailChain: [laboulange@mailchain](https://app.mailchain.com/)
 - E-mail: la.boulange.tezos@gmail.com
 - Twitter: https://twitter.com/LaBoulangeTezos
 - Telegram: https://t.me/laboulangetezos
