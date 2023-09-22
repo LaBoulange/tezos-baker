@@ -56,11 +56,11 @@ For simplicity, both the initial setup and maintenance processes are designed to
 ### Maintenance
 
 The `maintenance-cheat-sheet.sh` file includes the following sections:
-- Restart/Reboot: Instructions for when you need to restart, possibly due to reasons such as Linux distribution maintenance.
-- Upgrade octez: Steps for updating when a new version of octez is released. This section also covers Tezos protocol upgrades.
-- Upgrade TezPay: Procedures for when a new version of TezPay is available.
-- Stake management: Guidelines on setting your baker's deposit limit and replenishing your payout account.
-- Voting process: Help on how to vote at the various stages of the Tezos amendment and voting process (https://tezos.gitlab.io/active/voting.html).
+- **Restart/Reboot**: Instructions for when you need to restart, possibly due to reasons such as Linux distribution maintenance.
+- **Upgrade octez**: Steps for updating when a new version of octez is released. This section also covers Tezos protocol upgrades.
+- **Upgrade TezPay**: Procedures for when a new version of TezPay is available.
+- **Stake management**: Guidelines on setting your baker's deposit limit and replenishing your payout account.
+- **Voting process**: Help on how to vote at the various stages of the Tezos amendment and voting process (https://tezos.gitlab.io/active/voting.html).
 
 Don't execute this file as a script. Instead, copy and run the instructions of the section that interests you one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
