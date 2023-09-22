@@ -31,7 +31,12 @@ Before using this code, you should also have:
 - a Tezos account set up to handle the payouts.
 
 
-## Initial setup
+## Operating instructions
+
+For simplicity, both the initial setup and maintenance processes are designed to be executed by the 'root' user. While this is convenient, it is not best practice from a security standpoint. Ideally, one should minimize operations performed as 'root' and designate one or more users specifically for Tezos-related tasks. Because user management configurations can vary widely, we've opted not to make assumptions about your preferences in this area. This approach allows you to easily modify these scripts and procedures according to your own criteria and preferences.
+
+
+### Initial setup
 
 - Ensure `/usr/local/bin` is part of the `PATH` environment variable on your machine.
 - Copy the files located in the `usr/local/bin` directory of this repository to the `/usr/local/bin` directory on your machine.
@@ -48,7 +53,7 @@ Before using this code, you should also have:
 - Next, follow the step-by-step instructions in the `initial-setup.sh` file from this repository. Don't execute this file as a script. Instead, copy and run the instructions one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
 
-## Maintenance
+### Maintenance
 
 The `maintenance-cheat-sheet.sh` file includes the following sections:
 - Restart/Reboot: Instructions for when you need to restart, possibly due to reasons such as Linux distribution maintenance.
