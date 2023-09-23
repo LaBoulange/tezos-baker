@@ -5,13 +5,13 @@
 . `which tezos-env.sh`
 
 # Setup ZCASH parameters. This is just needed at initial setup.
-mkdir $ZCASH_DIR
-cd $ZCASH_DIR
+mkdir -p "$ZCASH_DIR"
+cd "$ZCASH_DIR"
 
 for paramFile in 'sprout-groth16.params' 'sapling-output.params' 'sapling-spend.params'
 do
-  wget ${ZCASH_DOWNLOAD_URL}/${paramFile}
-  chmod u+rw $paramFile
+  wget "${ZCASH_DOWNLOAD_URL}/${paramFile}"
+  chmod u+rw "$paramFile"
 done
 
 # Actual installation of octez
@@ -21,10 +21,10 @@ install-octez.sh
 # Setup the RPC node
 #####################
 
-mkdir $DATA_DIR
+mkdir -p "$DATA_DIR"
 
-mkdir $NODE_RUN_DIR
-mkdir $NODE_ETC_DIR
+mkdir "$NODE_RUN_DIR"
+mkdir "$NODE_ETC_DIR"
 
 # Initiate the node's configuration file
 octez-node config init --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DIR --network=mainnet --history-mode=full
