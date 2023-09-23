@@ -5,17 +5,14 @@
 . `which tezos-env.sh`
 
 # Setup ZCASH parameters. This is just needed at initial setup.
-ZCASH=$(basename "$ZCASH_DOWNLOAD_URL")
+mkdir $ZCASH_DIR
+cd $ZCASH_DIR
 
-mkdir $BUILD_DIR
-cd $BUILD_DIR
-
-wget $ZCASH_DOWNLOAD_URL
-chmod u+x $ZCASH
-./${ZCASH}
-
-cd /
-rm -rf $BUILD_DIR
+for paramFile in 'sprout-groth16.params' 'sapling-output.params' 'sapling-spend.params'
+do
+  wget ${ZCASH_DOWNLOAD_URL}/${paramFile}
+  chmod u+rw $paramFile
+done
 
 # Actual installation of octez
 install-octez.sh
