@@ -15,6 +15,8 @@ start-tezpay.sh
 # Upgrade octez
 ################
 
+. `which tezos-env.sh`
+
 stop-octez.sh
 
 install-octez.sh
@@ -58,6 +60,8 @@ start-tezpay.sh
 # Stake management
 ###################
 
+. `which tezos-env.sh`
+
 # Adjust the deposits limit, NNN being an amount
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set deposits limit for $KEY_BAKER to NNN  
 # Feed the payouts account from the baker account, NNN being an amount
@@ -66,6 +70,8 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} tran
 #################
 # Voting process
 #################
+
+. `which tezos-env.sh`
 
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} show voting period
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} submit proposals for $KEY_BAKER <proposal1> <proposal2> ...
