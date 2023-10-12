@@ -30,7 +30,7 @@ start-octez.sh
 # can operate simultaneously without the risk of a penalty for double operations. 
 # Indeed, each of these components only processes blocks corresponding to the protocol version relevant to it. Once the transition
 # is completed, the new protocol is the only active one, and the old versions of octez-baker and octez-accuser can be decommissioned.
-PROTOCOL_FORMER="PtMumbai"
+PROTOCOL_FORMER="PtNairob"
 BAKER_LOG_FILE_FORMER="/var/log/octez-baker-${PROTOCOL_FORMER}.log"
 ACCUSER_LOG_FILE_FORMER="/var/log/octez-accuser-${PROTOCOL_FORMER}.log"
 
