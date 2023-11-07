@@ -77,7 +77,7 @@ Or just click here:
 
 [![Button Support]][Link Support] 
 
-[Button Support]: https://img.shields.io/badge/Support_La_Boulange_(5_XTZ)!-007bff?style=for-the-badge
+[Button Support]: https://img.shields.io/badge/Support_La_Boulange!_(5_XTZ)-007bff?style=for-the-badge
 [Link Support]: https://tezos-share.stroep.nl/?id=tfLn0 'Support La Boulange (5 XTZ)'
 
 ## Contact
