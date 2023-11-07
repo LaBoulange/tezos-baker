@@ -6,8 +6,10 @@
 
 export PROTOCOL="PtNairob"
 export PROTOCOL_VERSION="18.0-4"
+export BINARIES_VERSION="18.0-3"
+# !!! BINARIES_VERSION should be removed and replaced by PROTOCOL_VERSION once fixed https://github.com/serokell/tezos-packaging/issues/735 !!!
 
-export OCTEZ_DOWNLOAD_URL="https://github.com/serokell/tezos-packaging/releases/download/v${PROTOCOL_VERSION}/binaries-${PROTOCOL_VERSION}.tar.gz"
+export OCTEZ_DOWNLOAD_URL="https://github.com/serokell/tezos-packaging/releases/download/v${PROTOCOL_VERSION}/binaries-${BINARIES_VERSION}.tar.gz"
 export ZCASH_DOWNLOAD_URL="https://download.z.cash/downloads"
 export ZCASH_DIR="${HOME}/.zcash-params"
 export BUILD_DIR='/tmp/build-octez'
