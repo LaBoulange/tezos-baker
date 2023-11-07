@@ -73,7 +73,10 @@ You can send a donation:
 - to our baker's address: [tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY](https://tzkt.io/tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY/schedule)
 - or to its Tezos domain name: [laboulange.tez](https://tzkt.io/laboulange.tez/schedule)
 
-<a style="display:inline-block;padding:10px 20px;background-color:#007bff;color:#fff;text-decoration:none;border-radius:5px;font:16px Arial,sans-serif;cursor:pointer" href="https://tezos-share.stroep.nl/?id=tfLn0" target="_blank" rel="noopener noreferrer nofollow">Support La Boulange</a><br>
+[![Button Support]][Link Support] 
+
+[Button Support]: https://img.shields.io/badge/Support_La_Boulange!-007bff?style=for-the-badge
+[Link Support]: https://tezos-share.stroep.nl/?id=tfLn0 'Support La Boulange'
 
 ## Contact
 
