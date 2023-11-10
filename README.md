@@ -31,6 +31,12 @@ Before using this code, you should also have:
 - a Tezos account set up to handle the payouts.
 
 
+## Release management
+
+- Versions are numbered in the same way as those of the Serokell/tezos-packaging repository, on which they are based concerning octez. (See https://github.com/serokell/tezos-packaging)
+- Underlying tags are named according to the major version number, with references to the active and replaced protocol names.
+
+
 ## Operating instructions
 
 For simplicity, both the initial setup and maintenance processes are designed to be executed by the 'root' user. While this is convenient, it is not best practice from a security standpoint. Ideally, one should minimize operations performed as 'root' and designate one or more users specifically for Tezos-related tasks. Because user management configurations can vary widely, we've opted not to make assumptions about your preferences in this area. This approach allows you to easily modify these scripts and procedures according to your own criteria and preferences.
