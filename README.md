@@ -17,6 +17,12 @@ Additionally, this code doesn't leverage all the options provided by octez and T
 - Tezpay: https://docs.tez.capital/tezpay/tutorials/ 
 
 
+## Release management
+
+- Versions are numbered in the same way as those of the Serokell/tezos-packaging repository, on which they are based concerning octez. (See https://github.com/serokell/tezos-packaging)
+- Underlying tags are named according to the major version number, with references to the active and replaced protocol names.
+
+
 ## Prerequisites
 
 This code is designed to run on a x86_64 Linux platform.
@@ -29,12 +35,6 @@ Hardware requirements:
 Before using this code, you should also have:
 - a Tezos account set up to become the baker, and funded with a sufficient amount of XTZ.
 - a Tezos account set up to handle the payouts.
-
-
-## Release management
-
-- Versions are numbered in the same way as those of the Serokell/tezos-packaging repository, on which they are based concerning octez. (See https://github.com/serokell/tezos-packaging)
-- Underlying tags are named according to the major version number, with references to the active and replaced protocol names.
 
 
 ## Operating instructions
