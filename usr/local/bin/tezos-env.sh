@@ -5,7 +5,7 @@
 ##################################
 
 export PROTOCOL="PtNairob"
-export PROTOCOL_VERSION="18.0-4"
+export PROTOCOL_VERSION="18.1-1"
 
 export OCTEZ_DOWNLOAD_URL="https://github.com/serokell/tezos-packaging/releases/download/v${PROTOCOL_VERSION}/binaries-${PROTOCOL_VERSION}.tar.gz"
 export ZCASH_DOWNLOAD_URL="https://download.z.cash/downloads"
