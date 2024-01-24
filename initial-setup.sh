@@ -75,7 +75,7 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} regi
 # Start baking and accusing     
 ############################
 
-nohup octez-baker-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH &>$BAKER_LOG_FILE &
+nohup octez-baker-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH --adaptive-issuance-vote $BAKER_ADAPTIVE_ISSUANCE_SWITCH &>$BAKER_LOG_FILE &
 nohup octez-accuser-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE &
 
 ##############################################################################################################################
