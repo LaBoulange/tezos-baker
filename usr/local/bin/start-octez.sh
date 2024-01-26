@@ -6,7 +6,7 @@ rm $NODE_LOG_FILE
 
 echo "Starting node"
 nohup octez-node run --config-file=$NODE_CONFIG_FILE --rpc-addr $NODE_RPC_ADDR --log-output=$NODE_LOG_FILE &>/dev/null &
-sleep 10
+sleep 15
 
 echo "Checking bootstrap"
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} bootstrapped

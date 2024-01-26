@@ -11,6 +11,15 @@ reboot
 start-octez.sh
 start-tezpay.sh
 
+# What follows is only relevant in case of ongoing protocol change (see section "Upgrade octez"). 
+. `which tezos-env.sh`
+
+BAKER_LOG_FILE_FORMER="/var/log/octez-baker-${PROTOCOL_FORMER}.log"
+ACCUSER_LOG_FILE_FORMER="/var/log/octez-accuser-${PROTOCOL_FORMER}.log"
+
+nohup octez-baker-${PROTOCOL_FORMER} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH &>$BAKER_LOG_FILE_FORMER &
+nohup octez-accuser-${PROTOCOL_FORMER} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE_FORMER &
+
 ################
 # Upgrade octez
 ################
@@ -32,7 +41,6 @@ start-octez.sh
 # can operate simultaneously without the risk of a penalty for double operations. 
 # Indeed, each of these components only processes blocks corresponding to the protocol version relevant to it. Once the transition
 # is completed, the new protocol is the only active one, and the old versions of octez-baker and octez-accuser can be decommissioned.
-PROTOCOL_FORMER="PtNairob"
 BAKER_LOG_FILE_FORMER="/var/log/octez-baker-${PROTOCOL_FORMER}.log"
 ACCUSER_LOG_FILE_FORMER="/var/log/octez-accuser-${PROTOCOL_FORMER}.log"
 
