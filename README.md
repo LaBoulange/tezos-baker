@@ -48,8 +48,9 @@ For simplicity, both the initial setup and maintenance processes are designed to
 - Copy the files located in the `usr/local/bin` directory of this repository to the `/usr/local/bin` directory on your machine.
 - Make sure all these files are executable by the users intended to run them.
 - Edit the file `/usr/local/bin/tezos-env.sh` as some variables need configuration:
-    - `PROTOCOL`: This should be the active Tezos protocol.
+    - `PROTOCOL`: This should be the active Tezos protocol or the newly voted protocol if in adoption period. See https://tezos.gitlab.io/active/voting.html for details.
     - `PROTOCOL_VERSION`: This should be the version number tagged as "latest" in the Serokell Tezos packaging repository: https://github.com/serokell/tezos-packaging/releases
+    - `PROTOCOL_FORMER`: This should be the Tezos protocol in the process of being phased out if a new protocol is in adoption period, or the active protocol otherwise. See https://tezos.gitlab.io/active/voting.html for details.
     - `DATA_DIR`: The directory where the data needed by octez and Tezpay will be stored (requires large storage space).
     - `KEY_BAKER`: This should be the friendly name you'd like to use as an alias for your baker address when managing your baker. This name is not shared publicly; it is used only locally.
     - `BAKER_ACCOUNT_HASH`: The tzXXX address of your baker.
