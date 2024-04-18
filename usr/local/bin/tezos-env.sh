@@ -5,7 +5,7 @@
 ##################################
 
 export PROTOCOL="Proxford"
-export PROTOCOL_VERSION="19.1-1"
+export PROTOCOL_VERSION="19.2-1"
 export PROTOCOL_FORMER="PtNairob"
 
 export OCTEZ_DOWNLOAD_URL="https://github.com/serokell/tezos-packaging/releases/download/v${PROTOCOL_VERSION}/binaries-${PROTOCOL_VERSION}.tar.gz"
