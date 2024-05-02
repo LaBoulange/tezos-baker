@@ -33,6 +33,7 @@ export BAKER_LOG_FILE="/var/log/octez-baker.log"
 export BAKER_LIQUIDITY_BAKING_SWITCH="pass"
 export BAKER_LIMIT_STAKING_OVER_BAKING=0
 export BAKER_EDGE_BAKING_OVER_STAKING=1
+
 export ACCUSER_LOG_FILE="/var/log/octez-accuser.log"
 
 ###################################
