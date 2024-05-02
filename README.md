@@ -93,6 +93,7 @@ Or just click here:
 Feel free to contact us with any questions or suggestions. We can be reached through the following channels:
 - MailChain: [laboulange@mailchain](https://app.mailchain.com/)
 - E-mail: la.boulange.tezos@gmail.com
+- DNS: https://dns.xyz/fr/LaBoulange
 - Twitter: https://twitter.com/LaBoulangeTezos
 - Telegram: https://t.me/laboulangetezos
 
