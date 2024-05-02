@@ -69,7 +69,11 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} add 
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} register key $KEY_BAKER as delegate
 
 # --> Go to tzkt.io/[your-baker-tz-address] and look under “Delegations” to see if it has been done correctly.
-#     It should say something similar to “Registered as baker with 0.00035 XTZ fee”.
+#     It should say something similar to “Registered as baker with 0.xxx XTZ fee”.
+
+# Initialize your stake. "NNN" below should be replaced by the amount of XTZ you wish to stake (absolute min: 600 XTZ, min for baking rights: 6000 XTZ)
+INITIAL_STAKE=NNN
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} stake $INITIAL_STAKE for $KEY_BAKER
 
 ############################
 # Start baking and accusing     
