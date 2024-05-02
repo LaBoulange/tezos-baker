@@ -70,11 +70,15 @@ start-tezpay.sh
 
 . `which tezos-env.sh`
 
-# Adjust the deposits limit, NNN being an amount (likely to disappear with protocol P)
-octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set deposits limit for $KEY_BAKER to NNN  
-# Finalize the unstaked balance (only after 7 cycles)
+# Change your staking parameters, LLL being 0 and 5, EEE being between 0 and 1
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set delegate parameters for $KEY_BAKER --limit-of-staking-over-baking LLL --edge-of-baking-over-staking EEE
+# Increase your staken NNN being the amount of XTZ you wish to stake
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} stake NNN for $KEY_BAKER
+# Decrease your stake, NNN being the amount of XTZ you wish to unstake (takes 2 cycles)
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} unstake NNN for $KEY_BAKER
+# Finalize the unstaked balance (only after 4 cycles)
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} finalize unstake for $KEY_BAKER
-# Feed the payouts account from the baker account, NNN being an amount
+# Feed the payouts account from the baker account, NNN being a spendable amount
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} transfer NNN from $KEY_BAKER to $KEY_PAYOUT
 
 #################
