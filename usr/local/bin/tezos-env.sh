@@ -31,7 +31,6 @@ export CLIENT_LOG_FILE="/var/log/octez-client.log"
 export BAKER_ACCOUNT_HASH="tzXXXXXXXXXX: YOUR BAKER ADDRESS HASH"
 export BAKER_LOG_FILE="/var/log/octez-baker.log"
 export BAKER_LIQUIDITY_BAKING_SWITCH="pass"
-export BAKER_ADAPTIVE_ISSUANCE_SWITCH="pass"
 
 export ACCUSER_LOG_FILE="/var/log/octez-accuser.log"
 
