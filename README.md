@@ -53,7 +53,7 @@ For simplicity, both the initial setup and maintenance processes are designed to
     - `BAKER_ACCOUNT_HASH`: The tzXXX address of your baker.
     - `BAKER_LIQUIDITY_BAKING_SWITCH`: The liquidity baking vote (off, on, or pass). See https://tezos.gitlab.io/active/liquidity_baking.html for more details.
     - `BAKER_LIMIT_STAKING_OVER_BAKING`: How many times your stake (0 to 5) you allow others to stake with your baker.
-    - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion (0 to 1) of the reward that the baker receives from the amount staked by stakers.
+    - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion (0 to 1) of the reward that your baker receives from the amount staked by stakers.
     - `TEZPAY_ACCOUNT_HASH`: The tzYYY address of your payout account.
     - `TEZPAY_FEES`: The baking fee you wish to charge your delegators, ranging from 0 (0%) to 1 (100%).
 - Make `/usr/local/bin/tezos-env.sh` executable by the users intended to run it (see [Operating instructions](#operating-instructions) above).
@@ -87,8 +87,12 @@ However, for this specific version, these changes will require some extra work o
     - `OCTEZ_DOWNLOAD_URL`
     - `ZCASH_DOWNLOAD_URL`
     - `TEZPAY_DOWNLOAD_URL`
-- And add the following line to this file just before the `Environment variables for octez` block:
-    . `which tezos-constants.sh`
+- Add the following line to this file just before the `Environment variables for octez` block:
+    - ``. `which tezos-constants.sh` ``
+- And finally, reflect the Paris protocol changes to this file:
+    - `BAKER_ADAPTIVE_ISSUANCE_SWITCH` should be removed as this is no longer needed in Paris B.
+    - `BAKER_LIMIT_STAKING_OVER_BAKING` should be added: how many times your stake (0 to 5) you allow others to stake with your baker.
+    - `BAKER_EDGE_BAKING_OVER_STAKING` should be added: proportion (0 to 1) of the reward that your baker receives from the amount staked by stakers.
 
 
 ## Should you wish to support us
