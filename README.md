@@ -87,7 +87,7 @@ However, for this specific version, these changes will require some extra work o
     - `OCTEZ_DOWNLOAD_URL`
     - `ZCASH_DOWNLOAD_URL`
     - `TEZPAY_DOWNLOAD_URL`
-- Add the following line to this file just before the `Environment variables for octez` block:
+- Add the following line to this file just before the `Environment variables for octez` block (if in doubt, please refer to `usr/local/bin/tezos-env.sh.template` for guidance):
     - ``. `which tezos-constants.sh` ``
 - And finally, reflect the Paris protocol changes to this file:
     - `BAKER_ADAPTIVE_ISSUANCE_SWITCH` should be removed as this is no longer needed in Paris B.
