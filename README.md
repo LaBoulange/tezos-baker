@@ -46,11 +46,8 @@ For simplicity, both the initial setup and maintenance processes are designed to
 
 - Ensure `/usr/local/bin` is part of the `PATH` environment variable on your machine.
 - Copy the files located in the `usr/local/bin` directory of this repository to the `/usr/local/bin` directory on your machine.
-- Make sure all these files are executable by the users intended to run them.
-- Edit the file `/usr/local/bin/tezos-env.sh` as some variables need configuration:
-    - `PROTOCOL`: This should be the active Tezos protocol or the newly voted protocol if in adoption period. See https://tezos.gitlab.io/active/voting.html for details.
-    - `PROTOCOL_VERSION`: This should be the version number tagged as "latest" in the Serokell Tezos packaging repository: https://github.com/serokell/tezos-packaging/releases
-    - `PROTOCOL_FORMER`: This should be the Tezos protocol in the process of being phased out if a new protocol is in adoption period, or the active protocol otherwise. See https://tezos.gitlab.io/active/voting.html for details.
+- Make sure all the `install-*.sh`, `start-*.sh`, `stop-*.sh`, and `tezos-*.sh` files located there are executable by the users intended to run them (see [Operating instructions](#Operating instructions) above).
+- Create a file `/usr/local/bin/tezos-env.sh` by copying `/usr/local/bin/tezos-env.sh.template`. Some variables need configuration and should persist over upgrades:
     - `DATA_DIR`: The directory where the data needed by octez and Tezpay will be stored (requires large storage space).
     - `KEY_BAKER`: This should be the friendly name you would like to use as an alias for your baker address when managing your baker. This name is not shared publicly; it is used only locally.
     - `BAKER_ACCOUNT_HASH`: The tzXXX address of your baker.
@@ -59,6 +56,7 @@ For simplicity, both the initial setup and maintenance processes are designed to
     - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion (0 to 1) of the reward that the baker receives from the amount staked by stakers.
     - `TEZPAY_ACCOUNT_HASH`: The tzYYY address of your payout account.
     - `TEZPAY_FEES`: The baking fee you wish to charge your delegators, ranging from 0 (0%) to 1 (100%).
+- Make `/usr/local/bin/tezos-env.sh` executable by the users intended to run it (see [Operating instructions](#Operating instructions) above).
 - Next, follow the step-by-step instructions in the `initial-setup.sh` file from this repository. Don't execute this file as a script. Instead, copy and run the instructions one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
 
@@ -74,9 +72,26 @@ The `maintenance-cheat-sheet.sh` file includes the following sections:
 Don't execute this file as a script. Instead, copy and run the instructions of the section that interests you one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
 
-## Should you wish to support us
+### Upgrade from previous version
+This version introduces structural changes to the environment variable configuration files to facilitate future upgrades: 
+- Some variables previously defined in `usr/local/bin/tezos-env.sh` have been moved to `usr/local/bin/tezos-constants.sh`. This change is made because these variables do not depend on your local configuration, but rather on the Tezos protocol and tools. This adjustment allows you to upgrade your baker setup without needing to manually edit your local configurations to reflect protocol-related changes, such as version names or numbers.
+- `usr/local/bin/tezos-env.sh` is no longer included in this repository. It has been replaced by a template file (`usr/local/bin/tezos-env.sh.template`) to prevent your actual `/usr/local/bin/tezos-env.sh` from being overwritten during upgrades.
 
-This is not mandatory at all, but greatly appreciated!
+However, for this specific version, these changes will require some extra work on your part (steps 3 and 4 below):
+- Copy the files located in the `usr/local/bin` directory of this repository to the `/usr/local/bin` directory on your machine.
+- Make sure all the `install-*.sh`, `start-*.sh`and `stop-*.sh` files located there are executable by the users intended to run them.
+- Remove the following environment variables from `/usr/local/bin/tezos-env.sh` by simply deleting the corresponding lines:
+    - `PROTOCOL`
+    - `PROTOCOL_VERSION`
+    - `PROTOCOL_FORMER`
+    - `OCTEZ_DOWNLOAD_URL`
+    - `ZCASH_DOWNLOAD_URL`
+    - `TEZPAY_DOWNLOAD_URL`
+- And add the following line to this file just before the `Environment variables for octez` block:
+    . `which tezos-constants.sh`
+
+
+## Should you wish to support us
 
 You can send a donation:
 - to our baker's address: [tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY](https://tzkt.io/tz1aJHKKUWrwfsuoftdmwNBbBctjSWchMWZY/schedule)
@@ -85,6 +100,8 @@ You can send a donation:
 Or just click here: 
 
 [![Button Support]][Link Support] 
+
+This is not mandatory, but it is greatly appreciated!
 
 [Button Support]: https://img.shields.io/badge/Support_La_Boulange!_(5_XTZ)-007bff?style=for-the-badge
 [Link Support]: https://tezos-share.stroep.nl/?id=tfLn0 'Support La Boulange (5 XTZ)'
