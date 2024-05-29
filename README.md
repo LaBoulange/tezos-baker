@@ -19,7 +19,7 @@ Additionally, this code doesn't leverage all the options provided by octez and T
 
 ## Release management
 
-- Versions are numbered in the same way as those of the Serokell/tezos-packaging repository, on which they are based concerning octez. (See https://github.com/serokell/tezos-packaging)
+- Versions are numbered in the same way as those of the Tezos Gitlab repository, on which they are based. (See https://gitlab.com/tezos/tezos/-/releases). Before v20.0, they were based on Serokell's 'tezos-packaging' repository (See https://github.com/serokell/tezos-packaging).
 - Underlying tags are named according to the same version number, with references to the active and replaced protocol names. Before v18.1-1, only the major version number was used.
 
 
