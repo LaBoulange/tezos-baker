@@ -4,11 +4,12 @@
 # Version variables for octez
 ##############################
 
+GITLAB_PACKAGE_ID='130341215'
+
 export PROTOCOL="PtParisB"
-export PROTOCOL_VERSION="20.0-1"
 export PROTOCOL_FORMER="Proxford"
 
-export OCTEZ_DOWNLOAD_URL="https://github.com/serokell/tezos-packaging/releases/download/v${PROTOCOL_VERSION}/binaries-${PROTOCOL_VERSION}.tar.gz"
+export OCTEZ_DOWNLOAD_URL="https://gitlab.com/tezos/tezos/-/package_files/${GITLAB_PACKAGE_ID}/download"
 export ZCASH_DOWNLOAD_URL="https://download.z.cash/downloads"
 
 ###################################

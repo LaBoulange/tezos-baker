@@ -2,18 +2,21 @@
 
 . `which tezos-env.sh`
 
-ARCHIVE=$(basename "$OCTEZ_DOWNLOAD_URL")
+ARCHIVE='package.tar.gz'
+EXTRACTED_DIR='octez-x86_64'
 
 mkdir $BUILD_DIR
 cd $BUILD_DIR
 
-wget $OCTEZ_DOWNLOAD_URL
+wget -O $ARCHIVE $OCTEZ_DOWNLOAD_URL
 gunzip $ARCHIVE
 
 ARCHIVE=${ARCHIVE::-3}
 
 tar -xvf $ARCHIVE
 rm $ARCHIVE
+
+cd $EXTRACTED_DIR
 
 mv octez-client ${INSTALL_DIR}
 mv octez-node ${INSTALL_DIR}
