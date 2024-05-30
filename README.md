@@ -52,8 +52,8 @@ For simplicity, both the initial setup and maintenance processes are designed to
     - `KEY_BAKER`: This should be the friendly name you would like to use as an alias for your baker address when managing your baker. This name is not shared publicly; it is used only locally.
     - `BAKER_ACCOUNT_HASH`: The tzXXX address of your baker.
     - `BAKER_LIQUIDITY_BAKING_SWITCH`: The liquidity baking vote (off, on, or pass). See https://tezos.gitlab.io/active/liquidity_baking.html for more details.
-    - `BAKER_LIMIT_STAKING_OVER_BAKING`: How many times your stake (0 to 5) you allow others to stake with your baker.
-    - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion (0 to 1) of the reward that your baker receives from the amount staked by stakers.
+    - `BAKER_LIMIT_STAKING_OVER_BAKING`: How many times your stake, ranging from 0 (no staking) to 5 (max allowed by the protocol), you allow others to stake with your baker.
+    - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion from 0 (0%) to 1 (100%) of the reward that your baker receives from the amount staked by stakers.
     - `TEZPAY_ACCOUNT_HASH`: The tzYYY address of your payout account.
     - `TEZPAY_FEES`: The baking fee you wish to charge your delegators, ranging from 0 (0%) to 1 (100%).
 - Make `/usr/local/bin/tezos-env.sh` executable by the users intended to run it (see [Operating instructions](#operating-instructions) above).
