@@ -2,7 +2,7 @@
 Boilerplate code to set up a minimalistic Tezos baker capable of baking, accusing, and paying its delegators.
 
 This code:
-- installs octez-node, octez-baker, octez-accuser, and Tezpay on a single machine
+- installs octez-node, octez-baker, octez-accuser, Tezpay and its extension payouts_substitutor on a single machine
 - provides some basic maintenance tools.
 
 
@@ -12,9 +12,10 @@ This repository is not intended to provide perfect code, but code as simple as p
 
 As a result, it is not state-of-the-art in terms of automation, high availability, or security. We will address these aspects throughout this documentation when relevant. In any case, we decline all responsibility in the event of damages, theft of crypto-assets, operational or security incidents, as detailed further in the LICENSE.txt file.
 
-Additionally, this code doesn't leverage all the options provided by octez and Tezpay. We encourage you to read the documentation for these tools and enhance your setup, transforming this basic configuration into something remarkable.
+Additionally, this code doesn't leverage all the options provided by octez, Tezpay and payouts-substitutor. We encourage you to read the documentation for these tools and enhance your setup, transforming this basic configuration into something remarkable.
 - octez: https://tezos.gitlab.io/index.html
 - Tezpay: https://docs.tez.capital/tezpay/tutorials/ 
+- payouts-substitutor: https://github.com/LaBoulange/tezpay-extensions
 
 
 ## Release management
