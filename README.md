@@ -87,6 +87,7 @@ These two changes involve the last two steps of the list below:
 - Update your Tezpay `config.hjson` file to enable `payouts-substitutor` extension by including the following configuration block. Additional configuration options are available in the [payouts-substitutor's documentation](https://github.com/LaBoulange/tezpay-extensions). For practical implementation, please refer to the `initial-setup.sh` file in this repository:
 
 example:
+
     extensions: [
         {
             name: payouts-substitutor
