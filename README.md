@@ -78,7 +78,7 @@ A new variable, `BAKER_ARCH`, has been introduced in `usr/local/bin/tezos-env.sh
 
 Another significant change is the use of the Tezpay extension [payouts-substitutor](https://github.com/LaBoulange/tezpay-extensions), which redirects the payout of rewards due to 'oven' type contracts to the owners of these contracts. Indeed, the operation of these contracts deprives them of rewards when balance movements are applied to them because their balance update mechanism involves a temporary passage through a zero balance (more details [here on the Tezos Agora](https://forum.tezosagora.org/t/tez-capital-resolving-kt-delegator-payment-issues-in-paris/6256?u=boulange)), which, since the Paris protocol, results in the cancellation of the reward for the concerned cycle.
 
-These two changes involve the last two steps of the list below:
+These two changes involve the last three steps of the list below:
 
 - Copy the files located in the `usr/local/bin` directory of this repository to the `/usr/local/bin` directory on your machine.
 - Make sure all the `install-*.sh`, `start-*.sh`and `stop-*.sh` files located there are executable by the users intended to run them.
@@ -108,9 +108,7 @@ These two changes involve the last two steps of the list below:
         }
     ] 
 
-&nbsp;
-
-    - stop, download the `payouts-substitutor` extension, and restart Tezpay by using `stop-tezpay.sh && install-tezpay.sh && start-tezpay.sh` 
+- Stop, download the `payouts-substitutor` extension, and then restart Tezpay by using `stop-tezpay.sh && install-tezpay.sh && start-tezpay.sh` 
 
 ## Should you wish to support us
 
