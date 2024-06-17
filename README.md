@@ -86,7 +86,7 @@ These two changes involve the last two steps of the list below:
     - `export BAKER_ARCH='amd64'` or `export BAKER_ARCH='arm64'` depending on the architecture you are using for baking.
 - Update your Tezpay `config.hjson` file to enable `payouts-substitutor` extension by including the following configuration block. Additional configuration options are available in the [payouts-substitutor's documentation](https://github.com/LaBoulange/tezpay-extensions). For practical implementation, please refer to the `initial-setup.sh` file in this repository:
 
-
+example:
     extensions: [
         {
             name: payouts-substitutor
