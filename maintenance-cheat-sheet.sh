@@ -71,7 +71,7 @@ start-tezpay.sh
 . `which tezos-env.sh`
 
 # Change your staking parameters, LLL being 0 and 5, EEE being between 0 and 1
-octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set delegate parameters for $KEY_BAKER --limit-of-staking-over-baking LLL --edge-of-baking-over-staking EEE
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set delegate parameters for $KEY_BAKER --limit-of-staking-over-baking $BAKER_LIMIT_STAKING_OVER_BAKING --edge-of-baking-over-staking $BAKER_EDGE_BAKING_OVER_STAKING
 # Increase your staken NNN being the amount of XTZ you wish to stake
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} stake NNN for $KEY_BAKER
 # Decrease your stake, NNN being the amount of XTZ you wish to unstake (takes 2 cycles)
