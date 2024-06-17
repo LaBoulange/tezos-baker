@@ -26,10 +26,12 @@ mv octez-accuser-* ${INSTALL_DIR}
 cd /
 rm -rf $BUILD_DIR
 
+INSTALL_USER=`whoami`
+INSTALL_GROUP=`groups | awk '{print $1}'`
+
 for executable in `find ${INSTALL_DIR} | grep octez`
 do
-  touch $executable
-  chown root:root $executable
+  chown $INSTALL_USER:$INSTALL_GROUP $executable
   chmod u+rwx $executable
   chmod go-rwx $executable
 done

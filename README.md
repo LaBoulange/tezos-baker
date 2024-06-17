@@ -48,6 +48,7 @@ For simplicity, both the initial setup and maintenance processes are designed to
 - Copy the files located in the `usr/local/bin` directory of this repository to the `/usr/local/bin` directory on your machine.
 - Make sure all the `install-*.sh`, `start-*.sh`, `stop-*.sh`, and `tezos-*.sh` files located there are executable by the users intended to run them (see [Operating instructions](#operating-instructions) above).
 - Create a file `/usr/local/bin/tezos-env.sh` by copying `/usr/local/bin/tezos-env.sh.template`. Some variables need configuration and should persist over upgrades:
+    - `BAKER_ARCH`: The hardware architecture you use for baking. Currently, the supported values are 'amd64' and 'arm64'.
     - `DATA_DIR`: The directory where the data needed by octez and Tezpay will be stored (requires large storage space).
     - `KEY_BAKER`: This should be the friendly name you would like to use as an alias for your baker address when managing your baker. This name is not shared publicly; it is used only locally.
     - `BAKER_ACCOUNT_HASH`: The tzXXX address of your baker.
@@ -73,27 +74,36 @@ Don't execute this file as a script. Instead, copy and run the instructions of t
 
 
 ### Upgrade from previous version
-This version introduces structural changes to the environment variable configuration files to facilitate future upgrades: 
-- Some variables previously defined in `usr/local/bin/tezos-env.sh` have been moved to `usr/local/bin/tezos-constants.sh`. This change is made because these variables do not depend on your local configuration, but rather on the Tezos protocol and tools. This adjustment allows you to upgrade your baker setup without needing to manually edit your local configurations to reflect protocol-related changes, such as version names or numbers.
-- `usr/local/bin/tezos-env.sh` is no longer included in this repository. It has been replaced by a template file (`usr/local/bin/tezos-env.sh.template`) to prevent your actual `/usr/local/bin/tezos-env.sh` from being overwritten during upgrades.
+A new variable, `BAKER_ARCH`, has been introduced in `usr/local/bin/tezos-env.sh` to specify the hardware architecture used for baking. This ensures that the corresponding octez and Tezpay executables are downloaded and installed. Please refer to the [Initial setup](#initial-setup) section above for more details.
 
-However, for this specific version, these changes will require some extra work on your part (steps 3 and 4 below):
+Another significant change is the use of the Tezpay extension [payouts-substitutor](https://github.com/LaBoulange/tezpay-extensions), which redirects the payout of rewards due to 'oven' type contracts to the owners of these contracts. Indeed, the operation of these contracts deprives them of rewards when balance movements are applied to them because their balance update mechanism involves a temporary passage through a zero balance (more details [here on the Tezos Agora](https://forum.tezosagora.org/t/tez-capital-resolving-kt-delegator-payment-issues-in-paris/6256?u=boulange)), which, since the Paris protocol, results in the cancellation of the reward for the concerned cycle.
+
+These two changes involve the last two steps of the list below:
+
 - Copy the files located in the `usr/local/bin` directory of this repository to the `/usr/local/bin` directory on your machine.
 - Make sure all the `install-*.sh`, `start-*.sh`and `stop-*.sh` files located there are executable by the users intended to run them.
-- Remove the following environment variables from `/usr/local/bin/tezos-env.sh` by simply deleting the corresponding lines:
-    - `PROTOCOL`
-    - `PROTOCOL_VERSION`
-    - `PROTOCOL_FORMER`
-    - `OCTEZ_DOWNLOAD_URL`
-    - `ZCASH_DOWNLOAD_URL`
-    - `TEZPAY_DOWNLOAD_URL`
-- Add the following line to this file just before the `Environment variables for octez` block (if in doubt, please refer to `usr/local/bin/tezos-env.sh.template` for guidance):
-    - ``. `which tezos-constants.sh` ``
-- And finally, reflect the Paris protocol changes to this file:
-    - `BAKER_ADAPTIVE_ISSUANCE_SWITCH` should be removed as this is no longer needed in Paris B.
-    - `BAKER_LIMIT_STAKING_OVER_BAKING` should be added: how many times your stake (0 to 5) you allow others to stake with your baker.
-    - `BAKER_EDGE_BAKING_OVER_STAKING` should be added: proportion (0 to 1) of the reward that your baker receives from the amount staked by stakers.
+- Add the following line to `/usr/local/bin/tezos-env.sh` just before the ``. `which tezos-constants.sh` `` statement (if in doubt, please refer to `usr/local/bin/tezos-env.sh.template` for guidance):
+    - `export BAKER_ARCH='amd64'` or `export BAKER_ARCH='arm64'` depending on the architecture you are using for baking.
+- Update your Tezpay `config.hjson` file to enable `payouts-substitutor` extension by including the following configuration block. Additional configuration options are available in the [payouts-substitutor's documentation](https://github.com/LaBoulange/tezpay-extensions). For practical implementation, please refer to the `initial-setup.sh` file in this repository:
 
+  extensions: [
+      {
+          name: payouts-substitutor
+          command: /usr/local/bin/payouts-substitutor
+          args: [
+          ]
+          kind: stdio
+          configuration: {
+              RPC_NODE: 127.0.0.1:8732
+          }
+          hooks: [
+              {
+                  id: after_candidates_generated
+                  mode: rw
+              }
+          ]
+      }
+  ] 
 
 ## Should you wish to support us
 
