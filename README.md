@@ -108,6 +108,8 @@ These two changes involve the last two steps of the list below:
         }
     ] 
 
+&nbsp;
+
     - stop, download the `payouts-substitutor` extension, and restart Tezpay by using `stop-tezpay.sh && install-tezpay.sh && start-tezpay.sh` 
 
 ## Should you wish to support us
