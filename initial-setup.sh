@@ -128,6 +128,24 @@ cat<<EOF>config.hjson
   overdelegation: {
     protect: true
   }
+  extensions: [
+      {
+          name: payouts-substitutor
+          command: ${TEZPAY_RUN_DIR}/payouts-substitutor
+          args: [
+          ]
+          kind: stdio
+          configuration: {
+              RPC_NODE: http://${NODE_RPC_ADDR}/
+          }
+          hooks: [
+              {
+                  id: after_candidates_generated
+                  mode: rw
+              }
+          ]
+      }
+  ]  
 }
 EOF
 
