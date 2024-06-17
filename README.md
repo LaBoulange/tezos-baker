@@ -21,6 +21,7 @@ Additionally, this code doesn't leverage all the options provided by octez and T
 
 - Versions are numbered in the same way as those of the Tezos Gitlab repository, on which they are based. (See https://gitlab.com/tezos/tezos/-/releases). Before v20.0, they were based on Serokell's 'tezos-packaging' repository (See https://github.com/serokell/tezos-packaging).
 - Underlying tags are named according to the same version number, with references to the active and replaced protocol names. Before v18.1-1, only the major version number was used.
+- In the case of a change not tied to a new release of octez, a minor version number prefixed by an underscore is appended to both versions and tags.
 
 
 ## Prerequisites
