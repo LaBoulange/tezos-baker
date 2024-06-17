@@ -84,7 +84,8 @@ These two changes involve the last two steps of the list below:
 - Make sure all the `install-*.sh`, `start-*.sh`and `stop-*.sh` files located there are executable by the users intended to run them.
 - Add the following line to `/usr/local/bin/tezos-env.sh` just before the ``. `which tezos-constants.sh` `` statement (if in doubt, please refer to `usr/local/bin/tezos-env.sh.template` for guidance):
     - `export BAKER_ARCH='amd64'` or `export BAKER_ARCH='arm64'` depending on the architecture you are using for baking.
-- Update your Tezpay `config.hjson` file to enable `payouts-substitutor` extension by including the following configuration block (assuming here that the values of `$NODE_RPC_ADDR` and `$RUN_DIR` have not been adjusted by you)). Additional configuration options are available in the [payouts-substitutor's documentation](https://github.com/LaBoulange/tezpay-extensions). For practical implementation, please refer to the `initial-setup.sh` file in this repository:
+- Update your Tezpay `config.hjson` file to enable `payouts-substitutor` extension
+    - include the following configuration block (assuming here that the values of `$NODE_RPC_ADDR` and `$RUN_DIR` have not been adjusted by you)). Additional configuration options are available in the [payouts-substitutor's documentation](https://github.com/LaBoulange/tezpay-extensions). For practical implementation, please refer to the `initial-setup.sh` file in this repository:
 
 &nbsp;
 
@@ -106,6 +107,8 @@ These two changes involve the last two steps of the list below:
             ]
         }
     ] 
+
+    - stop, download the `payouts-substitutor` extension, and restart Tezpay by using `stop-tezpay.sh && install-tezpay.sh && start-tezpay.sh` 
 
 ## Should you wish to support us
 
