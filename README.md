@@ -27,7 +27,7 @@ Additionally, this code doesn't leverage all the options provided by octez, Tezp
 
 ## Prerequisites
 
-This code is designed to run on a x86_64 Linux platform.
+This code is designed to run on a x86_64 or AMD64 Linux platform.
 
 Hardware requirements:
 - 2 CPU cores
