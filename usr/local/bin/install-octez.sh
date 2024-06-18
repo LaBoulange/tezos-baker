@@ -5,6 +5,7 @@
 ARCHIVE='package.tar.gz'
 EXTRACTED_DIR='octez-x86_64'
 
+
 mkdir $BUILD_DIR
 cd $BUILD_DIR
 

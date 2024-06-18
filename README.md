@@ -46,11 +46,15 @@ For simplicity, both the initial setup and maintenance processes are designed to
 
 ### Initial setup
 
-- Ensure `/usr/local/bin` is part of the `PATH` environment variable on your machine.
-- Copy the files located in the `usr/local/bin` directory of this repository to the `/usr/local/bin` directory on your machine.
-- Make sure all the `install-*.sh`, `start-*.sh`, `stop-*.sh`, and `tezos-*.sh` files located there are executable by the users intended to run them (see [Operating instructions](#operating-instructions) above).
-- Create a file `/usr/local/bin/tezos-env.sh` by copying `/usr/local/bin/tezos-env.sh.template`. Some variables need configuration and should persist over upgrades:
-    - `BAKER_ARCH`: The hardware architecture you use for baking. Currently, the supported values are 'amd64' and 'arm64'.
+- Choose a directory where the executable files for your baker will be installed. This directory will be referred to as `BAKER_INSTALLATION_DIR` later in this document.
+- Ensure this ``BAKER_INSTALLATION_DIR` is part of the `PATH` environment variable the users intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
+- Copy the file `usr/local/bin/install-tezos-baker.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine.
+- Copy the file `usr/local/bin/tezos_constants.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine.
+- Make sure all the two files above are executable by the users intended to run them.
+- Create a file `BAKER_INSTALLATION_DIR/tezos-env.sh` by copying `BAKER_INSTALLATION_DIR/tezos-env.sh.template`. Some variables need configuration and should persist over upgrades:
+    - `BAKER_ARCH`: The hardware architecture you use for baking. Currently, the supported values are `amd64` (x86_64) and `arm64`. Default: `amd64`.
+    - `BUILD_DIR`: The working directory where files will be downloaded by the insllation scripts of this repository. Default: `/tmp/build-tezos-baker`.
+    - `INSTALL_DIR`: The directory `BAKER_INSTALLATION_DIR` where executables files will be stored. Defult: `/usr/local/bin`.
     - `DATA_DIR`: The directory where the data needed by octez and Tezpay will be stored (requires large storage space).
     - `KEY_BAKER`: This should be the friendly name you would like to use as an alias for your baker address when managing your baker. This name is not shared publicly; it is used only locally.
     - `BAKER_ACCOUNT_HASH`: The tzXXX address of your baker.
@@ -59,7 +63,8 @@ For simplicity, both the initial setup and maintenance processes are designed to
     - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion from 0 (0%) to 1 (100%) of the reward that your baker receives from the amount staked by stakers.
     - `TEZPAY_ACCOUNT_HASH`: The tzYYY address of your payout account.
     - `TEZPAY_FEES`: The baking fee you wish to charge your delegators, ranging from 0 (0%) to 1 (100%).
-- Make `/usr/local/bin/tezos-env.sh` executable by the users intended to run it (see [Operating instructions](#operating-instructions) above).
+- Make `BAKER_INSTALLATION_DIR/tezos-env.sh` executable by the users intended to run it.
+- Run `install-tezos-baker.sh`.
 - Next, follow the step-by-step instructions in the `initial-setup.sh` file from this repository. Don't execute this file as a script. Instead, copy and run the instructions one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
 
@@ -75,19 +80,24 @@ The `maintenance-cheat-sheet.sh` file includes the following sections:
 Don't execute this file as a script. Instead, copy and run the instructions of the section that interests you one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
 
-### Upgrade from previous version
-A new variable, `BAKER_ARCH`, has been introduced in `usr/local/bin/tezos-env.sh` to specify the hardware architecture used for baking. This ensures that the corresponding octez and Tezpay executables are downloaded and installed. Please refer to the [Initial setup](#initial-setup) section above for more details.
+### Upgrade from previous versions
+
+#### Upgrade from tezos-baker v20.0 (see CHANGELOG.md)
+
+A new variable, `BAKER_ARCH`, has been introduced in `BAKER_INSTALLATION_DIR/tezos-env.sh` to specify the hardware architecture used for baking. This ensures that the corresponding octez and Tezpay executables are downloaded and installed. Please refer to the [Initial setup](#initial-setup) section above for more details.
 
 Another significant change is the use of the Tezpay extension [payouts-substitutor](https://github.com/LaBoulange/tezpay-extensions), which redirects the payout of rewards due to 'oven' type contracts to the owners of these contracts. Indeed, the operation of these contracts deprives them of rewards when balance movements are applied to them because their balance update mechanism involves a temporary passage through a zero balance (more details [here on the Tezos Agora](https://forum.tezosagora.org/t/tez-capital-resolving-kt-delegator-payment-issues-in-paris/6256?u=boulange)), which, since the Paris protocol, results in the cancellation of the reward for the concerned cycle.
 
-These two changes involve the last three steps of the list below:
+Finally, the script `install-tezos-baker.sh` has been introduced  to simplify the upgrade process for tezos-baker.
 
-- Copy the files located in the `usr/local/bin` directory of this repository to the `/usr/local/bin` directory on your machine.
-- Make sure all the `install-*.sh`, `start-*.sh`and `stop-*.sh` files located there are executable by the users intended to run them.
-- Add the following line to `/usr/local/bin/tezos-env.sh` just before the ``. `which tezos-constants.sh` `` statement (if in doubt, please refer to `usr/local/bin/tezos-env.sh.template` for guidance):
+These changes involve the following steps:
+
+- Copy the file `usr/local/bin/install-tezos-baker.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine.
+- Make sure this file is executable by the users intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
+- Add the following line to `BAKER_INSTALLATION_DIR/tezos-env.sh` just before the ``. `which tezos-constants.sh` `` statement (if in doubt, please refer to `usr/local/bin/tezos-env.sh.template` for guidance):
     - `export BAKER_ARCH='amd64'` or `export BAKER_ARCH='arm64'` depending on the architecture you are using for baking.
 - Update your Tezpay `config.hjson` file to enable `payouts-substitutor` extension
-    - include the following configuration block (assuming here that the values of `$NODE_RPC_ADDR` and `$RUN_DIR` have not been adjusted by you)). Additional configuration options are available in the [payouts-substitutor's documentation](https://github.com/LaBoulange/tezpay-extensions). For practical implementation, please refer to the `initial-setup.sh` file in this repository:
+    - include the following configuration block (assuming here that the values of `$INSTALL_DIR`, `$NODE_RPC_ADDR` and `$RUN_DIR` have not been adjusted by you)). Additional configuration options are available in the [payouts-substitutor's documentation](https://github.com/LaBoulange/tezpay-extensions). For practical implementation, please refer to the `initial-setup.sh` file in this repository:
 
 &nbsp;
 
@@ -110,7 +120,17 @@ These two changes involve the last three steps of the list below:
         }
     ] 
 
-- Stop, download the `payouts-substitutor` extension, and then restart Tezpay by using `stop-tezpay.sh && install-tezpay.sh && start-tezpay.sh` 
+- Run `install-tezos-baker.sh`.
+- Run the 'Upgrade octez' procedure of the [Maintenance](#maintenance) section above.
+- Run the 'Upgrade TezPay' procedure of the [Maintenance](#maintenance) section above.
+
+#### Upgrade from tezos-baker v20.0_2 (see CHANGELOG.md)
+
+- Copy the file `usr/local/bin/install-tezos-baker.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine (see [Initial setup](#initial-setup) section above, step 1).
+- Make sure this file is executable by the users intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
+- Run `install-tezos-baker.sh`.
+- Run the 'Upgrade octez' procedure of the [Maintenance](#maintenance) section above.
+
 
 ## Should you wish to support us
 

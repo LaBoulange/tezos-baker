@@ -1,8 +1,10 @@
 All notable changes to this project are documented in this file.
 
-## *TBD* - *TBD*
+## v20.1 - *TBD*
 
-- Added this changelog
+- Added this changelog.
+- Added updater executable `install-tezos-baker.sh`.
+- New version of `octez` (critical bug fix): ParisC protocol (ParisB still active). 
 
 ## v20.0_2 - 2024-06-17
 

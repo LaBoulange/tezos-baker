@@ -5,23 +5,23 @@
 ##############################
 
 case "$BAKER_ARCH" in
-   "amd64") GITLAB_PACKAGE_ID='130341215'
+   "amd64") GITLAB_PACKAGE_ID='133747462'
    ;;
-   "arm64") GITLAB_PACKAGE_ID='130343985' 
+   "arm64") GITLAB_PACKAGE_ID='133748628' 
    ;;
-   *) echo "Unknown architecture '$BAKER_ARCH'. Assumed 'amd64'." ; GITLAB_PACKAGE_ID='130341215'
+   *) echo "Unknown architecture '$BAKER_ARCH'. Assumed 'amd64'." ; GITLAB_PACKAGE_ID='133747462'
    ;;
 esac
 
-export PROTOCOL="PtParisB"
-export PROTOCOL_FORMER="Proxford"
+export PROTOCOL="PtParisC"
+export PROTOCOL_FORMER="PtParisB"
 
 export OCTEZ_DOWNLOAD_URL="https://gitlab.com/tezos/tezos/-/package_files/${GITLAB_PACKAGE_ID}/download"
 export ZCASH_DOWNLOAD_URL="https://download.z.cash/downloads"
 
-###################################
-# Environment variables for TezPay
-###################################
+##############################
+# Version variables for TezPay
+##############################
 
 PAYOUTS_SUBSTITUTOR_VERSION="0.1"
 

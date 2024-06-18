@@ -17,7 +17,7 @@ export BAKER_ARCH='amd64'
 ##################################
 
 export ZCASH_DIR="${HOME}/.zcash-params"
-export BUILD_DIR='/tmp/build-octez'
+export BUILD_DIR='/tmp/build-tezos-baker'
 export INSTALL_DIR="/usr/local/bin"
 export DATA_DIR="/var/tezos"
 
