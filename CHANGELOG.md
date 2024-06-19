@@ -1,6 +1,6 @@
 All notable changes to this project are documented in this file.
 
-## v20.1 - *TBD*
+## v20.1 - 2024-06-19
 
 - Added this changelog.
 - Added updater executable `install-tezos-baker.sh`.

@@ -88,7 +88,7 @@ A new variable, `BAKER_ARCH`, has been introduced in `BAKER_INSTALLATION_DIR/tez
 
 Another significant change is the use of the Tezpay extension [payouts-substitutor](https://github.com/LaBoulange/tezpay-extensions), which redirects the payout of rewards due to 'oven' type contracts to the owners of these contracts. Indeed, the operation of these contracts deprives them of rewards when balance movements are applied to them because their balance update mechanism involves a temporary passage through a zero balance (more details [here on the Tezos Agora](https://forum.tezosagora.org/t/tez-capital-resolving-kt-delegator-payment-issues-in-paris/6256?u=boulange)), which, since the Paris protocol, results in the cancellation of the reward for the concerned cycle.
 
-Finally, the script `install-tezos-baker.sh` has been introduced  to simplify the upgrade process for tezos-baker.
+Finally, the script `install-tezos-baker.sh` has been introduced to simplify the upgrade process of tezos-baker.
 
 These changes involve the following steps:
 
@@ -121,16 +121,18 @@ These changes involve the following steps:
     ] 
 
 - Run `install-tezos-baker.sh`.
-- Run the 'Upgrade octez' procedure of the [Maintenance](#maintenance) section above.
+- Run the 'Upgrade octez' procedure of the [Maintenance](#maintenance) section above. 'Paris C' should be considered a *new* protocol, so the parallel run defined in this procedure for protocol changes applies here.
 - Run the 'Upgrade TezPay' procedure of the [Maintenance](#maintenance) section above.
 
 #### Upgrade from tezos-baker v20.0_2 (see CHANGELOG.md)
 
+The script `install-tezos-baker.sh` has been introduced to simplify the upgrade process of tezos-baker.
+
 - Copy the file `usr/local/bin/install-tezos-baker.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine (see [Initial setup](#initial-setup) section above, step 1).
 - Make sure this file is executable by the users intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
 - Run `install-tezos-baker.sh`.
-- Run the 'Upgrade octez' procedure of the [Maintenance](#maintenance) section above.
-
+- Run the 'Upgrade octez' procedure of the [Maintenance](#maintenance) section above. 'Paris C' should be considered a *new* protocol, so the parallel run defined in this procedure for protocol changes applies here.
+- Run the 'Upgrade TezPay' procedure of the [Maintenance](#maintenance) section above.
 
 ## Should you wish to support us
 

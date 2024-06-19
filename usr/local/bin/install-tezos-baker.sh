@@ -7,8 +7,7 @@ ARCHIVE='tezos.baker.tar.gz'
 INSTALL_USER=`whoami`
 INSTALL_GROUP=`groups | awk '{print $1}'`
 
-TEZOS_BAKER_PROJECT="LaBoulange/tezos-baker"
-TEZOS_BAKER_DOWNLOAD_URL=`wget https://api.github.com/repos/${TEZOS_BAKER_PROJECT}/releases/latest -O - | sed -nr 's/\s*"tarball_url":\s*"(.*)",/\1/p'`
+TEZOS_BAKER_DOWNLOAD_URL=`wget https://api.github.com/repos/LaBoulange/tezos-baker/releases/latest -O - | sed -nr 's/\s*"tarball_url":\s*"(.*)",/\1/p'`
 
 THIS_FILE_NAME='update-tezos-baker.sh'
 
