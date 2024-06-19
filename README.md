@@ -5,6 +5,20 @@ This code:
 - installs octez-node, octez-baker, octez-accuser, Tezpay and its extension payouts_substitutor on a single machine
 - provides some basic maintenance tools.
 
+Content of this document:
+- [tezos-baker](#tezos-baker)
+  * [Disclaimer](#disclaimer)
+  * [Release management](#release-management)
+  * [Prerequisites](#prerequisites)
+  * [Operating instructions](#operating-instructions)
+    + [Initial setup](#initial-setup)
+    + [Maintenance](#maintenance)
+    + [Upgrade from previous versions](#upgrade-from-previous-versions)
+      - [Upgrade from tezos-baker v20.0 (see CHANGELOG.md)](#upgrade-from-tezos-baker-v200--see-changelogmd-)
+      - [Upgrade from tezos-baker v20.0_2 (see CHANGELOG.md)](#upgrade-from-tezos-baker-v200-2--see-changelogmd-)
+  * [Should you wish to support us](#should-you-wish-to-support-us)
+  * [Contact](#contact)
+
 
 ## Disclaimer
 
