@@ -9,7 +9,7 @@ INSTALL_GROUP=`groups | awk '{print $1}'`
 
 TEZOS_BAKER_DOWNLOAD_URL=`wget https://api.github.com/repos/LaBoulange/tezos-baker/releases/latest -O - | sed -nr 's/\s*"tarball_url":\s*"(.*)",/\1/p'`
 
-THIS_FILE_NAME='update-tezos-baker.sh'
+THIS_FILE_NAME='install-tezos-baker.sh'
 
 
 mkdir $BUILD_DIR
