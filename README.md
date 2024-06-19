@@ -15,7 +15,7 @@ Content of this document:
     + [Maintenance](#maintenance)
     + [Upgrade from previous versions](#upgrade-from-previous-versions)
       - [Upgrade from tezos-baker v20.0 (see CHANGELOG.md)](#upgrade-from-tezos-baker-v200-see-changelogmd)
-      - [Upgrade from tezos-baker v20.0_2 (see CHANGELOG.md)](#upgrade-from-tezos-baker-v200-2-see-changelogmd)
+      - [Upgrade from tezos-baker v20.0_2 (see CHANGELOG.md)](#upgrade-from-tezos-baker-v2002-see-changelogmd)
   * [Should you wish to support us](#should-you-wish-to-support-us)
   * [Contact](#contact)
 
