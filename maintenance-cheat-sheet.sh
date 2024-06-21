@@ -24,17 +24,21 @@ nohup octez-accuser-${PROTOCOL_FORMER} --base-dir $CLIENT_BASE_DIR --endpoint ht
 # Upgrade octez
 ################
 
+install-tezos-baker.sh
+
 . `which tezos-env.sh`
 
+stop-tezpay.sh
 stop-octez.sh
 
 install-octez.sh
 
 nohup octez-node upgrade storage --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DIR &>$NODE_LOG_FILE &
 tail -f $NODE_LOG_FILE
-# Check whether there is a backup to delete in ~
+# Check whether there is a backup to delete in your ~ directory 
 
 start-octez.sh
+start-tezpay.sh
 
 # What follows is only relevant in case of protocol change. 
 # During the transition from one protocol to another, both the old and new versions of octez-baker and octez-accuser 

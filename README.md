@@ -2,7 +2,7 @@
 Boilerplate code to set up a minimalistic Tezos baker capable of baking, accusing, and paying its delegators.
 
 This code:
-- installs octez-node, octez-baker, octez-accuser, Tezpay and its extension payouts_substitutor on a single machine
+- installs octez-node, octez-baker, octez-accuser, Tezpay and its extension payouts-substitutor on a single machine
 - provides some basic maintenance tools.
 
 Content of this document:
@@ -87,7 +87,7 @@ For simplicity, both the initial setup and maintenance processes are designed to
 The `maintenance-cheat-sheet.sh` file includes the following sections:
 - **Restart/Reboot**: Instructions for when you need to restart, possibly due to reasons such as Linux distribution maintenance.
 - **Upgrade octez**: Steps for updating when a new version of octez is released. This section also covers Tezos protocol upgrades.
-- **Upgrade TezPay**: Procedures for when a new version of TezPay is available.
+- **Upgrade TezPay**: Procedures for when a new version of TezPay or payouts-substitutor is available.
 - **Stake management**: Guidelines on setting your baker's deposit limit and replenishing your payout account.
 - **Voting process**: Help on how to vote at the various stages of the Tezos amendment and voting process (https://tezos.gitlab.io/active/voting.html).
 
