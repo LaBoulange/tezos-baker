@@ -3,7 +3,7 @@ All notable changes are documented in this file.
 ## *TBD* - *TBD*
 
 - Corrections and clarifications in the documentation
-- Corrections and clarifications in the maintenance cheat-sheet
+- Made the maintenance cheat-sheet consistent with the new upgrade process introduced in v20.1
 
 ## v20.1 - 2024-06-19
 
