@@ -60,24 +60,24 @@ For simplicity, both the initial setup and maintenance processes are designed to
 
 ### Initial setup
 
-- Choose a directory where the executable files for your baker will be installed. This directory will be referred to as `BAKER_INSTALLATION_DIR` later in this document.
-- Ensure this ``BAKER_INSTALLATION_DIR` is part of the `PATH` environment variable the users intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
+- Choose a directory where the executable files for your baker will be installed (typically `/usr/local/bin`). This directory will be referred to as `BAKER_INSTALLATION_DIR` later in this document.
+- Ensure this `BAKER_INSTALLATION_DIR` is part of the `PATH` environment variable the user intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
 - Copy the file `usr/local/bin/install-tezos-baker.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine.
 - Copy the file `usr/local/bin/tezos_constants.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine.
-- Make sure all the two files above are executable by the users intended to run them.
-- Create a file `BAKER_INSTALLATION_DIR/tezos-env.sh` by copying `BAKER_INSTALLATION_DIR/tezos-env.sh.template`. Some variables need configuration and should persist over upgrades:
+- Make sure all the two files above are executable by the user intended to run them.
+- Create a file `BAKER_INSTALLATION_DIR/tezos-env.sh` by copying the file `usr/local/bin/tezos-env.sh.template` of this repository. Some variables need configuration and should persist over upgrades:
     - `BAKER_ARCH`: The hardware architecture you use for baking. Currently, the supported values are `amd64` (x86_64) and `arm64`. Default: `amd64`.
-    - `BUILD_DIR`: The working directory where files will be downloaded by the insllation scripts of this repository. Default: `/tmp/build-tezos-baker`.
-    - `INSTALL_DIR`: The directory `BAKER_INSTALLATION_DIR` where executables files will be stored. Defult: `/usr/local/bin`.
+    - `BUILD_DIR`: The working directory where files will be downloaded by the installation scripts of this repository. Default: `/tmp/build-tezos-baker`.
+    - `INSTALL_DIR`: The directory `BAKER_INSTALLATION_DIR` where executables files will be stored. Default: `/usr/local/bin`.
     - `DATA_DIR`: The directory where the data needed by octez and Tezpay will be stored (requires large storage space).
-    - `KEY_BAKER`: This should be the friendly name you would like to use as an alias for your baker address when managing your baker. This name is not shared publicly; it is used only locally.
+    - `KEY_BAKER`: The friendly name you would like to use as an alias for your baker address when managing your baker. This name is not shared publicly; it is only used locally.
     - `BAKER_ACCOUNT_HASH`: The tzXXX address of your baker.
     - `BAKER_LIQUIDITY_BAKING_SWITCH`: The liquidity baking vote (off, on, or pass). See https://tezos.gitlab.io/active/liquidity_baking.html for more details.
     - `BAKER_LIMIT_STAKING_OVER_BAKING`: How many times your stake, ranging from 0 (no staking) to 5 (max allowed by the protocol), you allow others to stake with your baker.
     - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion from 0 (0%) to 1 (100%) of the reward that your baker receives from the amount staked by stakers.
     - `TEZPAY_ACCOUNT_HASH`: The tzYYY address of your payout account.
     - `TEZPAY_FEES`: The baking fee you wish to charge your delegators, ranging from 0 (0%) to 1 (100%).
-- Make `BAKER_INSTALLATION_DIR/tezos-env.sh` executable by the users intended to run it.
+- Make `BAKER_INSTALLATION_DIR/tezos-env.sh` executable by the user intended to run it.
 - Run `install-tezos-baker.sh`.
 - Next, follow the step-by-step instructions in the `initial-setup.sh` file from this repository. Don't execute this file as a script. Instead, copy and run the instructions one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
@@ -107,7 +107,7 @@ Finally, the script `install-tezos-baker.sh` has been introduced to simplify the
 These changes involve the following steps:
 
 - Copy the file `usr/local/bin/install-tezos-baker.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine.
-- Make sure this file is executable by the users intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
+- Make sure this file is executable by the user intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
 - Add the following line to `BAKER_INSTALLATION_DIR/tezos-env.sh` just before the ``. `which tezos-constants.sh` `` statement (if in doubt, please refer to `usr/local/bin/tezos-env.sh.template` for guidance):
     - `export BAKER_ARCH='amd64'` or `export BAKER_ARCH='arm64'` depending on the architecture you are using for baking.
 - Update your Tezpay `config.hjson` file to enable `payouts-substitutor` extension
@@ -143,7 +143,7 @@ These changes involve the following steps:
 The script `install-tezos-baker.sh` has been introduced to simplify the upgrade process of tezos-baker.
 
 - Copy the file `usr/local/bin/install-tezos-baker.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine (see [Initial setup](#initial-setup) section above, step 1).
-- Make sure this file is executable by the users intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
+- Make sure this file is executable by the user intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
 - Run `install-tezos-baker.sh`.
 - Run the 'Upgrade octez' procedure of the [Maintenance](#maintenance) section above. 'Paris C' should be considered a *new* protocol, so the parallel run defined in this procedure for protocol changes applies here.
 - Run the 'Upgrade TezPay' procedure of the [Maintenance](#maintenance) section above.

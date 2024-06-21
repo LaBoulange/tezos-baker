@@ -1,4 +1,8 @@
-All notable changes to this project are documented in this file.
+All notable changes are documented in this file.
+
+## *TBD* - *TBD*
+
+- Corrections and clarifications in the documentation
 
 ## v20.1 - 2024-06-19
 
