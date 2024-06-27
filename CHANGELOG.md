@@ -4,6 +4,7 @@ All notable changes are documented in this file.
 
 - Corrections and clarifications in the documentation
 - Made the maintenance cheat-sheet consistent with the new upgrade process introduced in v20.1
+- Payouts account delegation to the baker
 
 ## v20.1 - 2024-06-19
 
