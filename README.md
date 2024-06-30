@@ -112,7 +112,7 @@ This version installs Tezpay Payout Fixer without activating it, as Tezpay is ru
         command: "${TEZPAY_RUN_DIR}/tezpay-payout-fixer" 
         kind: stdio
         hooks: [
-            after_payouts_prepared: rw
+            after_payouts_prepared:rw
         ]
         }
         */   

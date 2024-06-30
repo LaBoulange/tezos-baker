@@ -137,7 +137,7 @@ cat<<EOF>config.hjson
         RPC_NODE: http://${NODE_RPC_ADDR}/
       }
       hooks: [
-        after_candidates_generated: rw
+        after_candidates_generated:rw
       ]
     }
     /* UNCOMMENT WHEN RUNNING payout-fixer IN MANUAL MODE
@@ -146,7 +146,7 @@ cat<<EOF>config.hjson
       command: "${TEZPAY_RUN_DIR}/tezpay-payout-fixer" 
       kind: stdio
       hooks: [
-        after_payouts_prepared: rw
+        after_payouts_prepared:rw
       ]
     }
     */   
