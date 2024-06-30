@@ -14,8 +14,7 @@ Content of this document:
     + [Initial setup](#initial-setup)
     + [Maintenance](#maintenance)
     + [Upgrade from previous versions](#upgrade-from-previous-versions)
-      - [Upgrade from tezos-baker v20.0 (see CHANGELOG.md)](#upgrade-from-tezos-baker-v200-see-changelogmd)
-      - [Upgrade from tezos-baker v20.0_2 (see CHANGELOG.md)](#upgrade-from-tezos-baker-v200_2-see-changelogmd)
+      - [Upgrade from tezos-baker v20.1 (see CHANGELOG.md)](#upgrade-from-tezos-baker-v201-see-changelogmd)
   * [Should you wish to support us](#should-you-wish-to-support-us)
   * [Contact](#contact)
 
@@ -96,56 +95,29 @@ Don't execute this file as a script. Instead, copy and run the instructions of t
 
 ### Upgrade from previous versions
 
-#### Upgrade from tezos-baker v20.0 (see CHANGELOG.md)
+#### Upgrade from tezos-baker v20.1 (see CHANGELOG.md)
+This version installs Tezpay Payout Fixer without activating it, as Tezpay is running in continual mode by default (see [Tezpay Payout Fixer documentation](https://github.com/tez-capital/tezpay/tree/0.16.1-beta/extension/official/payout-fixer)).
 
-A new variable, `BAKER_ARCH`, has been introduced in `BAKER_INSTALLATION_DIR/tezos-env.sh` to specify the hardware architecture used for baking. This ensures that the corresponding octez and Tezpay executables are downloaded and installed. Please refer to the [Initial setup](#initial-setup) section above for more details.
-
-Another significant change is the use of the Tezpay extension [payouts-substitutor](https://github.com/LaBoulange/tezpay-extensions), which redirects the payout of rewards due to 'oven' type contracts to the owners of these contracts. Indeed, the operation of these contracts deprives them of rewards when balance movements are applied to them because their balance update mechanism involves a temporary passage through a zero balance (more details [here on the Tezos Agora](https://forum.tezosagora.org/t/tez-capital-resolving-kt-delegator-payment-issues-in-paris/6256?u=boulange)), which, since the Paris protocol, results in the cancellation of the reward for the concerned cycle.
-
-Finally, the script `install-tezos-baker.sh` has been introduced to simplify the upgrade process of tezos-baker.
-
-These changes involve the following steps:
-
-- Copy the file `usr/local/bin/install-tezos-baker.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine.
-- Make sure this file is executable by the user intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
-- Add the following line to `BAKER_INSTALLATION_DIR/tezos-env.sh` just before the ``. `which tezos-constants.sh` `` statement (if in doubt, please refer to `usr/local/bin/tezos-env.sh.template` for guidance):
-    - `export BAKER_ARCH='amd64'` or `export BAKER_ARCH='arm64'` depending on the architecture you are using for baking.
-- Update your Tezpay `config.hjson` file to enable `payouts-substitutor` extension
-    - include the following configuration block (assuming here that the values of `$INSTALL_DIR`, `$NODE_RPC_ADDR` and `$RUN_DIR` have not been adjusted by you)). Additional configuration options are available in the [payouts-substitutor's documentation](https://github.com/LaBoulange/tezpay-extensions). For practical implementation, please refer to the `initial-setup.sh` file in this repository:
+- Run `install-tezos-baker.sh`.
+- Update your Tezpay configuration file by adding the following extension, commented, so that you will just have to uncomment thi block when willing to run the extension (optional)
 
 &nbsp;
 
     extensions: [
+        // ... other extensions ...
+
+        /* UNCOMMENT WHEN RUNNING payout-fixer IN MANUAL MODE
         {
-            name: payouts-substitutor
-            command: /usr/local/bin/payouts-substitutor
-            args: [
-            ]
-            kind: stdio
-            configuration: {
-                RPC_NODE: 127.0.0.1:8732
-            }
-            hooks: [
-                {
-                    id: after_candidates_generated
-                    mode: rw
-                }
-            ]
+        name: payout-fixer
+        command: "${TEZPAY_RUN_DIR}/tezpay-payout-fixer" 
+        kind: stdio
+        hooks: [
+            after_payouts_prepared: rw
+        ]
         }
-    ] 
+        */   
+    ]
 
-- Run `install-tezos-baker.sh`.
-- Run the 'Upgrade octez' procedure of the [Maintenance](#maintenance) section above. 'Paris C' should be considered a *new* protocol, so the parallel run defined in this procedure for protocol changes applies here.
-- Run the 'Upgrade TezPay' procedure of the [Maintenance](#maintenance) section above.
-
-#### Upgrade from tezos-baker v20.0_2 (see CHANGELOG.md)
-
-The script `install-tezos-baker.sh` has been introduced to simplify the upgrade process of tezos-baker.
-
-- Copy the file `usr/local/bin/install-tezos-baker.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine (see [Initial setup](#initial-setup) section above, step 1).
-- Make sure this file is executable by the user intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
-- Run `install-tezos-baker.sh`.
-- Run the 'Upgrade octez' procedure of the [Maintenance](#maintenance) section above. 'Paris C' should be considered a *new* protocol, so the parallel run defined in this procedure for protocol changes applies here.
 - Run the 'Upgrade TezPay' procedure of the [Maintenance](#maintenance) section above.
 
 ## Should you wish to support us

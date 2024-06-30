@@ -1,10 +1,11 @@
 All notable changes are documented in this file.
 
-## *TBD* - *TBD*
+## v20.1_2 - 2024-06-30
 
 - Corrections and clarifications in the documentation
 - Made the maintenance cheat-sheet consistent with the new upgrade process introduced in v20.1
 - Payouts account delegation to the baker
+- Tezpay Payout Fixer installation without activation (Tezpay is running in continual mode by default)
 
 ## v20.1 - 2024-06-19
 

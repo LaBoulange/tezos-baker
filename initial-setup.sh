@@ -129,22 +129,27 @@ cat<<EOF>config.hjson
     protect: true
   }
   extensions: [
-      {
-          name: payouts-substitutor
-          command: ${TEZPAY_RUN_DIR}/payouts-substitutor
-          args: [
-          ]
-          kind: stdio
-          configuration: {
-              RPC_NODE: http://${NODE_RPC_ADDR}/
-          }
-          hooks: [
-              {
-                  id: after_candidates_generated
-                  mode: rw
-              }
-          ]
+    {
+      name: payouts-substitutor
+      command: ${TEZPAY_RUN_DIR}/payouts-substitutor
+      kind: stdio
+      configuration: {
+        RPC_NODE: http://${NODE_RPC_ADDR}/
       }
+      hooks: [
+        after_candidates_generated: rw
+      ]
+    }
+    /* UNCOMMENT WHEN RUNNING payout-fixer IN MANUAL MODE
+    {
+      name: payout-fixer
+      command: "${TEZPAY_RUN_DIR}/tezpay-payout-fixer" 
+      kind: stdio
+      hooks: [
+        after_payouts_prepared: rw
+      ]
+    }
+    */   
   ]  
 }
 EOF
