@@ -1,5 +1,9 @@
 All notable changes are documented in this file.
 
+## v20.2 - 2024-07-17
+
+- New version of `octez` (minor bug fix): ParisC protocol. 
+
 ## v20.1_2 - 2024-06-30
 
 - Corrections and clarifications in the documentation

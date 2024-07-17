@@ -13,8 +13,7 @@ Content of this document:
   * [Operating instructions](#operating-instructions)
     + [Initial setup](#initial-setup)
     + [Maintenance](#maintenance)
-    + [Upgrade from previous versions](#upgrade-from-previous-versions)
-      - [Upgrade from tezos-baker v20.1 (see CHANGELOG.md)](#upgrade-from-tezos-baker-v201-see-changelogmd)
+    + [Upgrade from the previous version](#upgrade-from-the-previous-version)
   * [Should you wish to support us](#should-you-wish-to-support-us)
   * [Contact](#contact)
 
@@ -93,32 +92,10 @@ The `maintenance-cheat-sheet.sh` file includes the following sections:
 Don't execute this file as a script. Instead, copy and run the instructions of the section that interests you one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
 
-### Upgrade from previous versions
+### Upgrade from the previous version
 
-#### Upgrade from tezos-baker v20.1 (see CHANGELOG.md)
-This version installs Tezpay Payout Fixer without activating it, as Tezpay is running in continual mode by default (see [Tezpay Payout Fixer documentation](https://github.com/tez-capital/tezpay/tree/0.16.1-beta/extension/official/payout-fixer)).
+- Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section above. There is no protocol upgrade with this version.
 
-- Run `install-tezos-baker.sh`.
-- Update your Tezpay configuration file by adding the following extension, commented, so that you will just have to uncomment thi block when willing to run the extension (optional)
-
-&nbsp;
-
-    extensions: [
-        // ... other extensions ...
-
-        /* UNCOMMENT WHEN RUNNING payout-fixer IN MANUAL MODE
-        {
-        name: payout-fixer
-        command: "${TEZPAY_RUN_DIR}/tezpay-payout-fixer" 
-        kind: stdio
-        hooks: [
-            after_payouts_prepared:rw
-        ]
-        }
-        */   
-    ]
-
-- Run the 'Upgrade TezPay' procedure of the [Maintenance](#maintenance) section above.
 
 ## Should you wish to support us
 
