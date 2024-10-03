@@ -43,8 +43,8 @@ This code is designed to run on a x86_64 or ARM64 Linux platform.
 
 Hardware requirements:
 - 2 CPU cores
-- Preferably 8GB RAM
-- 300GB SSD drive
+- 8GB RAM
+- 100GB to 500GB SSD drive depending on the node history mode ("rolling" or "full", see https://tezos.gitlab.io/user/history_modes.html)
 
 Before using this code, you should also have:
 - a Tezos account set up to become the baker, and funded with a sufficient amount of XTZ.
@@ -63,18 +63,19 @@ For simplicity, both the initial setup and maintenance processes are designed to
 - Copy the file `usr/local/bin/install-tezos-baker.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine.
 - Copy the file `usr/local/bin/tezos_constants.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine.
 - Make sure all the two files above are executable by the user intended to run them.
-- Create a file `BAKER_INSTALLATION_DIR/tezos-env.sh` by copying the file `usr/local/bin/tezos-env.sh.template` of this repository. Some variables need configuration and should persist over upgrades:
+- Create a file `BAKER_INSTALLATION_DIR/tezos-env.sh` by copying the file `usr/local/bin/tezos-env.sh.template` of this repository. Some variables need configuration and should persist over upgrades while the others may optionally be adjusted. Those that require configuration follow:
     - `BAKER_ARCH`: The hardware architecture you use for baking. Currently, the supported values are `amd64` (x86_64) and `arm64`. Default: `amd64`.
     - `BUILD_DIR`: The working directory where files will be downloaded by the installation scripts of this repository. Default: `/tmp/build-tezos-baker`.
     - `INSTALL_DIR`: The directory `BAKER_INSTALLATION_DIR` where executables files will be stored. Default: `/usr/local/bin`.
     - `DATA_DIR`: The directory where the data needed by octez and Tezpay will be stored (requires large storage space).
+    - `NODE_MODE`: The history mode of your node (`full`, `rolling`, or `rolling:<number_of_extra_cycles>`). See https://tezos.gitlab.io/user/history_modes.html for more details. Default: `rolling`.
     - `KEY_BAKER`: The friendly name you would like to use as an alias for your baker address when managing your baker. This name is not shared publicly; it is only used locally.
     - `BAKER_ACCOUNT_HASH`: The tzXXX address of your baker.
-    - `BAKER_LIQUIDITY_BAKING_SWITCH`: The liquidity baking vote (off, on, or pass). See https://tezos.gitlab.io/active/liquidity_baking.html for more details.
-    - `BAKER_LIMIT_STAKING_OVER_BAKING`: How many times your stake, ranging from 0 (no staking) to 5 (max allowed by the protocol), you allow others to stake with your baker.
-    - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion from 0 (0%) to 1 (100%) of the reward that your baker receives from the amount staked by stakers.
+    - `BAKER_LIQUIDITY_BAKING_SWITCH`: The liquidity baking vote (`off`, `on`, or `pass`). See https://tezos.gitlab.io/active/liquidity_baking.html for more details. Default: `pass`.
+    - `BAKER_LIMIT_STAKING_OVER_BAKING`: How many times your stake, ranging from 0 (no staking) to 5 (max allowed by the protocol), you allow others to stake with your baker. Defaut: 5.
+    - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion from 0 (0%) to 1 (100%) of the reward that your baker receives from the amount staked by stakers. Default: 0.1 (10%).
     - `TEZPAY_ACCOUNT_HASH`: The tzYYY address of your payout account.
-    - `TEZPAY_FEES`: The baking fee you wish to charge your delegators, ranging from 0 (0%) to 1 (100%).
+    - `TEZPAY_FEES`: The baking fee you wish to charge your delegators, ranging from 0 (0%) to 1 (100%). Default: 0.1 (10%).
 - Make `BAKER_INSTALLATION_DIR/tezos-env.sh` executable by the user intended to run it.
 - Run `install-tezos-baker.sh`.
 - Next, follow the step-by-step instructions in the `initial-setup.sh` file from this repository. Don't execute this file as a script. Instead, copy and run the instructions one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
@@ -88,12 +89,16 @@ The `maintenance-cheat-sheet.sh` file includes the following sections:
 - **Upgrade TezPay**: Procedures for when a new version of TezPay or payouts-substitutor is available.
 - **Stake management**: Guidelines on setting your baker's deposit limit and replenishing your payout account.
 - **Voting process**: Help on how to vote at the various stages of the Tezos amendment and voting process (https://tezos.gitlab.io/active/voting.html).
+- **Switch history mode from full to rolling**: Help on how to optimize performances and disk space by switching the node history mode from `full` to `rolling`.
 
 Don't execute this file as a script. Instead, copy and run the instructions of the section that interests you one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
 
 ### Upgrade from the previous version
 
+- Modify your `BAKER_INSTALLATION_DIR/tezos-env.sh` file to:
+    - add the environment variable `export NODE_MODE=full`, which is the history mode used by former versions of tezos-baker. ATTENTION: Should you wish to switch from `full` to `rolling` to optimize performances and/or disk space, there is a specific procedure to follow. It is described in the `maintenance-cheat-sheet.sh` file. Do NOT set `NODE_MODE` to `rolling` at that stage unless you have already applied this procedure before this upgrade! 
+    - set the already existing `NODE_SNAPSHOT_URL` environment variable the following way: `export NODE_SNAPSHOT_URL="https://lambsonacid-octez.s3.us-east-2.amazonaws.com/mainnet/${NODE_MODE%%:*}/tezos.snapshot"`
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section above. There is no protocol upgrade with this version.
 
 
@@ -117,8 +122,7 @@ This is not mandatory, but it is greatly appreciated!
 Feel free to contact us with any questions or suggestions. We can be reached through the following channels:
 - MailChain: [laboulange@mailchain](https://app.mailchain.com/)
 - E-mail: la.boulange.tezos@gmail.com
-- DNS: https://dns.xyz/fr/LaBoulange
-- Twitter: https://twitter.com/LaBoulangeTezos
+- TwitterX: https://x.com/LaBoulangeTezos
 - Telegram: https://t.me/laboulangetezos
 
 We are also active in various Telegram and Discord groups related to Tezos.

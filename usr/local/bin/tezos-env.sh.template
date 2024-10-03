@@ -26,7 +26,8 @@ export NODE_RUN_DIR="${DATA_DIR}/octez-node"
 export NODE_LOG_FILE="/var/log/octez-node.log"
 export NODE_CONFIG_FILE="${NODE_ETC_DIR}/config.json"
 export NODE_RPC_ADDR="127.0.0.1:8732"
-export NODE_SNAPSHOT_URL="https://lambsonacid-octez.s3.us-east-2.amazonaws.com/mainnet/full/tezos.snapshot"
+export NODE_MODE="rolling"
+export NODE_SNAPSHOT_URL="https://lambsonacid-octez.s3.us-east-2.amazonaws.com/mainnet/${NODE_MODE%%:*}/tezos.snapshot"
 
 export KEY_BAKER="YOUR BAKER ALIAS. Example: bob"
 export KEY_PAYOUT="${KEY_BAKER}-payouts"
@@ -37,8 +38,8 @@ export CLIENT_LOG_FILE="/var/log/octez-client.log"
 export BAKER_ACCOUNT_HASH="tzXXXXXXXXXX: YOUR BAKER ADDRESS HASH"
 export BAKER_LOG_FILE="/var/log/octez-baker.log"
 export BAKER_LIQUIDITY_BAKING_SWITCH="pass"
-export BAKER_LIMIT_STAKING_OVER_BAKING=0
-export BAKER_EDGE_BAKING_OVER_STAKING=1
+export BAKER_LIMIT_STAKING_OVER_BAKING=5
+export BAKER_EDGE_BAKING_OVER_STAKING=0.1
 
 export ACCUSER_LOG_FILE="/var/log/octez-accuser.log"
 
