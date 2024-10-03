@@ -12,8 +12,8 @@ Content of this document:
   * [Prerequisites](#prerequisites)
   * [Operating instructions](#operating-instructions)
     + [Initial setup](#initial-setup)
-    + [Maintenance](#maintenance)
     + [Upgrade from the previous version](#upgrade-from-the-previous-version)
+    + [Maintenance](#maintenance)
   * [Should you wish to support us](#should-you-wish-to-support-us)
   * [Contact](#contact)
 
