@@ -1,5 +1,11 @@
 All notable changes are documented in this file.
 
+## v20.3 - 2024-10-03
+
+- New version of `octez` (new storage version): ParisC protocol. 
+- Made the node history mode configurable
+- Changed the default configuration values for staking
+
 ## v20.2 - 2024-07-17
 
 - New version of `octez` (minor bug fix): ParisC protocol. 
