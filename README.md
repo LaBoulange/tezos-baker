@@ -97,8 +97,8 @@ Don't execute this file as a script. Instead, copy and run the instructions of t
 ### Upgrade from the previous version
 
 - Modify your `BAKER_INSTALLATION_DIR/tezos-env.sh` file to:
-    - add the environment variable `export NODE_MODE=full`, which is the history mode used by former versions of tezos-baker. ATTENTION: Should you wish to switch from `full` to `rolling` to optimize performances and/or disk space, there is a specific procedure to follow. It is described in the `maintenance-cheat-sheet.sh` file. Do NOT set `NODE_MODE` to `rolling` at that stage unless you have already applied this procedure before this upgrade! 
-    - set the already existing `NODE_SNAPSHOT_URL` environment variable the following way: `export NODE_SNAPSHOT_URL="https://lambsonacid-octez.s3.us-east-2.amazonaws.com/mainnet/${NODE_MODE%%:*}/tezos.snapshot"`
+    - add the environment variable `export NODE_MODE=full` a line before the already existing environment variable `NODE_SNAPSHOT_URL`. `full` is the history mode used by former versions of tezos-baker. ATTENTION: Should you wish to switch from `full` to `rolling` to optimize performances and/or disk space, there is a specific procedure to follow. It is described in the `maintenance-cheat-sheet.sh` file. Do NOT set `NODE_MODE` to `rolling` at that stage unless you have already applied this procedure before this upgrade! 
+    - set the `NODE_SNAPSHOT_URL` environment variable the following way: `export NODE_SNAPSHOT_URL="https://lambsonacid-octez.s3.us-east-2.amazonaws.com/mainnet/${NODE_MODE%%:*}/tezos.snapshot"`
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section above. There is no protocol upgrade with this version.
 
 
