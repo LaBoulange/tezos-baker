@@ -5,16 +5,16 @@
 ##############################
 
 case "$BAKER_ARCH" in
-   "amd64") GITLAB_PACKAGE_ID='138316548'
+   "amd64") GITLAB_PACKAGE_ID='150896058'
    ;;
-   "arm64") GITLAB_PACKAGE_ID='138318508' 
+   "arm64") GITLAB_PACKAGE_ID='150897143'
    ;;
-   *) echo "Unknown architecture '$BAKER_ARCH'. Assumed 'amd64'." ; GITLAB_PACKAGE_ID='138316548'
+   *) echo "Unknown architecture '$BAKER_ARCH'. Assumed 'amd64'." ; GITLAB_PACKAGE_ID='150896058'
    ;;
 esac
 
 export PROTOCOL="PsParisC" 
-export PROTOCOL_FORMER="PtParisB"
+export PROTOCOL_FORMER="PsParisC"
 
 export OCTEZ_DOWNLOAD_URL="https://gitlab.com/tezos/tezos/-/package_files/${GITLAB_PACKAGE_ID}/download"
 export ZCASH_DOWNLOAD_URL="https://download.z.cash/downloads"

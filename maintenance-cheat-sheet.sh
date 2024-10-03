@@ -33,6 +33,7 @@ stop-octez.sh
 
 install-octez.sh
 
+# It is no problem to run the below unconditionally. If not needed, it will do nothing.
 nohup octez-node upgrade storage --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DIR &>$NODE_LOG_FILE &
 tail -f $NODE_LOG_FILE
 # Check whether there is a backup to delete in your ~ directory 
@@ -94,3 +95,20 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} tran
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} show voting period
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} submit proposals for $KEY_BAKER <proposal1> <proposal2> ...
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} submit ballot for $KEY_BAKER <proposal> <yay|nay|pass>
+
+############################################
+# Switch history mode from full to rolling #
+############################################
+
+# Set the NODE_MODE environment variable of your BAKER_INSTALLATION_DIR/tezos-env.sh file to "rolling", or "rolling:<number_of_additional_cycles>"
+# (see https://tezos.gitlab.io/user/history_modes.html for details) 
+
+. `which tezos-env.sh`
+octez-node config update --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DIR --history-mode=$NODE_MODE
+
+stop-octez.sh
+nohup octez-node run --force-history-mode-switch --config-file=$NODE_CONFIG_FILE --rpc-addr $NODE_RPC_ADDR --log-output=$NODE_LOG_FILE &>/dev/null &
+
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} bootstrapped
+nohup octez-baker-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH &>$BAKER_LOG_FILE &
+nohup octez-accuser-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE &

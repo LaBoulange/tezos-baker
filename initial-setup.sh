@@ -27,7 +27,7 @@ mkdir "$NODE_RUN_DIR"
 mkdir "$NODE_ETC_DIR"
 
 # Initiate the node's configuration file
-octez-node config init --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DIR --network=mainnet --history-mode=full
+octez-node config init --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DIR --network=mainnet --history-mode=$NODE_MODE
 octez-node config update --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DIR
 
 # Import the latest snapshot from trusted source
@@ -42,9 +42,9 @@ nohup octez-node run --config-file=$NODE_CONFIG_FILE --rpc-addr $NODE_RPC_ADDR -
 
 chmod o-rwx $NODE_RUN_DIR/identity.json
 
-####################
-# Sync the RPC node
-####################
+########################
+# Sync with the RPC node
+########################
 
 mkdir $CLIENT_BASE_DIR
 
