@@ -1,8 +1,9 @@
 # tezos-baker
-Boilerplate code to set up a minimalistic Tezos baker capable of baking, accusing, and paying its delegators.
+Boilerplate code to set up a minimalistic Tezos baker capable of baking, accusing, and optionally paying its delegators.
 
 This code:
-- installs octez-node, octez-baker, octez-accuser, Tezpay and its extension payouts-substitutor on a single machine
+- installs octez-node, octez-baker, octez-accuser, 
+- optionally installs Tezpay and its extension payouts-substitutor on the same machine,
 - provides some basic maintenance tools.
 
 Content of this document:
@@ -44,16 +45,18 @@ This code is designed to run on a x86_64 or ARM64 Linux platform.
 Hardware requirements:
 - 2 CPU cores
 - 8GB RAM
-- 100GB to 500GB SSD drive depending on the node history mode ("rolling" or "full", see https://tezos.gitlab.io/user/history_modes.html)
+- 100GB to 500GB SSD drive depending on the chosen node history mode ("rolling" or "full", see https://tezos.gitlab.io/user/history_modes.html)
 
 Before using this code, you should also have:
-- a Tezos account set up to become the baker, and funded with a sufficient amount of XTZ.
-- a Tezos account set up to handle the payouts.
+- a Tezos account set up to become the baker, and funded with a sufficient amount of XTZ (6000 is required to have baking rights without relying on externally staked and delegated).
+- if you wish to pay your delegators, a Tezos account set up to handle the payouts.
 
 
 ## Operating instructions
 
-For simplicity, both the initial setup and maintenance processes are designed to be executed by the 'root' user. While this is convenient, it is not best practice from a security standpoint. Ideally, one should minimize operations performed as 'root' and designate one or more users specifically for Tezos-related tasks. Because user management configurations can vary widely, we've opted not to make assumptions about your preferences in this area. This approach allows you to easily modify these scripts and procedures according to your own criteria and preferences.
+For simplicity, both the initial setup and maintenance processes are designed to be executed by the 'root' user. While this is convenient, it is not best practice from a security standpoint. Ideally, one should minimize operations performed as 'root' and designate one or more users specifically for Tezos-related tasks. 
+
+Because user management configurations can vary widely, we've opted not to make assumptions about your preferences in this area. This approach allows you to easily modify these scripts and procedures according to your own criteria and preferences.
 
 
 ### Initial setup
@@ -74,11 +77,12 @@ For simplicity, both the initial setup and maintenance processes are designed to
     - `BAKER_LIQUIDITY_BAKING_SWITCH`: The liquidity baking vote (`off`, `on`, or `pass`). See https://tezos.gitlab.io/active/liquidity_baking.html for more details. Default: `pass`.
     - `BAKER_LIMIT_STAKING_OVER_BAKING`: How many times your stake, ranging from 0 (no staking) to 5 (max allowed by the protocol), you allow others to stake with your baker. Defaut: 5.
     - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion from 0 (0%) to 1 (100%) of the reward that your baker receives from the amount staked by stakers. Default: 0.1 (10%).
+  - Should you wish to pay your delegators, the following variables also need configuring. They can be ignored otherwise:
     - `TEZPAY_ACCOUNT_HASH`: The tzYYY address of your payout account.
     - `TEZPAY_FEES`: The baking fee you wish to charge your delegators, ranging from 0 (0%) to 1 (100%). Default: 0.1 (10%).
 - Make `BAKER_INSTALLATION_DIR/tezos-env.sh` executable by the user intended to run it.
 - Run `install-tezos-baker.sh`.
-- Next, follow the step-by-step instructions in the `initial-setup.sh` file from this repository. Don't execute this file as a script. Instead, copy and run the instructions one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
+- Next, follow the step-by-step instructions in the `initial-setup.sh` file from this repository. Don't execute this file as a script! Instead, copy and run the instructions one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
 
 ### Upgrade from the previous version
@@ -94,12 +98,12 @@ For simplicity, both the initial setup and maintenance processes are designed to
 The `maintenance-cheat-sheet.sh` file includes the following sections:
 - **Restart/Reboot**: Instructions for when you need to restart, possibly due to reasons such as Linux distribution maintenance.
 - **Upgrade octez**: Steps for updating when a new version of octez is released. This section also covers Tezos protocol upgrades.
-- **Upgrade TezPay**: Procedures for when a new version of TezPay or payouts-substitutor is available.
-- **Stake management**: Guidelines on setting your baker's deposit limit and replenishing your payout account.
+- **Upgrade TezPay**: Should you wish to pay your delegators: procedures for when a new version of TezPay or payouts-substitutor is available.
+- **Stake and payouts management**: Guidelines on setting your baker's stake parameters and optionnaly replenishing your payout account.
 - **Voting process**: Help on how to vote at the various stages of the Tezos amendment and voting process (https://tezos.gitlab.io/active/voting.html).
 - **Switch history mode from full to rolling**: Help on how to optimize performances and disk space by switching the node history mode from `full` to `rolling`.
 
-Don't execute this file as a script. Instead, copy and run the instructions of the section that interests you one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
+Don't execute this file as a script! Instead, copy and run the instructions of the section that interests you one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
 
 ## Should you wish to support us
