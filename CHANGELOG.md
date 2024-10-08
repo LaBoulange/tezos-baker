@@ -1,5 +1,9 @@
 All notable changes are documented in this file.
 
+## xxx - xxx
+
+- Documentation: delegators payment is made optional
+
 ## v20.3 - 2024-10-03
 
 - New version of `octez` (new storage version): ParisC protocol. 

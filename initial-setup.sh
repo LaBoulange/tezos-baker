@@ -59,23 +59,24 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} boot
 # and to https://opentezos.com/node-baking/baking/cli-baker/#other-options-for-baking for more details.
 # If you're interested in rotating your baking keys without having to change your baking wallet, you might also consider using a consensus key: https://opentezos.com/node-baking/baking/consensus-key/
 
-# Also, add the public key of the payout account to fund it easily
+# Should you wish to pay your delegators, also add the public key of the payout account to fund it easily. This step can be ignored otherwise.
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} add address $KEY_PAYOUT $TEZPAY_ACCOUNT_HASH
 
-#######################
-# Register as delegate  
-#######################
+#################################################
+# Register as delegate  and setup your parameters
+#################################################
 
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} register key $KEY_BAKER as delegate
 
 # --> Go to tzkt.io/[your-baker-tz-address] and look under “Delegations” to see if it has been done correctly.
 #     It should say something similar to “Registered as baker with 0.xxx XTZ fee”.
 
-# Initialize your stake. "NNN" below should be replaced by the amount of XTZ you wish to stake (absolute min: 600 XTZ, min for baking rights: 6000 XTZ)
+# Initialize your stake. "NNN" below should be replaced by the amount of XTZ you wish to stake 
+# (min for having baking rights on your own: 6000 XTZ. Less is possible but you'll have to rely on external staking and delegation)
 INITIAL_STAKE=NNN
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} stake $INITIAL_STAKE for $KEY_BAKER
 
-# Set your staking parameters
+# Set your external staking parameters
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set delegate parameters for $KEY_BAKER --limit-of-staking-over-baking $BAKER_LIMIT_STAKING_OVER_BAKING --edge-of-baking-over-staking $BAKER_EDGE_BAKING_OVER_STAKING
 
 ############################
@@ -86,7 +87,7 @@ nohup octez-baker-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NO
 nohup octez-accuser-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE &
 
 ##############################################################################################################################
-# Start paying: 
+# If you wish, start paying your delegators (this step, that lasts until the end of this file, can be ignored otherwise): 
 # this should only be done once your baker has endorsing rights for the current cycle (you can check that nn TZKT or TZStats)
 ##############################################################################################################################
 
