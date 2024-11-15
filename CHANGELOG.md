@@ -1,7 +1,8 @@
 All notable changes are documented in this file.
 
-## xxx - xxx
+## v21.0 - 2024-11-15
 
+- New version of `octez`: Quebec protocol (ParisC still active).
 - Documentation: delegators payment is made optional
 
 ## v20.3 - 2024-10-03

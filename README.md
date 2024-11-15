@@ -77,7 +77,7 @@ Because user management configurations can vary widely, we've opted not to make 
     - `BAKER_LIQUIDITY_BAKING_SWITCH`: The liquidity baking vote (`off`, `on`, or `pass`). See https://tezos.gitlab.io/active/liquidity_baking.html for more details. Default: `pass`.
     - `BAKER_LIMIT_STAKING_OVER_BAKING`: How many times your stake, ranging from 0 (no staking) to 5 (max allowed by the protocol), you allow others to stake with your baker. Defaut: 5.
     - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion from 0 (0%) to 1 (100%) of the reward that your baker receives from the amount staked by stakers. Default: 0.1 (10%).
-  - Should you wish to pay your delegators, the following variables also need configuring. They can be ignored otherwise:
+- Should you wish to pay your delegators, the following variables also need configuring. They can be ignored otherwise:
     - `TEZPAY_ACCOUNT_HASH`: The tzYYY address of your payout account.
     - `TEZPAY_FEES`: The baking fee you wish to charge your delegators, ranging from 0 (0%) to 1 (100%). Default: 0.1 (10%).
 - Make `BAKER_INSTALLATION_DIR/tezos-env.sh` executable by the user intended to run it.
@@ -87,10 +87,7 @@ Because user management configurations can vary widely, we've opted not to make 
 
 ### Upgrade from the previous version
 
-- Modify your `BAKER_INSTALLATION_DIR/tezos-env.sh` file to:
-    - add the environment variable `export NODE_MODE=full` a line before the already existing environment variable `NODE_SNAPSHOT_URL`. `full` is the history mode used by former versions of tezos-baker. ATTENTION: Should you wish to switch from `full` to `rolling` to optimize performances and/or disk space, there is a specific procedure to follow (see [Maintenance](#maintenance) section below). Do NOT set `NODE_MODE` to `rolling` at that stage unless you have already applied this procedure before this upgrade! 
-    - set the `NODE_SNAPSHOT_URL` environment variable the following way:<br />`export NODE_SNAPSHOT_URL="https://lambsonacid-octez.s3.us-east-2.amazonaws.com/mainnet/${NODE_MODE%%:*}/tezos.snapshot"`
-- Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below. There is no protocol upgrade with this version.
+- Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below. This version involves a protocol upgrade.
 
 
 ### Maintenance
