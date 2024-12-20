@@ -5,11 +5,11 @@
 ##############################
 
 case "$BAKER_ARCH" in
-   "amd64") GITLAB_PACKAGE_ID='159438808'
+   "amd64") GITLAB_PACKAGE_ID='166087384'
    ;;
-   "arm64") GITLAB_PACKAGE_ID='159440008'
+   "arm64") GITLAB_PACKAGE_ID='166088079'
    ;;
-   *) echo "Unknown architecture '$BAKER_ARCH'. Assumed 'amd64'." ; GITLAB_PACKAGE_ID='159438808'
+   *) echo "Unknown architecture '$BAKER_ARCH'. Assumed 'amd64'." ; GITLAB_PACKAGE_ID='166087384'
    ;;
 esac
 

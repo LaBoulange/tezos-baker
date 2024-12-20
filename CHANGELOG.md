@@ -1,5 +1,9 @@
 All notable changes are documented in this file.
 
+## v21.1 - 2024-12-21
+
+- New version of `octez`: Quebec protocol (ParisC still active).
+
 ## v21.0 - 2024-11-15
 
 - New version of `octez`: Quebec protocol (ParisC still active).
