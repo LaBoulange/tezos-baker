@@ -43,6 +43,12 @@ export BAKER_EDGE_BAKING_OVER_STAKING=0.1
 
 export ACCUSER_LOG_FILE="/var/log/octez-accuser.log"
 
+export DAL_ETC_DIR="/usr/local/etc/octez-dal-node"
+export DAL_RUN_DIR="${DATA_DIR}/octez-dal-node"
+export DAL_LOG_FILE="/var/log/octez-dal-node.log"
+export DAL_CONFIG_FILE="${DAL_ETC_DIR}/config.json"
+export DAL_ENDPOINT_ADDR="127.0.0.1:10732"
+
 ###################################
 # Environment variables for TezPay
 ###################################

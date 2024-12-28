@@ -23,8 +23,8 @@ install-octez.sh
 
 mkdir -p "$DATA_DIR"
 
-mkdir "$NODE_RUN_DIR"
-mkdir "$NODE_ETC_DIR"
+mkdir -p "$NODE_RUN_DIR"
+mkdir -p "$NODE_ETC_DIR"
 
 # Initiate the node's configuration file
 octez-node config init --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DIR --network=mainnet --history-mode=$NODE_MODE
@@ -79,11 +79,24 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} stak
 # Set your external staking parameters
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set delegate parameters for $KEY_BAKER --limit-of-staking-over-baking $BAKER_LIMIT_STAKING_OVER_BAKING --edge-of-baking-over-staking $BAKER_EDGE_BAKING_OVER_STAKING
 
+####################
+# Start the DAL node     
+####################
+
+mkdir -p "$DAL_RUN_DIR"
+mkdir -p "$DAL_ETC_DIR"
+
+# Initiate the DAL node's configuration file
+octez-dal-node config init --config-file=$DAL_CONFIG_FILE --endpoint http://${NODE_RPC_ADDR} --attester-profiles="$BAKER_ACCOUNT_HASH" --data-dir $DAL_RUN_DIR
+
+# Run the DAL node
+nohup octez-dal-node run --config-file=$DAL_CONFIG_FILE &>$DAL_LOG_FILE &
+
 ############################
 # Start baking and accusing     
 ############################
 
-nohup octez-baker-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH &>$BAKER_LOG_FILE &
+nohup octez-baker-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH --dal-node http://${DAL_ENDPOINT_ADDR} &>$BAKER_LOG_FILE &
 nohup octez-accuser-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE &
 
 ##############################################################################################################################
