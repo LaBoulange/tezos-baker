@@ -121,11 +121,16 @@ cat<<EOF>config.hjson
     }
   }
   network: {
-    rpc_url: http://${NODE_RPC_ADDR}/
+    rpc_pool: [
+      http://${NODE_RPC_ADDR}/
+      https://eu.rpc.tez.capital/
+      https://us.rpc.tez.capital/
+    ]
     tzkt_url: https://api.tzkt.io/
-    explorer: https://tzstats.com/
+    protocol_rewards_url: https://protocol-rewards.tez.capital/
+    explorer: https://tzkt.io/
     ignore_kt: false
-  }
+  }  
   overdelegation: {
     protect: true
   }
