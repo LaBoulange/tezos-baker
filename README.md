@@ -1,8 +1,8 @@
 # tezos-baker
-Boilerplate code to set up a minimalistic Tezos baker capable of baking, accusing, and optionally paying its delegators.
+Boilerplate code to set up a minimalistic Tezos baker capable of baking, accusing, participating in the DAL, and optionally paying its delegators.
 
 This code:
-- installs octez-node, octez-baker, octez-accuser, 
+- installs octez-node, octez-baker, octez-accuser, octez-dal-node
 - optionally installs Tezpay and its extension payouts-substitutor on the same machine,
 - provides some basic maintenance tools.
 
