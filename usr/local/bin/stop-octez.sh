@@ -1,5 +1,6 @@
 #!/bin/bash
 
+kill `ps aux | grep octez-dal-node | head -1 | awk '{ print $2 }'`
 kill `ps aux | grep octez-node | head -1 | awk '{ print $2 }'`
 
 sleep 1
