@@ -12,7 +12,7 @@ sleep 20
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} bootstrapped
 
 echo "Starting DAL node"
-nohup octez-dal-node run --config-file=$DAL_CONFIG_FILE &>$DAL_LOG_FILE &
+nohup octez-dal-node run &>$DAL_LOG_FILE &
 
 echo "Checking DAL node bootstrap"
 sleep 5
