@@ -1,5 +1,10 @@
 All notable changes are documented in this file.
 
+## xxxx - xxxx-xx-xx
+
+- start-octez.sh: Longer pause time after node startup before starting DAL, baker and accuser
+- stop-octez.sh: Separate stopping of the DAL node
+
 ## v21.1_2 - 2024-01-19
 
 - DAL node integration.
