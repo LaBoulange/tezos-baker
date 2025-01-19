@@ -43,7 +43,7 @@ Additionally, this code doesn't leverage all the options provided by octez, Tezp
 This code is designed to run on a x86_64 or ARM64 Linux platform.
 
 Hardware requirements:
-- 2 CPU cores
+- 4 CPU cores
 - 8GB RAM
 - 100GB to 500GB SSD drive depending on the chosen node history mode ("rolling" or "full", see https://tezos.gitlab.io/user/history_modes.html)
 
