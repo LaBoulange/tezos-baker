@@ -87,7 +87,7 @@ Because user management configurations can vary widely, we've opted not to make 
 
 ### Upgrade from the previous version
 
-- Edit your `BAKER_INSTALLATION_DIR/tezos-env.sh` file by adding the five `export DAL_xxx` environment variables from this repository's `usr/local/bin/tezos-env.sh.template` file.
+- Edit your `BAKER_INSTALLATION_DIR/tezos-env.sh` file by adding the three `export DAL_xxx` environment variables from this repository's `usr/local/bin/tezos-env.sh.template` file.
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below. This version is undergoing a protocol upgrade, so please follow the subsection "# What follows is only relevant in case of protocol change."
 
 

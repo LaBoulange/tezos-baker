@@ -1,6 +1,6 @@
 All notable changes are documented in this file.
 
-## v21.1_2 - xxxx-xx-xx NOT RELEASED YET
+## v21.1_2 - 2024-01-19
 
 - DAL node integration.
 

@@ -63,7 +63,7 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} boot
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} add address $KEY_PAYOUT $TEZPAY_ACCOUNT_HASH
 
 #################################################
-# Register as delegate  and setup your parameters
+# Register as delegate and setup your parameters
 #################################################
 
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} register key $KEY_BAKER as delegate
@@ -84,13 +84,12 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set 
 ####################
 
 mkdir -p "$DAL_RUN_DIR"
-mkdir -p "$DAL_ETC_DIR"
 
 # Initiate the DAL node's configuration file
-octez-dal-node config init --config-file=$DAL_CONFIG_FILE --endpoint http://${NODE_RPC_ADDR} --attester-profiles="$BAKER_ACCOUNT_HASH" --data-dir $DAL_RUN_DIR
+octez-dal-node config init --endpoint http://${NODE_RPC_ADDR} --attester-profiles="$BAKER_ACCOUNT_HASH" --data-dir $DAL_RUN_DIR
 
 # Run the DAL node
-nohup octez-dal-node run --config-file=$DAL_CONFIG_FILE &>$DAL_LOG_FILE &
+nohup octez-dal-node run &>$DAL_LOG_FILE &
 
 ############################
 # Start baking and accusing     
