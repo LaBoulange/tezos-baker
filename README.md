@@ -44,8 +44,8 @@ This code is designed to run on a x86_64 or ARM64 Linux platform.
 
 Hardware requirements:
 - 4 CPU cores
-- 8GB RAM
-- 100GB to 500GB SSD drive depending on the chosen node history mode ("rolling" or "full", see https://tezos.gitlab.io/user/history_modes.html)
+- 8GB to 10GB RAM depending on your stake (see DAL hardware requirements, https://forum.tezosagora.org/t/hardware-and-bandwidth-requirements-for-the-tezos-dal/6230)
+- 120GB to 500GB SSD drive depending on the chosen node history mode ("rolling" or "full", see https://tezos.gitlab.io/user/history_modes.html)
 
 Before using this code, you should also have:
 - a Tezos account set up to become the baker, and funded with a sufficient amount of XTZ (6000 is required to have baking rights without relying on externally staked and delegated).
@@ -88,8 +88,9 @@ Because user management configurations can vary widely, we've opted not to make 
 ### Upgrade from the previous version
 
 - Edit your `BAKER_INSTALLATION_DIR/tezos-env.sh` file by adding the three `export DAL_xxx` environment variables from this repository's `usr/local/bin/tezos-env.sh.template` file.
-- Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below. This version is undergoing a protocol upgrade, so please follow the subsection "# What follows is only relevant in case of protocol change."
-
+- Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below, with one addition:
+  - Just before running `start-octez.sh`, run `octez-dal-node config init --endpoint http://${NODE_RPC_ADDR} --attester-profiles="$BAKER_ACCOUNT_HASH" --data-dir $DAL_RUN_DIR`
+  - This version is undergoing a protocol upgrade, so please follow the subsection "# What follows is only relevant in case of protocol change."
 
 ### Maintenance
 

@@ -33,10 +33,10 @@ stop-octez.sh
 
 install-octez.sh
 
-# It is no problem to run the below unconditionally. If not needed, it will do nothing.
+# It is no problem to run the command below unconditionally. If not needed, it will do nothing.
 nohup octez-node upgrade storage --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DIR &>$NODE_LOG_FILE &
 tail -f $NODE_LOG_FILE
-# Check whether there is a backup to delete in your ~ directory 
+# Check whether there is a backup to move or delete in your ~ directory 
 
 start-octez.sh
 start-tezpay.sh # Only if you configured Tezpay to pay your delegators
