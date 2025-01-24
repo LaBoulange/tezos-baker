@@ -85,8 +85,12 @@ Because user management configurations can vary widely, we've opted not to make 
 - Next, follow the step-by-step instructions in the `initial-setup.sh` file from this repository. Don't execute this file as a script! Instead, copy and run the instructions one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
 
-### Upgrade from the previous version
+### Upgrade from the previous versions
 
+#### From v21.1_2
+- - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below.
+
+#### From v21.1
 - Edit your `BAKER_INSTALLATION_DIR/tezos-env.sh` file by adding the three `export DAL_xxx` environment variables from this repository's `usr/local/bin/tezos-env.sh.template` file.
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below, with one addition:
   - Just before running `start-octez.sh`, run `octez-dal-node config init --endpoint http://${NODE_RPC_ADDR} --attester-profiles="$BAKER_ACCOUNT_HASH" --data-dir $DAL_RUN_DIR`
