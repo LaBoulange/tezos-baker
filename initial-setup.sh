@@ -27,7 +27,7 @@ mkdir -p "$NODE_RUN_DIR"
 mkdir -p "$NODE_ETC_DIR"
 
 # Initiate the node's configuration file
-octez-node config init --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DIR --network=mainnet --history-mode=$NODE_MODE
+octez-node config init --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DIR --network=$NODE_NETWORK --history-mode=$NODE_MODE
 octez-node config update --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DIR
 
 # Import the latest snapshot from trusted source

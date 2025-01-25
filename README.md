@@ -70,7 +70,9 @@ Because user management configurations can vary widely, we've opted not to make 
     - `BUILD_DIR`: The working directory where files will be downloaded by the installation scripts of this repository. Default: `/tmp/build-tezos-baker`.
     - `INSTALL_DIR`: The directory `BAKER_INSTALLATION_DIR` where executables files will be stored. Default: `/usr/local/bin`.
     - `DATA_DIR`: The directory where the data needed by octez and Tezpay will be stored (requires large storage space).
+    - `NODE_NETWORK`: The Tezos network that your bakery belongs to: `mainnet`, `ghostnet`, or any other network. Default: `mainnet`.
     - `NODE_MODE`: The history mode of your node (`full`, `rolling`, or `rolling:<number_of_extra_cycles>`). See https://tezos.gitlab.io/user/history_modes.html for more details. Default: `rolling`.
+    - `NODE_SNAPSHOT_URL`: The URL of the Tezos data snapshot to download to initialize your node. Default: Lambs on Acid's URL corresponding to your `NODE_NETWORK` and `NODE_MODE` (See https://lambsonacid.nl/).
     - `KEY_BAKER`: The friendly name you would like to use as an alias for your baker address when managing your baker. This name is not shared publicly; it is only used locally.
     - `BAKER_ACCOUNT_HASH`: The tzXXX address of your baker.
     - `BAKER_LIQUIDITY_BAKING_SWITCH`: The liquidity baking vote (`off`, `on`, or `pass`). See https://tezos.gitlab.io/active/liquidity_baking.html for more details. Default: `pass`.
@@ -86,7 +88,9 @@ Because user management configurations can vary widely, we've opted not to make 
 
 ### Upgrade from the previous version
 
-- Optional and if applicable: remove the Tezpay `payouts-substitutor` extension block from your `TEZPAY_RUN_DIR/config.hjson`.
+- Optional and if applicable: remove the Tezpay `payouts-substitutor` and the `payout-fixer` extensions block from your `TEZPAY_RUN_DIR/config.hjson`.
+- Modify your environment settings by editing the file at `BAKER_INSTALLATION_DIR/tezos-env.sh`:
+  - Insert a new line with the command `export NODE_NETWORK="mainnet"` immediately after the existing line that begins with `export NODE_RPC_ADDR=`. 
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below.
 
 
