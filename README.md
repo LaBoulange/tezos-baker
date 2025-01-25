@@ -13,7 +13,7 @@ Content of this document:
   * [Prerequisites](#prerequisites)
   * [Operating instructions](#operating-instructions)
     + [Initial setup](#initial-setup)
-    + [Upgrade from the previous version](#upgrade-from-the-previous-version)
+    + [Upgrade from the previous versions](#upgrade-from-the-previous-versions)
     + [Maintenance](#maintenance)
   * [Should you wish to support us](#should-you-wish-to-support-us)
   * [Contact](#contact)
