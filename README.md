@@ -3,7 +3,7 @@ Boilerplate code to set up a minimalistic Tezos baker capable of baking, accusin
 
 This code:
 - installs octez-node, octez-baker, octez-accuser, octez-dal-node
-- optionally installs Tezpay and its extension payouts-substitutor on the same machine,
+- optionally installs Tezpay on the same machine,
 - provides some basic maintenance tools.
 
 Content of this document:
@@ -13,7 +13,7 @@ Content of this document:
   * [Prerequisites](#prerequisites)
   * [Operating instructions](#operating-instructions)
     + [Initial setup](#initial-setup)
-    + [Upgrade from the previous versions](#upgrade-from-the-previous-versions)
+    + [Upgrade from the previous version](#upgrade-from-the-previous-version)
     + [Maintenance](#maintenance)
   * [Should you wish to support us](#should-you-wish-to-support-us)
   * [Contact](#contact)
@@ -25,10 +25,9 @@ This repository is not intended to provide perfect code, but code as simple as p
 
 As a result, it is not state-of-the-art in terms of automation, high availability, or security. We will address these aspects throughout this documentation when relevant. In any case, we decline all responsibility in the event of damages, theft of crypto-assets, operational or security incidents, as detailed further in the LICENSE.txt file.
 
-Additionally, this code doesn't leverage all the options provided by octez, Tezpay and payouts-substitutor. We encourage you to read the documentation for these tools and enhance your setup, transforming this basic configuration into something remarkable.
+Additionally, this code doesn't leverage all the options provided by octez and Tezpay. We encourage you to read the documentation for these tools and enhance your setup, transforming this basic configuration into something remarkable.
 - octez: https://tezos.gitlab.io/index.html
 - Tezpay: https://docs.tez.capital/tezpay/tutorials/ 
-- payouts-substitutor: https://github.com/LaBoulange/tezpay-extensions
 
 
 ## Release management
@@ -85,23 +84,18 @@ Because user management configurations can vary widely, we've opted not to make 
 - Next, follow the step-by-step instructions in the `initial-setup.sh` file from this repository. Don't execute this file as a script! Instead, copy and run the instructions one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
 
-### Upgrade from the previous versions
+### Upgrade from the previous version
 
-#### From v21.1_2
+- Optional and if applicable: remove the Tezpay `payouts-substitutor` extension block from your `TEZPAY_RUN_DIR/config.hjson`.
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below.
 
-#### From v21.1
-- Edit your `BAKER_INSTALLATION_DIR/tezos-env.sh` file by adding the three `export DAL_xxx` environment variables from this repository's `usr/local/bin/tezos-env.sh.template` file.
-- Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below, with one addition:
-  - Just before running `start-octez.sh`, run `octez-dal-node config init --endpoint http://${NODE_RPC_ADDR} --attester-profiles="$BAKER_ACCOUNT_HASH" --data-dir $DAL_RUN_DIR`
-  - This version is undergoing a protocol upgrade, so please follow the subsection "# What follows is only relevant in case of protocol change."
 
 ### Maintenance
 
 The `maintenance-cheat-sheet.sh` file includes the following sections:
 - **Restart/Reboot**: Instructions for when you need to restart, possibly due to reasons such as Linux distribution maintenance.
 - **Upgrade octez**: Steps for updating when a new version of octez is released. This section also covers Tezos protocol upgrades.
-- **Upgrade TezPay**: Should you wish to pay your delegators: procedures for when a new version of TezPay or payouts-substitutor is available.
+- **Upgrade TezPay**: Should you wish to pay your delegators: procedures for when a new version of TezPay is available.
 - **Stake and payouts management**: Guidelines on setting your baker's stake parameters and optionnaly replenishing your payout account.
 - **Voting process**: Help on how to vote at the various stages of the Tezos amendment and voting process (https://tezos.gitlab.io/active/voting.html).
 - **Switch history mode from full to rolling**: Help on how to optimize performances and disk space by switching the node history mode from `full` to `rolling`.

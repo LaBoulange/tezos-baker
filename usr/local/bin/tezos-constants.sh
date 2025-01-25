@@ -24,5 +24,3 @@ export ZCASH_DOWNLOAD_URL="https://download.z.cash/downloads"
 ##############################
 
 export TEZPAY_DOWNLOAD_URL="https://raw.githubusercontent.com/alis-is/tezpay/main/install.sh"
-export TEZPAY_PAYOUT_FIXER_DOWNLOAD_URL="https://github.com/tez-capital/tezpay/releases/latest/download/tezpay-payout-fixer-linux-${BAKER_ARCH}"
-export TEZPAY_PAYOUTS_SUBSTITUTOR_DOWNLOAD_URL="https://github.com/LaBoulange/tezpay-extensions/releases/latest/download/payouts-substitutor-linux-${BAKER_ARCH}"
