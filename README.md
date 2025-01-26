@@ -102,7 +102,9 @@ Because user management configurations can vary widely, we've opted not to make 
     - `export ETHERLINK_RPC_ADDR="127.0.0.1:8932"`
     - `export ETHERLINK_NODE_LOG_FILE="/var/log/octez-smart-rollup-node.log"`
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below.
-- If you wish to start running an Etherlink Smart Rollup observer node, follow the step-by-step instructions in the section "If you wish, start running an Etherlink Smart Rollup observer node." of the `initial-setup.sh` file from this repository. Do not execute this as a script! Instead, copy and run the instructions one at a time to be able to handle any potential errors. 
+- If you wish to start running an Etherlink Smart Rollup observer node:
+  - run the command ``. `which tezos-env.sh` ``
+  - then follow the step-by-step instructions in the section "If you wish, start running an Etherlink Smart Rollup observer node." of the `initial-setup.sh` file from this repository. Do not execute this as a script! Instead, copy and run the instructions one at a time to be able to handle any potential errors. 
 
 #### From v21.1
 - Optional and if applicable: remove the Tezpay `payouts-substitutor` and the `payout-fixer` extensions block from your `TEZPAY_RUN_DIR/config.hjson`.
@@ -122,7 +124,9 @@ Because user management configurations can vary widely, we've opted not to make 
     - `export ETHERLINK_RPC_ADDR="127.0.0.1:8932"`
     - `export ETHERLINK_NODE_LOG_FILE="/var/log/octez-smart-rollup-node.log"`
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below, with one addition: just before running `start-octez.sh`, run `octez-dal-node config init --endpoint http://${NODE_RPC_ADDR} --attester-profiles="$BAKER_ACCOUNT_HASH" --data-dir $DAL_RUN_DIR`
-- If you wish to start running an Etherlink Smart Rollup observer node, follow the step-by-step instructions in the section "If you wish, start running an Etherlink Smart Rollup observer node." of the `initial-setup.sh` file from this repository. Do not execute this as a script! Instead, copy and run the instructions one at a time to be able to handle any potential errors. 
+- If you wish to start running an Etherlink Smart Rollup observer node:
+  - run the command ``. `which tezos-env.sh` ``
+  - then follow the step-by-step instructions in the section "If you wish, start running an Etherlink Smart Rollup observer node." of the `initial-setup.sh` file from this repository. Do not execute this as a script! Instead, copy and run the instructions one at a time to be able to handle any potential errors. 
 
 ### Maintenance
 
