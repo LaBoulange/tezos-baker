@@ -46,7 +46,7 @@ chmod o-rwx $NODE_RUN_DIR/identity.json
 # Sync with the RPC node
 ########################
 
-mkdir $CLIENT_BASE_DIR
+mkdir -p $CLIENT_BASE_DIR
 
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} bootstrapped 
 
@@ -98,12 +98,30 @@ nohup octez-dal-node run &>$DAL_LOG_FILE &
 nohup octez-baker-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH --dal-node http://${DAL_ENDPOINT_ADDR} &>$BAKER_LOG_FILE &
 nohup octez-accuser-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE &
 
-##############################################################################################################################
-# If you wish, start paying your delegators (this step, that lasts until the end of this file, can be ignored otherwise): 
-# this should only be done once your baker has endorsing rights for the current cycle (you can check that nn TZKT or TZStats)
-##############################################################################################################################
+###################################################################################################
+# If you wish, start running an Etherlink Smart Rollup observer node. Skip this section otherwise.
+# If you decide to skip this section for now, you will still be able to change your mind later.
+###################################################################################################
 
-mkdir $TEZPAY_RUN_DIR
+mkdir -p "$ETHERLINK_RUN_DIR"
+octez-smart-rollup-node init observer config for $ETHERLINK_ROLLUP_ADDR  with operators --data-dir $ETHERLINK_RUN_DIR --pre-images-endpoint $ETHERLINK_PREIMAGES
+
+SNAPSHOT=`echo $ETHERLINK_SNAPSHOT | cut -d "/" -f 5`
+
+cd /tmp
+wget $ETHERLINK_SNAPSHOT
+octez-smart-rollup-node --endpoint $ETHERLINK_RPC_ENDPOINT snapshot import $SNAPSHOT --data-dir $ETHERLINK_RUN_DIR
+rm $SNAPSHOT
+
+nohup octez-smart-rollup-node --endpoint "http://${NODE_RPC_ADDR}" run --data-dir $ETHERLINK_RUN_DIR  &>$ETHERLINK_NODE_LOG_FILE &
+
+#########################################################################################################################################
+# If you wish, start paying your delegators. This section, that lasts until the end of this file, can be ignored otherwise. 
+# ATTENTION: This should only be done once your baker has endorsing rights for the current cycle (you can check that nn TZKT or TZStats)
+# If you decide to skip this section for now, you will still be able to change your mind later.
+#########################################################################################################################################
+
+mkdir -p $TEZPAY_RUN_DIR
 
 # Install the Tezpay software
 install-tezpay.sh

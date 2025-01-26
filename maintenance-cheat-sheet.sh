@@ -3,12 +3,14 @@
 ###################
 
 stop-tezpay.sh # Only if you configured Tezpay to pay your delegators
+stop-etherlink.sh # Only if you configured the Etherlink Smart Rollup node
 stop-octez.sh
 
 reboot
 # You are being disconnected here. Once logged-in again:
 
 start-octez.sh
+start-etherlink.sh # Only if you configured the Etherlink Smart Rollup node
 start-tezpay.sh # Only if you configured Tezpay to pay your delegators
 
 # What follows is only relevant in case of ongoing protocol change (see section "Upgrade octez"). 
@@ -29,6 +31,7 @@ install-tezos-baker.sh
 . `which tezos-env.sh`
 
 stop-tezpay.sh # Only if you configured Tezpay to pay your delegators
+stop-etherlink.sh # Only if you configured the Etherlink Smart Rollup node
 stop-octez.sh
 
 install-octez.sh
@@ -39,6 +42,7 @@ tail -f $NODE_LOG_FILE
 # Check whether there is a backup to move or delete in your ~ directory 
 
 start-octez.sh
+start-etherlink.sh # Only if you configured the Etherlink Smart Rollup node
 start-tezpay.sh # Only if you configured Tezpay to pay your delegators
 
 # What follows is only relevant in case of protocol change. 

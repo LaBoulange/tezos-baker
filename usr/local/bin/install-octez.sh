@@ -5,7 +5,6 @@
 ARCHIVE='package.tar.gz'
 EXTRACTED_DIR='octez-x86_64'
 
-
 mkdir $BUILD_DIR
 cd $BUILD_DIR
 
@@ -24,6 +23,7 @@ mv octez-node ${INSTALL_DIR}
 mv octez-baker-* ${INSTALL_DIR}
 mv octez-accuser-* ${INSTALL_DIR}
 mv octez-dal-node ${INSTALL_DIR}
+mv octez-smart-rollup-node ${INSTALL_DIR}
 
 cd /
 rm -rf $BUILD_DIR

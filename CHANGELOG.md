@@ -2,8 +2,9 @@ All notable changes are documented in this file.
 
 ## v21.3_2 - 2025-xx-xx
 
-- Removal of the deprecated `payouts-substitutor` and `payout-fixer` Tezpay extensions.
 - Introduced the NODE_NETWORK configuration variable to enable deploying on ghostnet, mainnet, or any other network.
+- Integrated the Etherlink Smart Rollup observer node (optional).
+- Removal of the deprecated `payouts-substitutor` and `payout-fixer` Tezpay extensions.
 
 ## v21.3 - 2025-01-25
 
