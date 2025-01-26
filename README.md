@@ -92,7 +92,7 @@ Because user management configurations can vary widely, we've opted not to make 
 - Modify your environment settings by editing the file at `BAKER_INSTALLATION_DIR/tezos-env.sh`:
   - Insert a new line with the command `export NODE_NETWORK="mainnet"` immediately after the existing line that begins with `export NODE_RPC_ADDR=`. 
   - If you wish to run an Etherlink Smart Rollup observer node, append the following commands as new lines at the end of the file:
-    - `export ETHERLINK_ROLLUP_ADDR=$(eval echo '$ETHERLINK_ROLLUP_ADDR_'`echo $NODE_NETWORK | tr '[:lower:]' '[:upper:]'`)`
+    - ``export ETHERLINK_ROLLUP_ADDR=$(eval echo '$ETHERLINK_ROLLUP_ADDR_'`echo $NODE_NETWORK | tr '[:lower:]' '[:upper:]'`)``
     - `export ETHERLINK_RUN_DIR="${DATA_DIR}/octez-smart-rollup-node"`
     - `export ETHERLINK_IMAGES_ENDPOINT="https://snapshots.eu.tzinit.org/etherlink-${NODE_NETWORK}"`
     - `export ETHERLINK_PREIMAGES="${ETHERLINK_IMAGES_ENDPOINT}/wasm_2_0_0"`
