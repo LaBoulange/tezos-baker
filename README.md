@@ -13,7 +13,7 @@ Content of this document:
   * [Prerequisites](#prerequisites)
   * [Operating instructions](#operating-instructions)
     + [Initial setup](#initial-setup)
-    + [Upgrade from the previous version](#upgrade-from-the-previous-version)
+    + [Upgrade from the previous versions](#upgrade-from-the-previous-versions)
     + [Maintenance](#maintenance)
   * [Should you wish to support us](#should-you-wish-to-support-us)
   * [Contact](#contact)
@@ -86,8 +86,9 @@ Because user management configurations can vary widely, we've opted not to make 
 - Next, follow the step-by-step instructions in the `initial-setup.sh` file from this repository. Don't execute this file as a script! Instead, copy and run the instructions one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
 
-### Upgrade from the previous version
+### Upgrade from the previous versions
 
+#### From v21.1_2 or v21.3
 - Optional and if applicable: remove the Tezpay `payouts-substitutor` and the `payout-fixer` extensions block from your `TEZPAY_RUN_DIR/config.hjson`.
 - Modify your environment settings by editing the file at `BAKER_INSTALLATION_DIR/tezos-env.sh`:
   - Insert a new line with the command `export NODE_NETWORK="mainnet"` immediately after the existing line that begins with `export NODE_RPC_ADDR=`. 
@@ -103,6 +104,25 @@ Because user management configurations can vary widely, we've opted not to make 
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below.
 - If you wish to start running an Etherlink Smart Rollup observer node, follow the step-by-step instructions in the section "If you wish, start running an Etherlink Smart Rollup observer node." of the `initial-setup.sh` file from this repository. Don't execute this as a script! Instead, copy and run the instructions one at a time. These actions are described in the comments appearing in this file.
 
+#### From v21.1
+- Optional and if applicable: remove the Tezpay `payouts-substitutor` and the `payout-fixer` extensions block from your `TEZPAY_RUN_DIR/config.hjson`.
+- Modify your environment settings by editing the file at `BAKER_INSTALLATION_DIR/tezos-env.sh`:
+  - Insert a new line with the command `export NODE_NETWORK="mainnet"` immediately after the existing line that begins with `export NODE_RPC_ADDR=`. 
+  - Append the following commands as new lines at the end of the file to configure the DAL node:
+    - `export DAL_RUN_DIR="${DATA_DIR}/octez-dal-node"`
+    - `export DAL_LOG_FILE="/var/log/octez-dal-node.log"`
+    - `export DAL_ENDPOINT_ADDR="127.0.0.1:10732"`
+  - If you wish to run an Etherlink Smart Rollup observer node, append the following commands as new lines after the DAL-related commands above:
+    - ``export ETHERLINK_ROLLUP_ADDR=$(eval echo '$ETHERLINK_ROLLUP_ADDR_'`echo $NODE_NETWORK | tr '[:lower:]' '[:upper:]'`)``
+    - `export ETHERLINK_RUN_DIR="${DATA_DIR}/octez-smart-rollup-node"`
+    - `export ETHERLINK_IMAGES_ENDPOINT="https://snapshots.eu.tzinit.org/etherlink-${NODE_NETWORK}"`
+    - `export ETHERLINK_PREIMAGES="${ETHERLINK_IMAGES_ENDPOINT}/wasm_2_0_0"`
+    - `export ETHERLINK_SNAPSHOT="${ETHERLINK_IMAGES_ENDPOINT}/eth-${NODE_NETWORK}.full"`
+    - `export ETHERLINK_RPC_ENDPOINT="https://rpc.tzkt.io/${NODE_NETWORK}"`
+    - `export ETHERLINK_RPC_ADDR="127.0.0.1:8932"`
+    - `export ETHERLINK_NODE_LOG_FILE="/var/log/octez-smart-rollup-node.log"`
+- Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below, with one addition: just before running `start-octez.sh`, run `octez-dal-node config init --endpoint http://${NODE_RPC_ADDR} --attester-profiles="$BAKER_ACCOUNT_HASH" --data-dir $DAL_RUN_DIR`
+- If you wish to start running an Etherlink Smart Rollup observer node, follow the step-by-step instructions in the section "If you wish, start running an Etherlink Smart Rollup observer node." of the `initial-setup.sh` file from this repository. Don't execute this as a script! Instead, copy and run the instructions one at a time. These actions are described in the comments appearing in this file.
 
 ### Maintenance
 
