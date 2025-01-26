@@ -2,7 +2,7 @@
 Boilerplate code to set up a minimalistic Tezos baker capable of baking, accusing, participating in the DAL, and optionally paying its delegators and running an Etherlink Smart Rollup observer node.
 
 This code:
-- installs octez-node, octez-baker, octez-accuser, octez-dal-node, octez-smart-rollup-node (even if unused)
+- installs the needed executables from the octez suite,
 - optionally installs Tezpay on the same machine,
 - provides some basic maintenance tools.
 
