@@ -1,6 +1,6 @@
 All notable changes are documented in this file.
 
-## v21.3_2 - 2025-xx-xx
+## v21.3_2 - 2025-01-27
 
 - Introduced the NODE_NETWORK configuration variable to enable deploying on ghostnet, mainnet, or any other network.
 - Integrated the Etherlink Smart Rollup observer node (optional).
