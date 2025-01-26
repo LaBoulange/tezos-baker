@@ -1,8 +1,8 @@
 # tezos-baker
-Boilerplate code to set up a minimalistic Tezos baker capable of baking, accusing, participating in the DAL, and optionally paying its delegators.
+Boilerplate code to set up a minimalistic Tezos baker capable of baking, accusing, participating in the DAL, and optionally paying its delegators and running an Etherlink Smart Rollup observer node.
 
 This code:
-- installs octez-node, octez-baker, octez-accuser, octez-dal-node
+- installs octez-node, octez-baker, octez-accuser, octez-dal-node, octez-smart-rollup-node (even if unused)
 - optionally installs Tezpay on the same machine,
 - provides some basic maintenance tools.
 
@@ -78,7 +78,7 @@ Because user management configurations can vary widely, we've opted not to make 
     - `BAKER_LIQUIDITY_BAKING_SWITCH`: The liquidity baking vote (`off`, `on`, or `pass`). See https://tezos.gitlab.io/active/liquidity_baking.html for more details. Default: `pass`.
     - `BAKER_LIMIT_STAKING_OVER_BAKING`: How many times your stake, ranging from 0 (no staking) to 5 (max allowed by the protocol), you allow others to stake with your baker. Defaut: 5.
     - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion from 0 (0%) to 1 (100%) of the reward that your baker receives from the amount staked by stakers. Default: 0.1 (10%).
-- Should you wish to pay your delegators, the following variables also need configuring. They can be ignored otherwise:
+- Should you wish to pay your delegators, the following variables need configuring. They can be ignored otherwise:
     - `TEZPAY_ACCOUNT_HASH`: The tzYYY address of your payout account.
     - `TEZPAY_FEES`: The baking fee you wish to charge your delegators, ranging from 0 (0%) to 1 (100%). Default: 0.1 (10%).
 - Make `BAKER_INSTALLATION_DIR/tezos-env.sh` executable by the user intended to run it.
@@ -91,7 +91,17 @@ Because user management configurations can vary widely, we've opted not to make 
 - Optional and if applicable: remove the Tezpay `payouts-substitutor` and the `payout-fixer` extensions block from your `TEZPAY_RUN_DIR/config.hjson`.
 - Modify your environment settings by editing the file at `BAKER_INSTALLATION_DIR/tezos-env.sh`:
   - Insert a new line with the command `export NODE_NETWORK="mainnet"` immediately after the existing line that begins with `export NODE_RPC_ADDR=`. 
+  - If you wish to run an Etherlink Smart Rollup observer node, append the following commands as new lines at the end of the file:
+    - `export ETHERLINK_ROLLUP_ADDR=$(eval echo '$ETHERLINK_ROLLUP_ADDR_' `` ` ``echo $NODE_NETWORK | tr '[:lower:]' '[:upper:]'`` ` ``)`
+    - `export ETHERLINK_RUN_DIR="${DATA_DIR}/octez-smart-rollup-node"`
+    - `export ETHERLINK_IMAGES_ENDPOINT="https://snapshots.eu.tzinit.org/etherlink-${NODE_NETWORK}"`
+    - `export ETHERLINK_PREIMAGES="${ETHERLINK_IMAGES_ENDPOINT}/wasm_2_0_0"`
+    - `export ETHERLINK_SNAPSHOT="${ETHERLINK_IMAGES_ENDPOINT}/eth-${NODE_NETWORK}.full"`
+    - `export ETHERLINK_RPC_ENDPOINT="https://rpc.tzkt.io/${NODE_NETWORK}"`
+    - `export ETHERLINK_RPC_ADDR="127.0.0.1:8932"`
+    - `export ETHERLINK_NODE_LOG_FILE="/var/log/octez-smart-rollup-node.log"`
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below.
+- If you wish to start running an Etherlink Smart Rollup observer node, follow the step-by-step instructions in the section "If you wish, start running an Etherlink Smart Rollup observer node." of the `initial-setup.sh` file from this repository. Don't execute this as a script! Instead, copy and run the instructions one at a time. These actions are described in the comments appearing in this file.
 
 
 ### Maintenance
