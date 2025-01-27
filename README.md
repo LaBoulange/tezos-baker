@@ -89,7 +89,7 @@ Because user management configurations can vary widely, we've opted not to make 
 ### Upgrade from the previous versions
 
 #### From v21.1_2 or v21.3
-- Optional and if applicable: remove the Tezpay `payouts-substitutor` and the `payout-fixer` extensions block from your `TEZPAY_RUN_DIR/config.hjson`.
+- Optional and if applicable: remove the Tezpay `payouts-substitutor` extension block from your `TEZPAY_RUN_DIR/config.hjson`.
 - Modify your environment settings by editing the file at `BAKER_INSTALLATION_DIR/tezos-env.sh`:
   - Insert a new line with the command `export NODE_NETWORK="mainnet"` immediately after the existing line that begins with `export NODE_RPC_ADDR=`. 
   - If you wish to run an Etherlink Smart Rollup observer node, append the following commands as new lines at the end of the file:
@@ -107,7 +107,7 @@ Because user management configurations can vary widely, we've opted not to make 
   - then follow the step-by-step instructions in the section "If you wish, start running an Etherlink Smart Rollup observer node." of the `initial-setup.sh` file from this repository. Do not execute this as a script! Instead, copy and run the instructions one at a time to be able to handle any potential errors. 
 
 #### From v21.1
-- Optional and if applicable: remove the Tezpay `payouts-substitutor` and the `payout-fixer` extensions block from your `TEZPAY_RUN_DIR/config.hjson`.
+- Optional and if applicable: remove the Tezpay `payouts-substitutor` extension block from your `TEZPAY_RUN_DIR/config.hjson`.
 - Modify your environment settings by editing the file at `BAKER_INSTALLATION_DIR/tezos-env.sh`:
   - Insert a new line with the command `export NODE_NETWORK="mainnet"` immediately after the existing line that begins with `export NODE_RPC_ADDR=`. 
   - Append the following commands as new lines at the end of the file to configure the DAL node:
