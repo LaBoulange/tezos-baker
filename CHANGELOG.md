@@ -1,4 +1,8 @@
 All notable changes are documented in this file.
+## v21.4 - 2025-02-28
+
+- New version of `octez` (technical enhancements and fixes): Quebec protocol. 
+- Corrected documentation mistakes
 
 ## v21.3_2 - 2025-01-27
 
