@@ -88,6 +88,9 @@ Because user management configurations can vary widely, we've opted not to make 
 
 ### Upgrade from the previous versions
 
+#### From v21.3_2
+- Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below.
+
 #### From v21.1_2 or v21.3
 - Optional and if applicable: remove the Tezpay `payouts-substitutor` extension block from your `TEZPAY_RUN_DIR/config.hjson`.
 - Modify your environment settings by editing the file at `BAKER_INSTALLATION_DIR/tezos-env.sh`:

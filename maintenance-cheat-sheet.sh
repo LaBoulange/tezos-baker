@@ -45,7 +45,7 @@ start-octez.sh
 start-etherlink.sh # Only if you configured the Etherlink Smart Rollup node
 start-tezpay.sh # Only if you configured Tezpay to pay your delegators
 
-# What follows is only relevant in case of protocol change. 
+# WHAT FOLLOWS IN ONLY RELEVANT IN CASE OF PROTOCOL UPGRADE
 # During the transition from one protocol to another, both the old and new versions of octez-baker and octez-accuser 
 # can operate simultaneously without the risk of a penalty for double operations. 
 # Indeed, each of these components only processes blocks corresponding to the protocol version relevant to it. Once the transition
