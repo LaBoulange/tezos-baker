@@ -1,4 +1,9 @@
 All notable changes are documented in this file.
+
+## vXX.XX - 2025-XX-XX
+
+- Added a delay between the startup of the Etherlink node and its health check
+
 ## v21.4 - 2025-02-28
 
 - New version of `octez` (technical enhancements and fixes): Quebec protocol. 
