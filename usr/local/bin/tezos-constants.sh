@@ -13,8 +13,8 @@ case "$BAKER_ARCH" in
    ;;
 esac
 
-export PROTOCOL="PsQuebec" 
-export PROTOCOL_FORMER="PsParisC"
+export PROTOCOL="PsRiotum" 
+export PROTOCOL_FORMER="PsQuebec"
 
 export OCTEZ_DOWNLOAD_URL="https://gitlab.com/tezos/tezos/-/package_files/${GITLAB_PACKAGE_ID}/download"
 export ZCASH_DOWNLOAD_URL="https://download.z.cash/downloads"
