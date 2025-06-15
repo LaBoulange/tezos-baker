@@ -1,5 +1,11 @@
 All notable changes are documented in this file.
 
+## 22.1 - 2025-06-15
+
+- New version of `octez` (bugfixes): Rio protocol.
+- Removed Mailchain contact: unused
+- Added swap to the minimal harware requirements
+
 ## 22.0 - 2025-04-14
 
 - New version of `octez`: Rio protocol (Quebec still active).
