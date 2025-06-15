@@ -43,7 +43,7 @@ This code is designed to run on a x86_64 or ARM64 Linux platform.
 
 Hardware requirements:
 - 4 CPU cores
-- 8GB to 10GB RAM depending on your stake (see DAL hardware requirements, https://forum.tezosagora.org/t/hardware-and-bandwidth-requirements-for-the-tezos-dal/6230)
+- 8GB to 10GB RAM depending on your stake (see DAL hardware requirements, https://forum.tezosagora.org/t/hardware-and-bandwidth-requirements-for-the-tezos-dal/6230) + similar swap 
 - 120GB to 500GB SSD drive depending on the chosen node history mode ("rolling" or "full", see https://tezos.gitlab.io/user/history_modes.html)
 
 Before using this code, you should also have:
@@ -88,48 +88,9 @@ Because user management configurations can vary widely, we've opted not to make 
 
 ### Upgrade from the previous versions
 
-#### From v21.3_2 or v21.4
+#### From v22.0
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below.
 
-#### From v21.1_2 or v21.3
-- Optional and if applicable: remove the Tezpay `payouts-substitutor` extension block from your `TEZPAY_RUN_DIR/config.hjson`.
-- Modify your environment settings by editing the file at `BAKER_INSTALLATION_DIR/tezos-env.sh`:
-  - Insert a new line with the command `export NODE_NETWORK="mainnet"` immediately after the existing line that begins with `export NODE_RPC_ADDR=`. 
-  - If you wish to run an Etherlink Smart Rollup observer node, append the following commands as new lines at the end of the file:
-    - ``export ETHERLINK_ROLLUP_ADDR=$(eval echo '$ETHERLINK_ROLLUP_ADDR_'`echo $NODE_NETWORK | tr '[:lower:]' '[:upper:]'`)``
-    - `export ETHERLINK_RUN_DIR="${DATA_DIR}/octez-smart-rollup-node"`
-    - `export ETHERLINK_IMAGES_ENDPOINT="https://snapshots.eu.tzinit.org/etherlink-${NODE_NETWORK}"`
-    - `export ETHERLINK_PREIMAGES="${ETHERLINK_IMAGES_ENDPOINT}/wasm_2_0_0"`
-    - `export ETHERLINK_SNAPSHOT="${ETHERLINK_IMAGES_ENDPOINT}/eth-${NODE_NETWORK}.full"`
-    - `export ETHERLINK_RPC_ENDPOINT="https://rpc.tzkt.io/${NODE_NETWORK}"`
-    - `export ETHERLINK_RPC_ADDR="127.0.0.1:8932"`
-    - `export ETHERLINK_NODE_LOG_FILE="/var/log/octez-smart-rollup-node.log"`
-- Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below.
-- If you wish to start running an Etherlink Smart Rollup observer node:
-  - run the command ``. `which tezos-env.sh` ``
-  - then follow the step-by-step instructions in the section "If you wish, start running an Etherlink Smart Rollup observer node." of the `initial-setup.sh` file from this repository. Do not execute this as a script! Instead, copy and run the instructions one at a time to be able to handle any potential errors. 
-
-#### From v21.1
-- Optional and if applicable: remove the Tezpay `payouts-substitutor` extension block from your `TEZPAY_RUN_DIR/config.hjson`.
-- Modify your environment settings by editing the file at `BAKER_INSTALLATION_DIR/tezos-env.sh`:
-  - Insert a new line with the command `export NODE_NETWORK="mainnet"` immediately after the existing line that begins with `export NODE_RPC_ADDR=`. 
-  - Append the following commands as new lines at the end of the file to configure the DAL node:
-    - `export DAL_RUN_DIR="${DATA_DIR}/octez-dal-node"`
-    - `export DAL_LOG_FILE="/var/log/octez-dal-node.log"`
-    - `export DAL_ENDPOINT_ADDR="127.0.0.1:10732"`
-  - If you wish to run an Etherlink Smart Rollup observer node, append the following commands as new lines after the DAL-related commands above:
-    - ``export ETHERLINK_ROLLUP_ADDR=$(eval echo '$ETHERLINK_ROLLUP_ADDR_'`echo $NODE_NETWORK | tr '[:lower:]' '[:upper:]'`)``
-    - `export ETHERLINK_RUN_DIR="${DATA_DIR}/octez-smart-rollup-node"`
-    - `export ETHERLINK_IMAGES_ENDPOINT="https://snapshots.eu.tzinit.org/etherlink-${NODE_NETWORK}"`
-    - `export ETHERLINK_PREIMAGES="${ETHERLINK_IMAGES_ENDPOINT}/wasm_2_0_0"`
-    - `export ETHERLINK_SNAPSHOT="${ETHERLINK_IMAGES_ENDPOINT}/eth-${NODE_NETWORK}.full"`
-    - `export ETHERLINK_RPC_ENDPOINT="https://rpc.tzkt.io/${NODE_NETWORK}"`
-    - `export ETHERLINK_RPC_ADDR="127.0.0.1:8932"`
-    - `export ETHERLINK_NODE_LOG_FILE="/var/log/octez-smart-rollup-node.log"`
-- Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below, with one addition: just before running `start-octez.sh`, run `octez-dal-node config init --endpoint http://${NODE_RPC_ADDR} --attester-profiles="$BAKER_ACCOUNT_HASH" --data-dir $DAL_RUN_DIR`
-- If you wish to start running an Etherlink Smart Rollup observer node:
-  - run the command ``. `which tezos-env.sh` ``
-  - then follow the step-by-step instructions in the section "If you wish, start running an Etherlink Smart Rollup observer node." of the `initial-setup.sh` file from this repository. Do not execute this as a script! Instead, copy and run the instructions one at a time to be able to handle any potential errors. 
 
 ### Maintenance
 
@@ -162,7 +123,6 @@ This is not mandatory, but it is greatly appreciated!
 ## Contact
 
 Feel free to contact us with any questions or suggestions. We can be reached through the following channels:
-- MailChain: [laboulange@mailchain](https://app.mailchain.com/)
 - E-mail: la.boulange.tezos@gmail.com
 - TwitterX: https://x.com/LaBoulangeTezos
 - Telegram: https://t.me/laboulangetezos
