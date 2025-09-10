@@ -88,7 +88,7 @@ Because user management configurations can vary widely, we've opted not to make 
 
 ### Upgrade from the previous versions
 
-#### From v22.0
+#### From v22.x
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below.
 
 

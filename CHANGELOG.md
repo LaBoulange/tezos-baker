@@ -1,5 +1,10 @@
 All notable changes are documented in this file.
 
+## v23.2 - 2025-09-11
+
+- New version of `octez`: Seoul protocol (Rio still active).
+- Switched from protocol-specific to agnostic baker and accuser
+
 ## v22.1 - 2025-06-15
 
 - New version of `octez` (bugfixes): Rio protocol.
