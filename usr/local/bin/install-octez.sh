@@ -20,8 +20,8 @@ cd $EXTRACTED_DIR
 
 mv octez-client ${INSTALL_DIR}
 mv octez-node ${INSTALL_DIR}
-mv octez-baker-* ${INSTALL_DIR}
-mv octez-accuser-* ${INSTALL_DIR}
+mv octez-baker ${INSTALL_DIR}
+mv octez-accuser ${INSTALL_DIR}
 mv octez-dal-node ${INSTALL_DIR}
 mv octez-smart-rollup-node ${INSTALL_DIR}
 

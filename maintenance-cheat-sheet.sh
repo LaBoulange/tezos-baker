@@ -13,15 +13,6 @@ start-octez.sh
 start-etherlink.sh # Only if you configured the Etherlink Smart Rollup node
 start-tezpay.sh # Only if you configured Tezpay to pay your delegators
 
-# What follows is only relevant in case of ongoing protocol change (see section "Upgrade octez"). 
-. `which tezos-env.sh`
-
-BAKER_LOG_FILE_FORMER="/var/log/octez-baker-${PROTOCOL_FORMER}.log"
-ACCUSER_LOG_FILE_FORMER="/var/log/octez-accuser-${PROTOCOL_FORMER}.log"
-
-nohup octez-baker-${PROTOCOL_FORMER} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH &>$BAKER_LOG_FILE_FORMER &
-nohup octez-accuser-${PROTOCOL_FORMER} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE_FORMER &
-
 ################
 # Upgrade octez
 ################
@@ -44,24 +35,6 @@ tail -f $NODE_LOG_FILE
 start-octez.sh
 start-etherlink.sh # Only if you configured the Etherlink Smart Rollup node
 start-tezpay.sh # Only if you configured Tezpay to pay your delegators
-
-# WHAT FOLLOWS IN ONLY RELEVANT IN CASE OF PROTOCOL UPGRADE
-# During the transition from one protocol to another, both the old and new versions of octez-baker and octez-accuser 
-# can operate simultaneously without the risk of a penalty for double operations. 
-# Indeed, each of these components only processes blocks corresponding to the protocol version relevant to it. Once the transition
-# is completed, the new protocol is the only active one, and the old versions of octez-baker and octez-accuser can be decommissioned.
-BAKER_LOG_FILE_FORMER="/var/log/octez-baker-${PROTOCOL_FORMER}.log"
-ACCUSER_LOG_FILE_FORMER="/var/log/octez-accuser-${PROTOCOL_FORMER}.log"
-
-nohup octez-baker-${PROTOCOL_FORMER} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH --dal-node http://${DAL_ENDPOINT_ADDR} &>$BAKER_LOG_FILE_FORMER &
-nohup octez-accuser-${PROTOCOL_FORMER} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE_FORMER &
-
-#####
-# Once the protocol transition is completed:
-kill # octez-baker-${PROTOCOL_FORMER} pid
-kill # octez-accuser-${PROTOCOL_FORMER} pid
-rm `find ${INSTALL_DIR} | grep $PROTOCOL_FORMER`
-#####
 
 #######################################################################
 # Upgrade TezPay (only if you configured Tezpay to pay your delegators)
@@ -117,5 +90,5 @@ stop-octez.sh
 nohup octez-node run --force-history-mode-switch --config-file=$NODE_CONFIG_FILE --rpc-addr $NODE_RPC_ADDR --log-output=$NODE_LOG_FILE &>/dev/null &
 
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} bootstrapped
-nohup octez-baker-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH &>$BAKER_LOG_FILE &
-nohup octez-accuser-${PROTOCOL} --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE &
+nohup octez-baker --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH &>$BAKER_LOG_FILE &
+nohup octez-accuser --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE &
