@@ -1,5 +1,9 @@
 All notable changes are documented in this file.
 
+## vXX.X - XXXX-XX-XX
+
+- Updated the snapshot URL in `tezos-env.sh.template`
+
 ## v23.2 - 2025-09-12
 
 - New version of `octez`: Seoul protocol (Rio still active).
