@@ -123,10 +123,10 @@ nohup octez-smart-rollup-node --endpoint "http://${NODE_RPC_ADDR}" run --data-di
 
 mkdir -p $TEZPAY_RUN_DIR
 
-# Install the Tezpay software
+# Install the TezPay software
 install-tezpay.sh
 
-# Create Tezpay's configuration file
+# Create TezPay's configuration file
 cat<<EOF>config.hjson
 {
   tezpay_config_version: 0
@@ -169,7 +169,7 @@ cat<<EOF>config.hjson
 }
 EOF
 
-# Create Tezpay's payout key file: replace the placeholder below by the unencrypted private key of your payout account.
+# Create TezPay's payout key file: replace the placeholder below by the unencrypted private key of your payout account.
 #
 # SECURITY WARNING: The payout account should only hold enough XTZ to pay your delegators. Since this key is stored 
 # unencrypted on your machine, an attacker with access to it could withdraw your funds. 
@@ -182,7 +182,7 @@ EOF
 chmod go-rwx payout_wallet_private.key
 
 # Run TezPay in continual mode
-nohup tezpay continual -p $TEZPAY_RUN_DIR &>$TEZPAY_LOG_FILE &
+nohup tezpay continual -p $TEZPAY_RUN_DIR --interval $TEZPAY_INTERVAL --disable-donation-prompt &>$TEZPAY_LOG_FILE &
 
 # Delegate your payouts account to your baker
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set delegate for $TEZPAY_ACCOUNT_HASH to $BAKER_ACCOUNT_HASH

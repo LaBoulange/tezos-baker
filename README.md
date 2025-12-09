@@ -3,7 +3,7 @@ Boilerplate code to set up a minimalistic Tezos baker capable of baking, accusin
 
 This code:
 - installs the needed executables from the octez suite,
-- optionally installs Tezpay on the same machine,
+- optionally installs TezPay on the same machine,
 - provides some basic maintenance tools.
 
 Content of this document:
@@ -25,9 +25,9 @@ This repository is not intended to provide perfect code, but code as simple as p
 
 As a result, it is not state-of-the-art in terms of automation, high availability, or security. We will address these aspects throughout this documentation when relevant. In any case, we decline all responsibility in the event of damages, theft of crypto-assets, operational or security incidents, as detailed further in the LICENSE.txt file.
 
-Additionally, this code doesn't leverage all the options provided by octez and Tezpay. We encourage you to read the documentation for these tools and enhance your setup, transforming this basic configuration into something remarkable.
+Additionally, this code doesn't leverage all the options provided by octez and TezPay. We encourage you to read the documentation for these tools and enhance your setup, transforming this basic configuration into something remarkable.
 - octez: https://tezos.gitlab.io/index.html
-- Tezpay: https://docs.tez.capital/tezpay/tutorials/ 
+- TezPay: https://docs.tez.capital/tezpay/tutorials/ 
 
 
 ## Release management
@@ -69,7 +69,7 @@ Because user management configurations can vary widely, we've opted not to make 
     - `BAKER_ARCH`: The hardware architecture you use for baking. Currently, the supported values are `amd64` (x86_64) and `arm64`. Default: `amd64`.
     - `BUILD_DIR`: The working directory where files will be downloaded by the installation scripts of this repository. Default: `/tmp/build-tezos-baker`.
     - `INSTALL_DIR`: The directory `BAKER_INSTALLATION_DIR` where executables files will be stored. Default: `/usr/local/bin`.
-    - `DATA_DIR`: The directory where the data needed by octez and Tezpay will be stored (requires large storage space).
+    - `DATA_DIR`: The directory where the data needed by octez and TezPay will be stored (requires large storage space).
     - `NODE_NETWORK`: The Tezos network that your bakery belongs to: `mainnet`, `ghostnet`, or any other network. Default: `mainnet`.
     - `NODE_MODE`: The history mode of your node (`full`, `rolling`, or `rolling:<number_of_extra_cycles>`). See https://tezos.gitlab.io/user/history_modes.html for more details. Default: `rolling`.
     - `NODE_SNAPSHOT_URL`: The URL of the Tezos data snapshot to download to initialize your node. Default: Lambs on Acid's URL corresponding to your `NODE_NETWORK` and `NODE_MODE` (See https://lambsonacid.nl/).
@@ -81,6 +81,7 @@ Because user management configurations can vary widely, we've opted not to make 
 - Should you wish to pay your delegators, the following variables need configuring. They can be ignored otherwise:
     - `TEZPAY_ACCOUNT_HASH`: The tzYYY address of your payout account.
     - `TEZPAY_FEES`: The baking fee you wish to charge your delegators, ranging from 0 (0%) to 1 (100%). Default: 0.1 (10%).
+    - `TEZPAY_INTERVAL`: Aggregates and distributes payouts every N cycles. Default: 1 (every cycle).
 - Make `BAKER_INSTALLATION_DIR/tezos-env.sh` executable by the user intended to run it.
 - Run `install-tezos-baker.sh`.
 - Next, follow the step-by-step instructions in the `initial-setup.sh` file from this repository. Do not execute this file as a script! Instead, copy and run the instructions one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
@@ -88,7 +89,11 @@ Because user management configurations can vary widely, we've opted not to make 
 
 ### Upgrade from the previous versions
 
-#### From v22.x
+#### From v23.2
+- If you use TezPay to pay your delegators:
+  - Edit the file `BAKER_INSTALLATION_DIR/tezos-env.sh`.
+  - Add the line `export TEZPAY_INTERVAL=1` (or a higher integer value; see [Initial setup](#initial-setup)) in the "Environment variables for TezPay" section.
+  - Save these changes.
 - Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below.
 
 

@@ -2,7 +2,7 @@
 # Restart / reboot
 ###################
 
-stop-tezpay.sh # Only if you configured Tezpay to pay your delegators
+stop-tezpay.sh # Only if you configured TezPay to pay your delegators
 stop-etherlink.sh # Only if you configured the Etherlink Smart Rollup node
 stop-octez.sh
 
@@ -11,7 +11,7 @@ reboot
 
 start-octez.sh
 start-etherlink.sh # Only if you configured the Etherlink Smart Rollup node
-start-tezpay.sh # Only if you configured Tezpay to pay your delegators
+start-tezpay.sh # Only if you configured TezPay to pay your delegators
 
 ################
 # Upgrade octez
@@ -21,7 +21,7 @@ install-tezos-baker.sh
 
 . `which tezos-env.sh`
 
-stop-tezpay.sh # Only if you configured Tezpay to pay your delegators
+stop-tezpay.sh # Only if you configured TezPay to pay your delegators
 stop-etherlink.sh # Only if you configured the Etherlink Smart Rollup node
 stop-octez.sh
 
@@ -34,10 +34,10 @@ tail -f $NODE_LOG_FILE
 
 start-octez.sh
 start-etherlink.sh # Only if you configured the Etherlink Smart Rollup node
-start-tezpay.sh # Only if you configured Tezpay to pay your delegators
+start-tezpay.sh # Only if you configured TezPay to pay your delegators
 
 #######################################################################
-# Upgrade TezPay (only if you configured Tezpay to pay your delegators)
+# Upgrade TezPay (only if you configured TezPay to pay your delegators)
 #######################################################################
 
 stop-tezpay.sh
@@ -60,7 +60,7 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} stak
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} unstake NNN for $KEY_BAKER
 # Finalize your unstaked balance (only after 4 cycles)
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} finalize unstake for $KEY_BAKER
-# If you configured Tezpay to pay your delegators, feed the payouts account from the baker account, NNN below being a spendable amount
+# If you configured TezPay to pay your delegators, feed the payouts account from the baker account, NNN below being a spendable amount
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} transfer NNN from $KEY_BAKER to $KEY_PAYOUT
 
 #################

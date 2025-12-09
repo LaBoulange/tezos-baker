@@ -3,6 +3,8 @@ All notable changes are documented in this file.
 ## vXX.X - XXXX-XX-XX
 
 - Updated the snapshot URL in `tezos-env.sh.template`
+- Introduced the `--interval` TezPay parameter
+- Minor documentation rewording.
 
 ## v23.2 - 2025-09-12
 
@@ -29,7 +31,7 @@ All notable changes are documented in this file.
 
 - Introduced the NODE_NETWORK configuration variable to enable deploying on ghostnet, mainnet, or any other network.
 - Integrated the Etherlink Smart Rollup observer node (optional).
-- Removal of the deprecated `payouts-substitutor` Tezpay extension.
+- Removal of the deprecated `payouts-substitutor` TezPay extension.
 
 ## v21.3 - 2025-01-25
 
@@ -65,7 +67,7 @@ All notable changes are documented in this file.
 - Corrections and clarifications in the documentation
 - Made the maintenance cheat-sheet consistent with the new upgrade process introduced in v20.1
 - Payouts account delegation to the baker
-- Tezpay Payout Fixer installation without activation (Tezpay is running in continual mode by default)
+- TezPay Payout Fixer installation without activation (TezPay is running in continual mode by default)
 
 ## v20.1 - 2024-06-19
 
@@ -75,7 +77,7 @@ All notable changes are documented in this file.
 
 ## v20.0_2 - 2024-06-17
 
-- Integration of the `payouts-substitutor` Tezpay extension.
+- Integration of the `payouts-substitutor` TezPay extension.
 - arm64 support (formerly: amd64 only).
 - Proper support for any `user:group` configuration in executable permission settings.
 - Minor enhancements.

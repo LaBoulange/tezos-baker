@@ -56,6 +56,7 @@ export TEZPAY_RUN_DIR="${DATA_DIR}/tezpay"
 export TEZPAY_INSTALL_SCRIPT="/tmp/install.sh"
 export TEZPAY_ACCOUNT_HASH="tzYYYYYYYYYY: YOUR PAYOUTS ADDRESS HASH"
 export TEZPAY_FEES=0.1
+export TEZPAY_INTERVAL=1
 export TEZPAY_LOG_FILE="/var/log/tezpay.log"
 
 ######################################################################################################################
