@@ -4,16 +4,18 @@
 # Version variables for octez
 ##############################
 
+OCTEZ_VERSION="23.3"
+
 case "$BAKER_ARCH" in
-   "amd64") GITLAB_PACKAGE_ID='226917854'
+   "amd64") export BAKER_ARCH='x86_64'; echo "Architecture identifier is '$BAKER_ARCH' (deprecated synonym 'amd64')." ; export BAKER_ARCH='x86_64'
    ;;
-   "arm64") GITLAB_PACKAGE_ID='226920324'
+   "x86_64" | "arm64") echo "Architecture identifier is '$BAKER_ARCH'"
    ;;
-   *) echo "Unknown architecture '$BAKER_ARCH'. Assumed 'amd64'." ; GITLAB_PACKAGE_ID='226917854'
+   *) echo "Unknown architecture identifier '$BAKER_ARCH'. Defaulted to 'x86_64'." ; export BAKER_ARCH='x86_64'
    ;;
 esac
 
-export OCTEZ_DOWNLOAD_URL="https://gitlab.com/tezos/tezos/-/package_files/${GITLAB_PACKAGE_ID}/download"
+export OCTEZ_DOWNLOAD_URL="https://octez.tezos.com/releases/octez-v${OCTEZ_VERSION}/binaries/${BAKER_ARCH}/octez-v${OCTEZ_VERSION}.tar.gz"
 export ZCASH_DOWNLOAD_URL="https://download.z.cash/downloads"
 
 ###############################
