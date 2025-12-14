@@ -43,7 +43,7 @@ This code is designed to run on a x86_64 or ARM64 Linux platform.
 
 Hardware requirements:
 - 4 CPU cores
-- 8GB to 10GB RAM depending on your stake (see DAL hardware requirements, https://forum.tezosagora.org/t/hardware-and-bandwidth-requirements-for-the-tezos-dal/6230) + similar swap 
+- 16GB to 20GB RAM depending on your stake (see DAL hardware requirements, https://forum.tezosagora.org/t/hardware-and-bandwidth-requirements-for-the-tezos-dal/6230), swap included.
 - 120GB to 500GB SSD drive depending on the chosen node history mode ("rolling" or "full", see https://tezos.gitlab.io/user/history_modes.html)
 
 Before using this code, you should also have:
@@ -66,7 +66,7 @@ Because user management configurations can vary widely, we've opted not to make 
 - Copy the file `usr/local/bin/tezos_constants.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine.
 - Make sure all the two files above are executable by the user intended to run them.
 - Create a file `BAKER_INSTALLATION_DIR/tezos-env.sh` by copying the file `usr/local/bin/tezos-env.sh.template` of this repository. Some variables need configuration and should persist over upgrades while the others may optionally be adjusted. Those that require configuration follow:
-    - `BAKER_ARCH`: The hardware architecture you use for baking. Currently, the supported values are `amd64` (x86_64) and `arm64`. Default: `amd64`.
+    - `BAKER_ARCH`: The hardware architecture you use for baking. Currently, the supported values are `x86_64` (similar to `amd64` - deprecated) and `arm64`. Default: `x86_64`.
     - `BUILD_DIR`: The working directory where files will be downloaded by the installation scripts of this repository. Default: `/tmp/build-tezos-baker`.
     - `INSTALL_DIR`: The directory `BAKER_INSTALLATION_DIR` where executables files will be stored. Default: `/usr/local/bin`.
     - `DATA_DIR`: The directory where the data needed by octez and TezPay will be stored (requires large storage space).
@@ -90,11 +90,12 @@ Because user management configurations can vary widely, we've opted not to make 
 ### Upgrade from the previous versions
 
 #### From v23.2
+- The `BAKER_ARCH` value `amd64` has been deprecated in favor of its synonym `x86_64`. A warning will be emitted if you are using this value.
 - If you use TezPay to pay your delegators:
   - Edit the file `BAKER_INSTALLATION_DIR/tezos-env.sh`.
-  - Add the line `export TEZPAY_INTERVAL=1` (or a higher integer value; see [Initial setup](#initial-setup)) in the "Environment variables for TezPay" section.
+  - Add the line `export TEZPAY_INTERVAL=1` (or any higher integer value; see [Initial setup](#initial-setup)) in the "Environment variables for TezPay" section above.
   - Save these changes.
-- Run the 'Upgrade octez' procedure from the [Maintenance](#maintenance) section below.
+- Run the “Upgrade Octez” procedure from the [Maintenance](#maintenance) section below.
 
 
 ### Maintenance

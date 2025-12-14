@@ -1,9 +1,12 @@
 All notable changes are documented in this file.
 
-## vXX.X - XXXX-XX-XX
+## v23.3 - 2025-12-xx
 
-- Updated the snapshot URL in `tezos-env.sh.template`
-- Introduced the `--interval` TezPay parameter
+- New version of `octez`: Seoul protocol.
+- Fixed a bug in `install-octez.sh` that could prevent `arm64` architectures from installing properly.
+- Introduced the `x86_64` value for the `BAKER_ARCH` environment variable, deprecating `amd64`.
+- Updated the snapshot URL in `tezos-env.sh.template`.
+- Introduced the `--interval` TezPay parameter.
 - Minor documentation rewording.
 
 ## v23.2 - 2025-09-12

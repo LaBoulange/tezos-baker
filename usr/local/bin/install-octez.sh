@@ -3,7 +3,7 @@
 . `which tezos-env.sh`
 
 ARCHIVE='package.tar.gz'
-EXTRACTED_DIR='octez-x86_64'
+EXTRACTED_DIR='octez'
 
 mkdir $BUILD_DIR
 cd $BUILD_DIR
