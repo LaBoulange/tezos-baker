@@ -1,6 +1,6 @@
 All notable changes are documented in this file.
 
-## v23.3 - 2025-12-xx
+## v23.3 - 2025-12-15
 
 - New version of `octez`: Seoul protocol.
 - Fixed a bug in `install-octez.sh` that could prevent `arm64` architectures from installing properly.
