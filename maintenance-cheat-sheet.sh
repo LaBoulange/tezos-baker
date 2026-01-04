@@ -108,8 +108,8 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set 
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set companion key for $KEY_BAKER to $KEY_DAL_COMPANION_TZ4
 
 # Check whether the registration worked properly
-octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} rpc get /chains/main/blocks/head/context/delegates/$(octez-client show address $KEY_BAKER | grep '^Hash' | awk '{print $2}')/consensus_key
-octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} rpc get /chains/main/blocks/head/context/delegates/$(octez-client show address $KEY_BAKER | grep '^Hash' | awk '{print $2}')/companion_key
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} rpc get /chains/main/blocks/head/context/delegates/$BAKER_ACCOUNT_HASH/consensus_key
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} rpc get /chains/main/blocks/head/context/delegates/$BAKER_ACCOUNT_HASH/companion_key
 
 stop-octez.sh
 start-octez.sh
