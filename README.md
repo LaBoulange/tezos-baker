@@ -95,7 +95,6 @@ Because user management configurations can vary widely, we've opted not to make 
   - Add the line `export KEY_DAL_COMPANION_TZ4="dal-companion-tz4"` in the "Environment variables for octez" section, below the line above.
   - Save these changes.
 - If would like to use BLS/tz4 for baking, follow the "Enable BLS/tz4 baking” procedure from the [Maintenance](#maintenance) section below.
-- Follow the “Upgrade Octez” procedure from the [Maintenance](#maintenance) section below.
 
 #### From v23.2
 - The `BAKER_ARCH` value `amd64` has been deprecated in favor of its synonym `x86_64`. A warning will be emitted if you are using this value.
@@ -107,8 +106,6 @@ Because user management configurations can vary widely, we've opted not to make 
   - Add the line `export KEY_DAL_COMPANION_TZ4="dal-companion-tz4"` in the "Environment variables for octez" section, below the line above.
   - Save these changes.
 - If would like to use BLS/tz4 for baking, follow the "Enable BLS/tz4 baking” procedure from the [Maintenance](#maintenance) section below.
-- Follow the “Upgrade Octez” procedure from the [Maintenance](#maintenance) section below.
-
 
 ### Maintenance
 
