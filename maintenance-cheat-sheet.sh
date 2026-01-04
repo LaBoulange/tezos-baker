@@ -99,6 +99,8 @@ start-octez.sh
 # These keys should be assigned the local aliases ‘consensus_tz4’ and ‘dal_companion_tz4’, respectively.
 # Please refer to https://docs.tezos.com/tutorials/join-dal-baker/prepare-account and https://docs.tezos.com/tutorials/bake-with-ledger/install-app for more details.
 
+install-tezos-baker.sh
+
 . `which tezos-env.sh`
 
 # Register your keys as consensus keys
