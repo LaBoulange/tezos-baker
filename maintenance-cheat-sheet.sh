@@ -104,7 +104,7 @@ install-tezos-baker.sh
 . `which tezos-env.sh`
 
 # Register your keys as consensus keys
-octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set consensus key for $KEY_BAKER to $KEY_DAL_COMPANION_TZ4
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set consensus key for $KEY_BAKER to $KEY_CONSENSUS_TZ4
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set companion key for $KEY_BAKER to $KEY_DAL_COMPANION_TZ4
 
 # Check whether the registration worked properly

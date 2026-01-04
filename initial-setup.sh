@@ -72,7 +72,7 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} regi
 
 # If would like to use BLS/tz4 for baking, follow the two steps A and B right below. These steps must be ignored otherwise.
   # A - Register your keys as consensus keys
-octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set consensus key for $KEY_BAKER to $KEY_DAL_COMPANION_TZ4
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set consensus key for $KEY_BAKER to $KEY_CONSENSUS_TZ4
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set companion key for $KEY_BAKER to $KEY_DAL_COMPANION_TZ4
   # B - Check whether the registration worked properly
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} rpc get /chains/main/blocks/head/context/delegates/$(octez-client show address $KEY_BAKER | grep '^Hash' | awk '{print $2}')/consensus_key
