@@ -1,5 +1,11 @@
 All notable changes are documented in this file.
 
+## v23.3_2 - 2026-01-04
+
+- Added BLS/tz4 signing support (initial setup and maintenance)
+- Updated outdated OpenTezos reference URLs to use docs.tezos.com tutorials instead
+- Fixed the restarting process of the “Switch history mode from full to rolling” section in the maintenance cheat sheet
+
 ## v23.3 - 2025-12-15
 
 - New version of `octez`: Seoul protocol.
@@ -32,7 +38,7 @@ All notable changes are documented in this file.
 
 ## v21.3_2 - 2025-01-27
 
-- Introduced the NODE_NETWORK configuration variable to enable deploying on ghostnet, mainnet, or any other network.
+- Introduced the `NODE_NETWORK` configuration variable to enable deploying on ghostnet, mainnet, or any other network.
 - Integrated the Etherlink Smart Rollup observer node (optional).
 - Removal of the deprecated `payouts-substitutor` TezPay extension.
 

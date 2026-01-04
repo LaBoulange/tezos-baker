@@ -55,9 +55,8 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} boot
 #########################
 
 # This step depends on how your keys are stored: Ledger, remote signer or local (not recommended!)
-# Please refer to https://opentezos.com/node-baking/baking/cli-baker/#from-scratch-method - Step 9 "Import your keys" 
-# and to https://opentezos.com/node-baking/baking/cli-baker/#other-options-for-baking for more details.
-# If you're interested in rotating your baking keys without having to change your baking wallet, you might also consider using a consensus key: https://opentezos.com/node-baking/baking/consensus-key/
+# If you plan to use BLS/tz4 for baking, now is also the right time to generate your consensus and DAL companion keys. These should be assigned the aliases ‘consensus_tz4’ and ‘dal_companion_tz4’, respectively.
+# Please refer to https://docs.tezos.com/tutorials/join-dal-baker/prepare-account and https://docs.tezos.com/tutorials/bake-with-ledger/install-app for more details.
 
 # Should you wish to pay your delegators, also add the public key of the payout account to fund it easily. This step can be ignored otherwise.
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} add address $KEY_PAYOUT $TEZPAY_ACCOUNT_HASH
@@ -70,6 +69,14 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} regi
 
 # --> Go to tzkt.io/[your-baker-tz-address] and look under “Delegations” to see if it has been done correctly.
 #     It should say something similar to “Registered as baker with 0.xxx XTZ fee”.
+
+# If would like to use BLS/tz4 for baking, follow the two steps A and B right below. These steps must be ignored otherwise.
+  # A - Register your keys as consensus keys
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set consensus key for $KEY_BAKER to $KEY_DAL_COMPANION_TZ4
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set companion key for $KEY_BAKER to $KEY_DAL_COMPANION_TZ4
+  # B - Check whether the registration worked properly
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} rpc get /chains/main/blocks/head/context/delegates/$(octez-client show address $KEY_BAKER | grep '^Hash' | awk '{print $2}')/consensus_key
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} rpc get /chains/main/blocks/head/context/delegates/$(octez-client show address $KEY_BAKER | grep '^Hash' | awk '{print $2}')/companion_key
 
 # Initialize your stake. "NNN" below should be replaced by the amount of XTZ you wish to stake 
 # (min for having baking rights on your own: 6000 XTZ. Less is possible but you'll have to rely on external staking and delegation)
@@ -95,7 +102,7 @@ nohup octez-dal-node run &>$DAL_LOG_FILE &
 # Start baking and accusing     
 ############################
 
-nohup octez-baker --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH --dal-node http://${DAL_ENDPOINT_ADDR} &>$BAKER_LOG_FILE &
+nohup octez-baker --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_CONSENSUS_TZ4 $KEY_DAL_COMPANION_TZ4 $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH --dal-node http://${DAL_ENDPOINT_ADDR} &>$BAKER_LOG_FILE &
 nohup octez-accuser --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE &
 
 ###################################################################################################

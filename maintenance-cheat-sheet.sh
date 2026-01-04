@@ -76,9 +76,9 @@ octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} subm
 # Vote 'yay', 'nay' or 'pass' for a proposal (exploration and promotion periods only)
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} submit ballot for $KEY_BAKER <proposal> <yay|nay|pass>
 
-############################################
-# Switch history mode from full to rolling #
-############################################
+###########################################
+# Switch history mode from full to rolling 
+###########################################
 
 # Set the NODE_MODE environment variable of your BAKER_INSTALLATION_DIR/tezos-env.sh file to "rolling", or "rolling:<number_of_additional_cycles>"
 # (see https://tezos.gitlab.io/user/history_modes.html for details) 
@@ -88,7 +88,26 @@ octez-node config update --config-file=$NODE_CONFIG_FILE --data-dir=$NODE_RUN_DI
 
 stop-octez.sh
 nohup octez-node run --force-history-mode-switch --config-file=$NODE_CONFIG_FILE --rpc-addr $NODE_RPC_ADDR --log-output=$NODE_LOG_FILE &>/dev/null &
+start-octez.sh
 
-octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} bootstrapped
-nohup octez-baker --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH &>$BAKER_LOG_FILE &
-nohup octez-accuser --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE &
+
+########################
+# Enable BLS/tz4 baking 
+########################
+
+# Generate your tz4 consensus and companion keys, depending on your signing process.
+# These keys should be assigned the local aliases ‘consensus_tz4’ and ‘dal_companion_tz4’, respectively.
+# Please refer to https://docs.tezos.com/tutorials/join-dal-baker/prepare-account and https://docs.tezos.com/tutorials/bake-with-ledger/install-app for more details.
+
+. `which tezos-env.sh`
+
+# Register your keys as consensus keys
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set consensus key for $KEY_BAKER to $KEY_DAL_COMPANION_TZ4
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set companion key for $KEY_BAKER to $KEY_DAL_COMPANION_TZ4
+
+# Check whether the registration worked properly
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} rpc get /chains/main/blocks/head/context/delegates/$(octez-client show address $KEY_BAKER | grep '^Hash' | awk '{print $2}')/consensus_key
+octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} rpc get /chains/main/blocks/head/context/delegates/$(octez-client show address $KEY_BAKER | grep '^Hash' | awk '{print $2}')/companion_key
+
+stop-octez.sh
+start-octez.sh

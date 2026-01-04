@@ -31,6 +31,8 @@ export NODE_MODE="rolling"
 export NODE_SNAPSHOT_URL="https://snapshots.tzinit.org/${NODE_NETWORK}/${NODE_MODE%%:*}"
 
 export KEY_BAKER="YOUR BAKER ALIAS. Example: bob"
+export KEY_CONSENSUS_TZ4="consensus_tz4"
+export KEY_DAL_COMPANION_TZ4="dal_companion_tz4"
 export KEY_PAYOUT="${KEY_BAKER}-payouts"
 
 export CLIENT_BASE_DIR="${DATA_DIR}/octez-client"

@@ -89,13 +89,25 @@ Because user management configurations can vary widely, we've opted not to make 
 
 ### Upgrade from the previous versions
 
+#### from v23.3
+- Edit the file `BAKER_INSTALLATION_DIR/tezos-env.sh`:
+  - Add the line `export KEY_CONSENSUS_TZ4="consensus_tz4"` in the "Environment variables for octez" section, below the line starting with `export KEY_BAKER=`.
+  - Add the line `export KEY_DAL_COMPANION_TZ4="dal_companion_tz4"` in the "Environment variables for octez" section, below the line above.
+  - Save these changes.
+- If would like to use BLS/tz4 for baking, follow the "Enable BLS/tz4 baking” procedure from the [Maintenance](#maintenance) section below.
+- Follow the “Upgrade Octez” procedure from the [Maintenance](#maintenance) section below.
+
 #### From v23.2
 - The `BAKER_ARCH` value `amd64` has been deprecated in favor of its synonym `x86_64`. A warning will be emitted if you are using this value.
-- If you use TezPay to pay your delegators:
-  - Edit the file `BAKER_INSTALLATION_DIR/tezos-env.sh`.
-  - Add the line `export TEZPAY_INTERVAL=1` (or any higher integer value; see [Initial setup](#initial-setup)) in the "Environment variables for TezPay" section above.
+- If you use TezPay to pay your delegators, edit the file `BAKER_INSTALLATION_DIR/tezos-env.sh`:
+  - Add the line `export TEZPAY_INTERVAL=1` (or any higher integer value; see [Initial setup](#initial-setup)) in the "Environment variables for TezPay" section.
   - Save these changes.
-- Run the “Upgrade Octez” procedure from the [Maintenance](#maintenance) section below.
+- Edit the file `BAKER_INSTALLATION_DIR/tezos-env.sh`:
+  - Add the line `export KEY_CONSENSUS_TZ4="consensus_tz4"` in the "Environment variables for octez" section, below the line starting with `export KEY_BAKER=`.
+  - Add the line `export KEY_DAL_COMPANION_TZ4="dal_companion_tz4"` in the "Environment variables for octez" section, below the line above.
+  - Save these changes.
+- If would like to use BLS/tz4 for baking, follow the "Enable BLS/tz4 baking” procedure from the [Maintenance](#maintenance) section below.
+- Follow the “Upgrade Octez” procedure from the [Maintenance](#maintenance) section below.
 
 
 ### Maintenance
@@ -107,6 +119,7 @@ The `maintenance-cheat-sheet.sh` file includes the following sections:
 - **Stake and payouts management**: Guidelines on setting your baker's stake parameters and optionnaly replenishing your payout account.
 - **Voting process**: Help on how to vote at the various stages of the Tezos amendment and voting process (https://tezos.gitlab.io/active/voting.html).
 - **Switch history mode from full to rolling**: Help on how to optimize performances and disk space by switching the node history mode from `full` to `rolling`.
+- **Enable BLS/tz4 baking**: Guidelines on setting up your baker's tz4 consensus and DAL companion keys.
 
 Don't execute this file as a script! Instead, copy and run the instructions of the section that interests you one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
 
