@@ -101,10 +101,12 @@ Because user management configurations can vary widely, we've opted not to make 
 - If you use TezPay to pay your delegators, edit the file `BAKER_INSTALLATION_DIR/tezos-env.sh`:
   - Add the line `export TEZPAY_INTERVAL=1` (or any higher integer value; see [Initial setup](#initial-setup)) in the "Environment variables for TezPay" section.
   - Save these changes.
+  - Follow the "Upgrade TezPay" procedure from the [Maintenance](#maintenance) section below.
 - Edit the file `BAKER_INSTALLATION_DIR/tezos-env.sh`:
   - Add the line `export KEY_CONSENSUS_TZ4="consensus-tz4"` in the "Environment variables for octez" section, below the line starting with `export KEY_BAKER=`.
   - Add the line `export KEY_DAL_COMPANION_TZ4="dal-companion-tz4"` in the "Environment variables for octez" section, below the line above.
   - Save these changes.
+- Follow the "Upgrade octez" procedure from the [Maintenance](#maintenance) section below.
 - If you would like to use BLS/tz4 for baking, follow the "Enable BLS/tz4 baking” procedure from the [Maintenance](#maintenance) section below.
 
 ### Maintenance

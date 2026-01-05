@@ -1,5 +1,9 @@
 All notable changes are documented in this file.
 
+## vXXXXXX - XXXX-XX-XX
+
+- Corrected upgrade instructions
+
 ## v23.3_2 - 2026-01-04
 
 - Added BLS/tz4 signing support (initial setup and maintenance)
