@@ -1,7 +1,8 @@
 All notable changes are documented in this file.
 
-## vXXXXXX - XXXX-XX-XX
+## v24.0 - 2026-01-08
 
+- New version of `octez`: Tallinn protocol (Seoul still active).
 - Corrected upgrade instructions
 
 ## v23.3_2 - 2026-01-04

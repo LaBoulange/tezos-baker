@@ -4,7 +4,7 @@
 # Version variables for octez
 ##############################
 
-OCTEZ_VERSION="23.3"
+OCTEZ_VERSION="24.0"
 
 case "$BAKER_ARCH" in
    "amd64") export BAKER_ARCH='x86_64'; echo "Architecture identifier is '$BAKER_ARCH' (deprecated synonym 'amd64')." ; export BAKER_ARCH='x86_64'
