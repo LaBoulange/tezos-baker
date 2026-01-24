@@ -89,7 +89,7 @@ Because user management configurations can vary widely, we've opted not to make 
 
 ### Upgrade from the previous versions
 
-#### from tezos-baker v23.3_2
+#### from tezos-baker v23.3_2 and v24.0
 - Follow the "Upgrade octez" procedure from the [Maintenance](#maintenance) section below.
 
 #### from tezos-baker v23.3
