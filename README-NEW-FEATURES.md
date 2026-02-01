@@ -346,8 +346,8 @@ Jan 24 12:00:30 baker: Waiting for next baking slot
 ### Requirements
 
 - Bash 4.0+
-- Standard Unix utilities (grep, awk, sed, wget, etc.)
-- bc (for numeric validation)
+- Standard Unix utilities (`grep`, `awk`, `sed`, `wget`, etc.)
+- `bc` (for numeric validation)
 
 ---
 
@@ -357,7 +357,7 @@ Jan 24 12:00:30 baker: Waiting for next baking slot
 - Manually edit `tezos-env.sh`
 - Use `initial-setup.sh` as a reference
 - Use `maintenance-cheat-sheet.sh` for copy-paste commands
-- Run individual scripts (start-octez.sh, stop-octez.sh, etc.)
+- Run individual scripts (`start-octez.sh`, `stop-octez.sh`, etc.)
 
 The new tools are **additions**, not replacements. Use whichever approach you prefer!
 
@@ -401,7 +401,7 @@ export PATH="/usr/local/bin:$PATH"
 
 ### "Permission denied"
 
-Most commands need to be run as root or with appropriate permissions:
+Most commands need to be run with appropriate permissions (see [Operating instructions](README.md#operating-instructions)):
 ```bash
 sudo tezos-baker upgrade
 ```
