@@ -121,7 +121,7 @@ Alternatively, you can set up manually as before:
     - `BUILD_DIR`: The working directory where files will be downloaded by the installation scripts of this repository. Default: `/tmp/build-tezos-baker`.
     - `INSTALL_DIR`: The directory `BAKER_INSTALLATION_DIR` where executables files will be stored. Default: `/usr/local/bin`.
     - `DATA_DIR`: The directory where the data needed by octez and TezPay will be stored (requires large storage space).
-    - `NODE_NETWORK`: The Tezos network that your bakery belongs to: `mainnet`, `ghostnet`, or any other network. Default: `mainnet`.
+    - `NODE_NETWORK`: The Tezos network that your bakery belongs to: `mainnet`, `tallinnnet`, or any other network. Default: `mainnet`.
     - `NODE_MODE`: The history mode of your node (`full`, `rolling`, or `rolling:<number_of_extra_cycles>`). See https://tezos.gitlab.io/user/history_modes.html for more details. Default: `rolling`.
     - `NODE_SNAPSHOT_URL`: The URL of the Tezos data snapshot to download to initialize your node. Default: Lambs on Acid's URL corresponding to your `NODE_NETWORK` and `NODE_MODE` (See https://lambsonacid.nl/).
     - `KEY_BAKER`: The friendly name you would like to use as an alias for your baker address when managing your baker. This name is not shared publicly; it is only used locally.

@@ -187,7 +187,7 @@ print_header "Step 2/8: Network Configuration"
 
 echo "Available networks:"
 echo "  1) mainnet (production network)"
-echo "  2) ghostnet (test network)"
+echo "  2) tallinnnet (test network)"
 echo "  3) custom (specify your own)"
 echo ""
 
@@ -201,7 +201,7 @@ while true; do
             break
             ;;
         2)
-            NODE_NETWORK="ghostnet"
+            NODE_NETWORK="tallinnnet"
             break
             ;;
         3)
