@@ -183,7 +183,7 @@ tezos-baker upgrade
 - Automatically detects your system architecture (x86_64 or ARM64)
 
 **Network Selection:**
-- Choose from mainnet, ghostnet, or custom networks
+- Choose from mainnet, tallinnnet, or custom networks
 - Select history mode (rolling, full, or rolling with extra cycles)
 
 **Baker Configuration:**
@@ -253,7 +253,7 @@ Step 2/8: Network Configuration
 
 Available networks:
   1) mainnet (production network)
-  2) ghostnet (test network)
+  2) tallinnnet (test network)
   3) custom (specify your own)
 
 ? Select network [1]: 1
@@ -424,7 +424,7 @@ Potential future improvements:
 - [ ] Configuration file editor (interactive tezos-env.sh updates)
 - [ ] Health checks and diagnostics
 - [ ] Automated backup/restore
-- [ ] Web dashboard (optional)
+- [ ] Web dashboard
 
 ---
 
