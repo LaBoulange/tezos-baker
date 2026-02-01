@@ -288,6 +288,9 @@ echo "BLS/tz4 keys provide enhanced security for baking operations."
 echo "You can configure this now or later using the maintenance CLI."
 echo ""
 
+KEY_CONSENSUS_TZ4="consensus-tz4"
+KEY_DAL_COMPANION_TZ4="dal-companion-tz4"
+
 if prompt_yes_no "Do you want to use BLS/tz4 consensus keys?" "n"; then
     USE_BLS_TZ4=true
     prompt_input "Consensus key alias" "consensus-tz4" "KEY_CONSENSUS_TZ4"
@@ -295,8 +298,6 @@ if prompt_yes_no "Do you want to use BLS/tz4 consensus keys?" "n"; then
     print_info "If not already done, you will need to import these keys manually after the setup."
 else
     USE_BLS_TZ4=false
-    KEY_CONSENSUS_TZ4="consensus-tz4"
-    KEY_DAL_COMPANION_TZ4="dal-companion-tz4"
 fi
 
 #############################################################################
