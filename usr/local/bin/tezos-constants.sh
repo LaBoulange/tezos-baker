@@ -6,6 +6,12 @@
 
 OCTEZ_VERSION="24.1"
 
+#####################################
+# Version variables for tezos-baker
+#####################################
+
+TEZOS_BAKER_VERSION="${OCTEZ_VERSION}_2"
+
 case "$BAKER_ARCH" in
    "amd64") export BAKER_ARCH='x86_64'; echo "Architecture identifier is '$BAKER_ARCH' (deprecated synonym 'amd64')." ; export BAKER_ARCH='x86_64'
    ;;
