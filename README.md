@@ -27,11 +27,11 @@ A comprehensive command-line interface for all maintenance operations with simpl
 
 ```bash
 # Examples:
-tezos-baker help              # Show all available commands
-tezos-baker status            # Check baker status
-tezos-baker upgrade           # Upgrade Octez
-tezos-baker stake increase 1000  # Stake 1000 XTZ
-tezos-baker logs baker        # View baker logs
+tezos-baker help                  # Show all available commands
+tezos-baker status                # Check baker status
+tezos-baker upgrade               # Upgrade Octez
+tezos-baker stake increase 1000   # Stake 1000 XTZ
+tezos-baker logs baker            # View baker logs
 ```
 
 **📖 For complete documentation, see [README-NEW-FEATURES.md](README-NEW-FEATURES.md)**
