@@ -270,7 +270,7 @@ while true; do
 done
 
 while true; do
-    prompt_input "Baker account address (tz1/tz2/tz3/tz4...)" "$BAKER_ACCOUNT_HASH" "BAKER_ACCOUNT_HASH"
+    prompt_input "Baker account address (tz1/tz2/tz3/tz4)" "$BAKER_ACCOUNT_HASH" "BAKER_ACCOUNT_HASH"
     if validate_tezos_address "$BAKER_ACCOUNT_HASH" "tz"; then
         print_success "Valid Tezos address"
         break
@@ -292,7 +292,7 @@ if prompt_yes_no "Do you want to use BLS/tz4 consensus keys?" "n"; then
     USE_BLS_TZ4=true
     prompt_input "Consensus key alias" "consensus-tz4" "KEY_CONSENSUS_TZ4"
     prompt_input "DAL companion key alias" "dal-companion-tz4" "KEY_DAL_COMPANION_TZ4"
-    print_info "You will need to import these keys manually after the setup."
+    print_info "If not already done, you will need to import these keys manually after the setup."
 else
     USE_BLS_TZ4=false
     KEY_CONSENSUS_TZ4="consensus-tz4"
@@ -309,11 +309,11 @@ echo "Configure your baker's staking parameters:"
 echo ""
 
 while true; do
-    prompt_input "Limit of staking over baking (0-5, how many times your stake others can stake)" "5" "BAKER_LIMIT_STAKING_OVER_BAKING"
-    if validate_number "$BAKER_LIMIT_STAKING_OVER_BAKING" "0" "5"; then
+    prompt_input "Limit of staking over baking (0-9, how many times your stake others can stake)" "9" "BAKER_LIMIT_STAKING_OVER_BAKING"
+    if validate_number "$BAKER_LIMIT_STAKING_OVER_BAKING" "0" "9"; then
         break
     fi
-    print_error "Must be a number between 0 and 5."
+    print_error "Must be a number between 0 and 9."
 done
 
 while true; do
@@ -367,7 +367,7 @@ if prompt_yes_no "Do you want to configure TezPay for delegator payments?" "n"; 
     SETUP_TEZPAY=true
     
     while true; do
-        prompt_input "Payout account address (tz1/tz2/tz3...)" "" "TEZPAY_ACCOUNT_HASH"
+        prompt_input "Payout account address (tz1/tz2/tz3/tz4...)" "" "TEZPAY_ACCOUNT_HASH"
         if validate_tezos_address "$TEZPAY_ACCOUNT_HASH" "tz"; then
             print_success "Valid Tezos address"
             break
