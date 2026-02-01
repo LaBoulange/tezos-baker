@@ -6,8 +6,41 @@ This code:
 - optionally installs TezPay on the same machine,
 - provides some basic maintenance tools.
 
+## 🆕 New User-Friendly Features
+
+**We've made managing your Tezos baker much easier!** 
+
+Instead of manually editing configuration files and copy-pasting commands from cheat sheets, you can now use:
+
+### 🧙 **Interactive Setup Wizard** (`tezos-baker-setup.sh`)
+A guided wizard that walks you through the initial setup with step-by-step prompts, input validation, and automatic configuration file generation.
+
+**Safe for existing installations:** The wizard automatically detects existing configurations, creates backups, and loads current values as defaults.
+
+```bash
+# Run the wizard for initial setup (or to modify existing configuration)
+tezos-baker-setup.sh
+```
+
+### 🛠️ **Modern CLI Tool** (`tezos-baker`)
+A comprehensive command-line interface for all maintenance operations with simple, intuitive commands.
+
+```bash
+# Examples:
+tezos-baker help              # Show all available commands
+tezos-baker status            # Check baker status
+tezos-baker upgrade           # Upgrade Octez
+tezos-baker stake increase 1000  # Stake 1000 XTZ
+tezos-baker logs baker        # View baker logs
+```
+
+**📖 For complete documentation, see [README-NEW-FEATURES.md](README-NEW-FEATURES.md)**
+
+> **Note:** The traditional workflow (manual configuration and cheat sheets) still works perfectly. The new tools are additions, not replacements!
+
 Content of this document:
 - [tezos-baker](#tezos-baker)
+  * [🆕 New User-Friendly Features](#-new-user-friendly-features)
   * [Disclaimer](#disclaimer)
   * [Release management](#release-management)
   * [Prerequisites](#prerequisites)
@@ -60,6 +93,24 @@ Because user management configurations can vary widely, we've opted not to make 
 
 ### Initial setup
 
+#### 🆕 Recommended: Interactive Setup Wizard
+
+The easiest way to set up your baker is using the interactive wizard:
+
+```bash
+# 1. Install the tezos-baker scripts
+install-tezos-baker.sh
+
+# 2. Run the interactive setup wizard
+tezos-baker-setup.sh
+```
+
+The wizard will guide you through all configuration steps, validate your inputs, and automatically generate the `tezos-env.sh` file. See [README-NEW-FEATURES.md](README-NEW-FEATURES.md) for details.
+
+#### Traditional: Manual Setup
+
+Alternatively, you can set up manually as before:
+
 - Choose a directory where the executable files for your baker will be installed (typically `/usr/local/bin`). This directory will be referred to as `BAKER_INSTALLATION_DIR` later in this document.
 - Ensure this `BAKER_INSTALLATION_DIR` is part of the `PATH` environment variable the user intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
 - Copy the file `usr/local/bin/install-tezos-baker.sh` of this repository to the `BAKER_INSTALLATION_DIR` directory of your machine.
@@ -89,31 +140,46 @@ Because user management configurations can vary widely, we've opted not to make 
 
 ### Upgrade from the previous versions
 
-#### from tezos-baker v23.3_2 and v24.0
-- Follow the "Upgrade octez" procedure from the [Maintenance](#maintenance) section below.
+#### From tezos-baker v24.0 or v24.1
 
-#### from tezos-baker v23.3
-- Edit the file `BAKER_INSTALLATION_DIR/tezos-env.sh`:
-  - Add the line `export KEY_CONSENSUS_TZ4="consensus-tz4"` in the "Environment variables for octez" section, below the line starting with `export KEY_BAKER=`.
-  - Add the line `export KEY_DAL_COMPANION_TZ4="dal-companion-tz4"` in the "Environment variables for octez" section, below the line above.
-  - Save these changes.
-- Follow the "Upgrade octez" procedure from the [Maintenance](#maintenance) section below.
-- If you would like to use BLS/tz4 for baking, follow the "Enable BLS/tz4 baking” procedure from the [Maintenance](#maintenance) section below.
+**🆕 Recommended: Using the CLI**
 
-#### From tezos-baker v23.2
-- The `BAKER_ARCH` value `amd64` has been deprecated in favor of its synonym `x86_64`. A warning will be emitted if you are using this value.
-- If you use TezPay to pay your delegators, edit the file `BAKER_INSTALLATION_DIR/tezos-env.sh`:
-  - Add the line `export TEZPAY_INTERVAL=1` (or any higher integer value; see [Initial setup](#initial-setup)) in the "Environment variables for TezPay" section.
-  - Save these changes.
-  - Follow the "Upgrade TezPay" procedure from the [Maintenance](#maintenance) section below.
-- Edit the file `BAKER_INSTALLATION_DIR/tezos-env.sh`:
-  - Add the line `export KEY_CONSENSUS_TZ4="consensus-tz4"` in the "Environment variables for octez" section, below the line starting with `export KEY_BAKER=`.
-  - Add the line `export KEY_DAL_COMPANION_TZ4="dal-companion-tz4"` in the "Environment variables for octez" section, below the line above.
-  - Save these changes.
-- Follow the "Upgrade octez" procedure from the [Maintenance](#maintenance) section below.
-- If you would like to use BLS/tz4 for baking, follow the "Enable BLS/tz4 baking” procedure from the [Maintenance](#maintenance) section below.
+Simply run:
+```bash
+tezos-baker upgrade
+```
+
+**Traditional: Manual upgrade**
+
+Follow the "Upgrade octez" procedure from the [Maintenance](#maintenance) section below.
+
+> **Note:** This version introduces new user-friendly tools (interactive setup wizard and CLI). See [README-NEW-FEATURES.md](README-NEW-FEATURES.md) for details. Your existing configuration will continue to work without any changes.
 
 ### Maintenance
+
+#### 🆕 Recommended: Modern CLI Tool
+
+The easiest way to perform maintenance operations is using the `tezos-baker` CLI:
+
+```bash
+# Common operations:
+tezos-baker start               # Start all services
+tezos-baker stop                # Stop all services (useful before reboot)
+tezos-baker restart             # Restart all services
+tezos-baker upgrade             # Upgrade Octez
+tezos-baker upgrade-tezpay      # Upgrade TezPay
+tezos-baker stake increase 1000 # Stake 1000 XTZ
+tezos-baker vote info           # Show voting period
+tezos-baker logs baker          # View baker logs
+tezos-baker status              # Check status
+
+# For complete command reference:
+tezos-baker help
+```
+
+See [README-NEW-FEATURES.md](README-NEW-FEATURES.md) for detailed documentation and examples.
+
+#### Traditional: Manual Maintenance
 
 The `maintenance-cheat-sheet.sh` file includes the following sections:
 - **Restart/Reboot**: Instructions for when you need to restart, possibly due to reasons such as Linux distribution maintenance.
@@ -125,7 +191,6 @@ The `maintenance-cheat-sheet.sh` file includes the following sections:
 - **Enable BLS/tz4 baking**: Guidelines on setting up your baker's tz4 consensus and DAL companion keys.
 
 Don't execute this file as a script! Instead, copy and run the instructions of the section that interests you one at a time, as you'll be prompted to take several actions throughout the process. These actions are described in the comments appearing in this file.
-
 
 ## Should you wish to support us
 

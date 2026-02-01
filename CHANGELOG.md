@@ -1,5 +1,23 @@
 All notable changes are documented in this file.
 
+## v24.1_2 - XXXX-XX-XX
+
+- Introduced interactive setup wizard (`tezos-baker-setup.sh`) for guided initial configuration
+  - Safe for existing installations: automatically creates backups and loads current values as defaults
+  - Step-by-step prompts with input validation (Tezos addresses, numbers, etc.)
+  - Automatic detection of system architecture and existing configuration
+- Introduced modern CLI tool (`tezos-baker`) for simplified maintenance operations
+  - Reusable helper functions for better maintainability
+  - Commands: `setup`, `start`, `stop`, `restart`, `upgrade`, `upgrade-tezpay`, `stake`, `vote`, `history-mode`, `enable-bls`, `status`, `logs`
+  - Support for `--version` flag to display `tezos-baker` version
+- Added centralized version management in `tezos-constants.sh` (`TEZOS_BAKER_VERSION`)
+- Added comprehensive documentation for new user-friendly features (`README-NEW-FEATURES.md`)
+- Updated README.md with new setup and maintenance workflows
+- Improved error handling in start/stop scripts for optional components (TezPay, Etherlink)
+- Enhanced `stop-octez.sh` to stop all Octez processes more gracefully (baker, accuser, DAL, node)
+- Added validation checks in `start-tezpay.sh` and `start-etherlink.sh` before launching services
+- Adapted `install-tezos-baker.sh` to properly handle executable files without `.sh` extension
+
 ## v24.1 - 2026-01-24
 
 - New version of `octez`: (bugfixes): Tallinn protocol.

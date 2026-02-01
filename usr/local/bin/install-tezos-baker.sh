@@ -11,7 +11,6 @@ TEZOS_BAKER_DOWNLOAD_URL=`wget https://api.github.com/repos/LaBoulange/tezos-bak
 
 THIS_FILE_NAME='install-tezos-baker.sh'
 
-
 mkdir $BUILD_DIR
 cd $BUILD_DIR
 
@@ -25,13 +24,17 @@ rm $ARCHIVE
 
 cd `ls`/usr/local/bin
 
-chown $INSTALL_USER:$INSTALL_GROUP *.sh
-chmod u+rwx *.sh
-chmod go-rwx *.sh
+# Set ownership and permissions for all executable files
+chown $INSTALL_USER:$INSTALL_GROUP *.sh tezos-baker 2>/dev/null || true
+chmod u+rwx *.sh tezos-baker 2>/dev/null || true
+chmod go-rwx *.sh tezos-baker 2>/dev/null || true
 
+# Move this file to a temporary location to avoid overwriting itself
 mv $THIS_FILE_NAME ${INSTALL_DIR}/${THIS_FILE_NAME}.new
 
-mv *.sh $INSTALL_DIR
+# Move all executable files to install directory
+mv *.sh $INSTALL_DIR 2>/dev/null || true
+mv tezos-baker $INSTALL_DIR 2>/dev/null || true
 
 cd /
 rm -rf $BUILD_DIR
