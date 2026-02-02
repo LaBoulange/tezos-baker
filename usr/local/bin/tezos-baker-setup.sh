@@ -250,6 +250,13 @@ if [ -f "/usr/local/bin/tezos-env.sh" ]; then
     OLD_NODE_MODE="$NODE_MODE"
     OLD_BAKER_ARCH="$BAKER_ARCH"
     
+    # Store old staking parameters
+    OLD_BAKER_LIMIT="$BAKER_LIMIT_STAKING_OVER_BAKING"
+    OLD_BAKER_EDGE="$BAKER_EDGE_BAKING_OVER_STAKING"
+    
+    # Store old TezPay address
+    OLD_TEZPAY_ACCOUNT_HASH="$TEZPAY_ACCOUNT_HASH"
+    
     # Store old optional component states
     # Note: These will be set after user answers questions
     OLD_USE_BLS_TZ4=""
@@ -1082,8 +1089,9 @@ elif [ "$SETUP_TEZPAY" = true ]; then
     print_warning "TezPay already configured. Manual modifications will not be overwritten."
 fi
 
-# Warn about disabled components
+# Warn about configuration changes that require manual action
 if [ "$EXISTING_CONFIG" = true ]; then
+    # Warn about disabled components
     if [ "$ETHERLINK_RUNNING" = true ] && [ "$SETUP_ETHERLINK" = false ]; then
         echo ""
         print_warning "Etherlink was running but is now disabled in configuration"
@@ -1098,6 +1106,40 @@ if [ "$EXISTING_CONFIG" = true ]; then
         echo "   You should stop it manually:"
         echo "   ${GREEN}stop-tezpay.sh${NC}"
         echo ""
+    fi
+    
+    # Warn about staking parameter changes
+    if [ -n "$OLD_BAKER_LIMIT" ] && [ -n "$OLD_BAKER_EDGE" ]; then
+        if [ "$OLD_BAKER_LIMIT" != "$BAKER_LIMIT_STAKING_OVER_BAKING" ] || [ "$OLD_BAKER_EDGE" != "$BAKER_EDGE_BAKING_OVER_STAKING" ]; then
+            echo ""
+            print_warning "Staking parameters have changed"
+            echo "   Old values: limit=$OLD_BAKER_LIMIT, edge=$OLD_BAKER_EDGE"
+            echo "   New values: limit=$BAKER_LIMIT_STAKING_OVER_BAKING, edge=$BAKER_EDGE_BAKING_OVER_STAKING"
+            echo ""
+            echo "   You need to update on-chain parameters:"
+            echo "   ${GREEN}octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set delegate parameters for $KEY_BAKER --limit-of-staking-over-baking $BAKER_LIMIT_STAKING_OVER_BAKING --edge-of-baking-over-staking $BAKER_EDGE_BAKING_OVER_STAKING${NC}"
+            echo ""
+        fi
+    fi
+    
+    # Warn about TezPay address change
+    if [ "$SETUP_TEZPAY" = true ] && [ -n "$OLD_TEZPAY_ACCOUNT_HASH" ] && [ "$OLD_TEZPAY_ACCOUNT_HASH" != "tzYYYYYYYYYY: YOUR PAYOUTS ADDRESS HASH" ]; then
+        if [ "$OLD_TEZPAY_ACCOUNT_HASH" != "$TEZPAY_ACCOUNT_HASH" ]; then
+            echo ""
+            print_warning "TezPay payout address has changed"
+            echo "   Old address: $OLD_TEZPAY_ACCOUNT_HASH"
+            echo "   New address: $TEZPAY_ACCOUNT_HASH"
+            echo ""
+            echo "   You need to manually update TezPay configuration:"
+            echo "   1. Stop TezPay: ${GREEN}stop-tezpay.sh${NC}"
+            echo "   2. Edit ${TEZPAY_RUN_DIR}/config.hjson (update overrides section with new address)"
+            echo "   3. Update payout_wallet_private.key with new private key"
+            echo "   4. Update payout key in octez-client:"
+            echo "      ${GREEN}octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} forget address $KEY_PAYOUT${NC}"
+            echo "      ${GREEN}octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} add address $KEY_PAYOUT $TEZPAY_ACCOUNT_HASH${NC}"
+            echo "   5. Restart TezPay: ${GREEN}start-tezpay.sh${NC}"
+            echo ""
+        fi
     fi
 fi
 
