@@ -3,6 +3,7 @@
 #############################################################################
 # Tezos Baker Setup Wizard
 # Interactive setup script for initial Tezos baker configuration
+# Smart update mode: only modifies what has changed
 #############################################################################
 
 set -e
@@ -13,9 +14,13 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
 NC='\033[0m' # No Color
 
+#############################################################################
 # Helper functions
+#############################################################################
+
 print_header() {
     echo -e "\n${BLUE}═══════════════════════════════════════════════════════════════${NC}"
     echo -e "${CYAN}$1${NC}"
@@ -97,6 +102,45 @@ validate_number() {
     return 0
 }
 
+check_service_running() {
+    local service_name="$1"
+    
+    case "$service_name" in
+        "octez-node")
+            pgrep -f "octez-node run" > /dev/null 2>&1
+            ;;
+        "octez-baker")
+            pgrep -f "octez-baker.*run" > /dev/null 2>&1
+            ;;
+        "octez-accuser")
+            pgrep -f "octez-accuser.*run" > /dev/null 2>&1
+            ;;
+        "octez-dal-node")
+            pgrep -f "octez-dal-node run" > /dev/null 2>&1
+            ;;
+        "tezpay")
+            pgrep -f "tezpay continual" > /dev/null 2>&1
+            ;;
+        "etherlink")
+            pgrep -f "octez-smart-rollup-node.*run" > /dev/null 2>&1
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+compare_configs() {
+    local old_file="$1"
+    local new_file="$2"
+    
+    # Compare relevant configuration values (ignore comments and whitespace)
+    diff -w -B \
+        <(grep -v '^#' "$old_file" | grep -v '^$' | sort) \
+        <(grep -v '^#' "$new_file" | grep -v '^$' | sort) \
+        > /dev/null 2>&1
+}
+
 #############################################################################
 # Main Setup Wizard
 #############################################################################
@@ -106,8 +150,8 @@ print_header "🥖 Tezos Baker Setup Wizard"
 
 echo -e "${YELLOW}Welcome to the Tezos Baker Setup Wizard!${NC}"
 echo ""
-echo "This wizard will guide you through the initial configuration of your Tezos baker."
-echo "You will be asked a series of questions to configure your environment."
+echo "This wizard will guide you through the configuration of your Tezos baker."
+echo "It uses smart update mode: only what has changed will be modified."
 echo ""
 print_warning "Make sure you have read the README.md file before proceeding."
 echo ""
@@ -115,15 +159,75 @@ echo ""
 # Check for existing installation
 EXISTING_CONFIG=false
 BACKUP_CREATED=false
+SERVICES_RUNNING=false
+NODE_RUNNING=false
+BAKER_RUNNING=false
+ACCUSER_RUNNING=false
+DAL_RUNNING=false
+TEZPAY_RUNNING=false
+ETHERLINK_RUNNING=false
+
+# Variables to track what needs to be done
+NEED_REINSTALL_OCTEZ=false
+NEED_RECONFIG_NODE=false
+NEED_REIMPORT_SNAPSHOT=false
+NEED_RESTART_SERVICES=false
 
 if [ -f "/usr/local/bin/tezos-env.sh" ]; then
     EXISTING_CONFIG=true
     print_warning "Existing tezos-env.sh configuration detected!"
     echo ""
+    
+    # Detect running services
+    print_info "Detecting running services..."
+    
+    if check_service_running "octez-node"; then
+        NODE_RUNNING=true
+        SERVICES_RUNNING=true
+        print_success "Octez node is running"
+    fi
+    
+    if check_service_running "octez-baker"; then
+        BAKER_RUNNING=true
+        SERVICES_RUNNING=true
+        print_success "Octez baker is running"
+    fi
+    
+    if check_service_running "octez-accuser"; then
+        ACCUSER_RUNNING=true
+        SERVICES_RUNNING=true
+        print_success "Octez accuser is running"
+    fi
+    
+    if check_service_running "octez-dal-node"; then
+        DAL_RUNNING=true
+        SERVICES_RUNNING=true
+        print_success "Octez DAL node is running"
+    fi
+    
+    if check_service_running "tezpay"; then
+        TEZPAY_RUNNING=true
+        SERVICES_RUNNING=true
+        print_success "TezPay is running"
+    fi
+    
+    if check_service_running "etherlink"; then
+        ETHERLINK_RUNNING=true
+        SERVICES_RUNNING=true
+        print_success "Etherlink is running"
+    fi
+    
+    if [ "$SERVICES_RUNNING" = false ]; then
+        print_info "No services currently running"
+    fi
+    
+    echo ""
     echo "The wizard will:"
     echo "  1. Create a backup of your current configuration"
     echo "  2. Load your current values as defaults"
     echo "  3. Allow you to modify any settings"
+    echo "  4. Only update what has changed"
+    echo "  5. Manage services intelligently (stop/restart only if needed)"
     echo ""
     
     if ! prompt_yes_no "Do you want to continue?" "y"; then
@@ -140,6 +244,17 @@ if [ -f "/usr/local/bin/tezos-env.sh" ]; then
     
     # Load existing configuration
     . /usr/local/bin/tezos-env.sh 2>/dev/null || true
+    
+    # Store old values for comparison
+    OLD_NODE_NETWORK="$NODE_NETWORK"
+    OLD_NODE_MODE="$NODE_MODE"
+    OLD_BAKER_ARCH="$BAKER_ARCH"
+    
+    # Store old optional component states
+    # Note: These will be set after user answers questions
+    OLD_USE_BLS_TZ4=""
+    OLD_SETUP_TEZPAY=""
+    OLD_SETUP_ETHERLINK=""
 fi
 
 if ! prompt_yes_no "Are you ready to begin?" "y"; then
@@ -291,6 +406,16 @@ echo ""
 KEY_CONSENSUS_TZ4="consensus-tz4"
 KEY_DAL_COMPANION_TZ4="dal-companion-tz4"
 
+# Store old BLS/tz4 state if existing config
+if [ "$EXISTING_CONFIG" = true ]; then
+    # Try to detect if BLS/tz4 was used before by checking if consensus key exists
+    if octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" list known addresses 2>/dev/null | grep -q "^consensus-tz4:"; then
+        OLD_USE_BLS_TZ4=true
+    else
+        OLD_USE_BLS_TZ4=false
+    fi
+fi
+
 if prompt_yes_no "Do you want to use BLS/tz4 consensus keys?" "n"; then
     USE_BLS_TZ4=true
     prompt_input "Consensus key alias" "consensus-tz4" "KEY_CONSENSUS_TZ4"
@@ -298,6 +423,16 @@ if prompt_yes_no "Do you want to use BLS/tz4 consensus keys?" "n"; then
     print_info "If not already done, you will need to import these keys manually after the setup."
 else
     USE_BLS_TZ4=false
+fi
+
+# Detect BLS/tz4 configuration change
+if [ "$EXISTING_CONFIG" = true ] && [ "$OLD_USE_BLS_TZ4" != "$USE_BLS_TZ4" ]; then
+    NEED_RESTART_SERVICES=true
+    if [ "$USE_BLS_TZ4" = true ]; then
+        print_warning "BLS/tz4 enabled - baker restart will be required after key import"
+    else
+        print_warning "BLS/tz4 disabled - baker restart will be required"
+    fi
 fi
 
 #############################################################################
@@ -546,15 +681,72 @@ chmod +x "$ENV_FILE"
 print_success "Configuration file created: $ENV_FILE"
 
 #############################################################################
-# Execute Installation Steps
+# Execute Installation Steps (Smart Update Mode)
 #############################################################################
 
-print_header "Starting Installation"
+print_header "Smart Installation"
 
 # Source the environment
 . "$ENV_FILE"
 
-# Step 1: Setup ZCASH parameters
+# Detect what needs to be done
+if [ "$EXISTING_CONFIG" = true ]; then
+    print_info "Analyzing configuration changes..."
+    
+    # Check for critical changes
+    if [ "$OLD_NODE_NETWORK" != "$NODE_NETWORK" ] || [ "$OLD_NODE_MODE" != "$NODE_MODE" ]; then
+        NEED_REIMPORT_SNAPSHOT=true
+        NEED_RESTART_SERVICES=true
+        print_warning "Network or history mode changed - snapshot reimport required"
+    fi
+    
+    if [ "$OLD_BAKER_ARCH" != "$BAKER_ARCH" ]; then
+        NEED_REINSTALL_OCTEZ=true
+        NEED_RESTART_SERVICES=true
+        print_warning "Architecture changed - Octez reinstall required"
+    fi
+    
+    # Check if node directory exists
+    if [ ! -d "$NODE_RUN_DIR" ] || [ ! -f "$NODE_RUN_DIR/identity.json" ]; then
+        NEED_REIMPORT_SNAPSHOT=true
+        print_info "Node not initialized - full setup required"
+    fi
+fi
+
+# Stop services if necessary
+if [ "$NEED_RESTART_SERVICES" = true ] && [ "$SERVICES_RUNNING" = true ]; then
+    print_warning "Configuration changes require stopping all services"
+    
+    if [ -x "$(which tezos-baker 2>/dev/null)" ]; then
+        print_info "Stopping all services with tezos-baker CLI..."
+        tezos-baker stop
+    else
+        print_info "Stopping services manually..."
+        # Fallback: stop services manually in correct order
+        if [ -x "$(which stop-tezpay.sh 2>/dev/null)" ]; then
+            stop-tezpay.sh 2>/dev/null || true
+        fi
+        if [ -x "$(which stop-etherlink.sh 2>/dev/null)" ]; then
+            stop-etherlink.sh 2>/dev/null || true
+        fi
+        if [ -x "$(which stop-octez.sh 2>/dev/null)" ]; then
+            stop-octez.sh
+        fi
+    fi
+    
+    print_success "All services stopped"
+    
+    # Update service status
+    SERVICES_RUNNING=false
+    NODE_RUNNING=false
+    BAKER_RUNNING=false
+    ACCUSER_RUNNING=false
+    DAL_RUNNING=false
+    TEZPAY_RUNNING=false
+    ETHERLINK_RUNNING=false
+fi
+
+# Step 1: Setup ZCASH parameters (always check, but skip if exists)
 print_info "Setting up ZCASH parameters..."
 mkdir -p "$ZCASH_DIR"
 cd "$ZCASH_DIR"
@@ -570,119 +762,368 @@ do
     fi
 done
 
-# Step 2: Install octez
-print_info "Installing Octez..."
-if [ -x "${INSTALL_DIR}/install-octez.sh" ]; then
-    "${INSTALL_DIR}/install-octez.sh"
+# Step 2: Install Octez only if necessary
+if [ "$NEED_REINSTALL_OCTEZ" = true ] || [ ! -x "$(which octez-node 2>/dev/null)" ]; then
+    print_info "Installing Octez..."
+    if [ -x "${INSTALL_DIR}/install-octez.sh" ]; then
+        "${INSTALL_DIR}/install-octez.sh"
+    else
+        print_error "install-octez.sh not found. Please ensure install-tezos-baker.sh was run first."
+        exit 1
+    fi
 else
-    print_error "install-octez.sh not found. Please ensure install-tezos-baker.sh was run first."
-    exit 1
+    print_success "Octez already installed, skipping"
 fi
 
-# Step 3: Setup the RPC node
-print_info "Setting up RPC node..."
-mkdir -p "$DATA_DIR"
-mkdir -p "$NODE_RUN_DIR"
-mkdir -p "$NODE_ETC_DIR"
+# Step 3: Setup node only if necessary
+if [ "$NEED_REIMPORT_SNAPSHOT" = true ]; then
+    print_info "Setting up RPC node..."
+    mkdir -p "$DATA_DIR"
+    mkdir -p "$NODE_RUN_DIR"
+    mkdir -p "$NODE_ETC_DIR"
+    
+    print_info "Initializing node configuration..."
+    octez-node config init --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR" --network="$NODE_NETWORK" --history-mode="$NODE_MODE"
+    octez-node config update --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR"
+    
+    print_info "Downloading snapshot..."
+    cd /tmp
+    SNAPSHOT=$(basename "$NODE_SNAPSHOT_URL")
+    wget -q --show-progress "$NODE_SNAPSHOT_URL"
+    octez-node snapshot info "$SNAPSHOT"
+    
+    print_info "Importing snapshot (this will take several minutes, please wait)..."
+    octez-node snapshot import "$SNAPSHOT" --no-check --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR"
+    rm "$SNAPSHOT"
+    
+    print_success "Snapshot imported successfully!"
+    
+    chmod o-rwx "$NODE_RUN_DIR/identity.json"
+else
+    print_success "Node already configured, skipping snapshot import"
+fi
 
-print_info "Initializing node configuration..."
-octez-node config init --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR" --network="$NODE_NETWORK" --history-mode="$NODE_MODE"
-octez-node config update --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR"
+# Step 4: Start node only if not already running
+if ! check_service_running "octez-node"; then
+    print_info "Starting node..."
+    nohup octez-node run --config-file="$NODE_CONFIG_FILE" --rpc-addr "$NODE_RPC_ADDR" --log-output="$NODE_LOG_FILE" &>/dev/null &
+    
+    print_info "Waiting for node to bootstrap (this may take several minutes)..."
+    mkdir -p "$CLIENT_BASE_DIR"
+    octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" bootstrapped
+    
+    print_success "Node bootstrapped successfully!"
+else
+    print_success "Node already running"
+    # Ensure client directory exists
+    mkdir -p "$CLIENT_BASE_DIR"
+fi
 
-print_info "Downloading and importing snapshot (this may take a while)..."
-cd /tmp
-SNAPSHOT=$(basename "$NODE_SNAPSHOT_URL")
-wget -q --show-progress "$NODE_SNAPSHOT_URL"
-octez-node snapshot info "$SNAPSHOT"
+#############################################################################
+# Detect existing configuration state
+#############################################################################
 
-print_warning "Importing snapshot in background. Check $NODE_LOG_FILE for progress."
-nohup octez-node snapshot import "$SNAPSHOT" --no-check --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR" &>"$NODE_LOG_FILE" &
-rm "$SNAPSHOT"
+print_header "Analyzing Existing Configuration"
 
-print_info "Starting node..."
-nohup octez-node run --config-file="$NODE_CONFIG_FILE" --rpc-addr "$NODE_RPC_ADDR" --log-output="$NODE_LOG_FILE" &>/dev/null &
+# Check if baker key is already imported
+BAKER_KEY_EXISTS=false
+if octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" list known addresses 2>/dev/null | grep -q "^${KEY_BAKER}:"; then
+    BAKER_KEY_EXISTS=true
+    print_success "Baker key '$KEY_BAKER' already imported"
+fi
 
-chmod o-rwx "$NODE_RUN_DIR/identity.json"
+# Check if BLS/tz4 keys are already imported
+CONSENSUS_KEY_EXISTS=false
+DAL_KEY_EXISTS=false
+if [ "$USE_BLS_TZ4" = true ]; then
+    if octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" list known addresses 2>/dev/null | grep -q "^${KEY_CONSENSUS_TZ4}:"; then
+        CONSENSUS_KEY_EXISTS=true
+        print_success "Consensus key '$KEY_CONSENSUS_TZ4' already imported"
+    fi
+    if octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" list known addresses 2>/dev/null | grep -q "^${KEY_DAL_COMPANION_TZ4}:"; then
+        DAL_KEY_EXISTS=true
+        print_success "DAL companion key '$KEY_DAL_COMPANION_TZ4' already imported"
+    fi
+fi
 
-# Step 4: Wait for node to bootstrap
-print_info "Waiting for node to bootstrap (this may take several minutes)..."
-mkdir -p "$CLIENT_BASE_DIR"
-octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" bootstrapped
+# Check if payout key is already added
+PAYOUT_KEY_EXISTS=false
+if [ "$SETUP_TEZPAY" = true ]; then
+    if octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" list known addresses 2>/dev/null | grep -q "^${KEY_PAYOUT}:"; then
+        PAYOUT_KEY_EXISTS=true
+        print_success "Payout key '$KEY_PAYOUT' already added"
+    fi
+fi
 
-print_success "Node bootstrapped successfully!"
+# Check if baker is already registered
+BAKER_REGISTERED=false
+BAKER_HASH=$(octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" show address "$KEY_BAKER" 2>/dev/null | grep '^Hash' | awk '{print $2}')
+if [ -n "$BAKER_HASH" ]; then
+    if octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" rpc get "/chains/main/blocks/head/context/delegates/${BAKER_HASH}" 2>/dev/null | grep -q "deactivated"; then
+        BAKER_REGISTERED=true
+        print_success "Baker already registered as delegate"
+    fi
+fi
+
+# Check if BLS/tz4 is already configured
+BLS_CONFIGURED=false
+if [ "$USE_BLS_TZ4" = true ] && [ -n "$BAKER_HASH" ]; then
+    CONSENSUS_KEY_HASH=$(octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" rpc get "/chains/main/blocks/head/context/delegates/${BAKER_HASH}/consensus_key" 2>/dev/null | grep -o 'tz4[1-9A-HJ-NP-Za-km-z]\{33\}')
+    if [ -n "$CONSENSUS_KEY_HASH" ]; then
+        BLS_CONFIGURED=true
+        print_success "BLS/tz4 consensus key already configured"
+    fi
+fi
+
+# Check if DAL node is already configured
+DAL_CONFIGURED=false
+if [ -f "$DAL_RUN_DIR/config.json" ]; then
+    DAL_CONFIGURED=true
+    print_success "DAL node already configured"
+fi
+
+# Check if TezPay is already configured
+TEZPAY_CONFIGURED=false
+if [ "$SETUP_TEZPAY" = true ]; then
+    if [ -f "$TEZPAY_RUN_DIR/config.hjson" ] && [ -f "$TEZPAY_RUN_DIR/payout_wallet_private.key" ]; then
+        TEZPAY_CONFIGURED=true
+        print_success "TezPay already configured"
+    fi
+fi
+
+# Check if Etherlink is already configured
+ETHERLINK_CONFIGURED=false
+if [ "$SETUP_ETHERLINK" = true ]; then
+    if [ -f "$ETHERLINK_RUN_DIR/config.json" ]; then
+        ETHERLINK_CONFIGURED=true
+        print_success "Etherlink already configured"
+    fi
+fi
 
 #############################################################################
 # Manual Steps Required
 #############################################################################
 
-print_header "Manual Steps Required"
+print_header "Configuration Steps"
 
-echo -e "${YELLOW}The automated setup is complete, but you need to perform the following manual steps:${NC}"
-echo ""
-echo -e "${CYAN}1. Import your baking key${NC}"
-echo "   This depends on your key storage method (Ledger, remote signer, or local)."
-echo "   Example for local key:"
-echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} import secret key $KEY_BAKER <your_key>"
+echo -e "${YELLOW}Please complete the following configuration steps:${NC}"
 echo ""
 
-if [ "$USE_BLS_TZ4" = true ]; then
-    echo -e "${CYAN}2. Import your BLS/tz4 consensus and DAL companion keys${NC}"
-    echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} import secret key $KEY_CONSENSUS_TZ4 <your_consensus_key>"
-    echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} import secret key $KEY_DAL_COMPANION_TZ4 <your_dal_key>"
-    echo "   See: https://docs.tezos.com/tutorials/join-dal-baker/prepare-account"
+# Step counter
+STEP=1
+
+# Import baker key if needed
+if [ "$BAKER_KEY_EXISTS" = false ]; then
+    echo -e "${CYAN}${STEP}. Import your baking key${NC}"
+    echo "   This depends on your key storage method (Ledger, remote signer, or local)."
+    echo "   Please refer to https://docs.tezos.com/tutorials/join-dal-baker/prepare-account"
+    echo "   and https://docs.tezos.com/tutorials/bake-with-ledger/install-app for more details."
     echo ""
+    echo "   Example for local key (not recommended for production):"
+    echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} import secret key $KEY_BAKER <your_key>"
+    echo ""
+    STEP=$((STEP + 1))
 fi
 
-if [ "$SETUP_TEZPAY" = true ]; then
-    echo -e "${CYAN}3. Add your payout account public key${NC}"
+# Import BLS/tz4 keys if needed
+if [ "$USE_BLS_TZ4" = true ]; then
+    if [ "$CONSENSUS_KEY_EXISTS" = false ] || [ "$DAL_KEY_EXISTS" = false ]; then
+        echo -e "${CYAN}${STEP}. Import your BLS/tz4 consensus and DAL companion keys${NC}"
+        if [ "$CONSENSUS_KEY_EXISTS" = false ]; then
+            echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} import secret key $KEY_CONSENSUS_TZ4 <your_consensus_key>"
+        fi
+        if [ "$DAL_KEY_EXISTS" = false ]; then
+            echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} import secret key $KEY_DAL_COMPANION_TZ4 <your_dal_key>"
+        fi
+        echo ""
+        STEP=$((STEP + 1))
+    fi
+fi
+
+# Add payout key if needed
+if [ "$SETUP_TEZPAY" = true ] && [ "$PAYOUT_KEY_EXISTS" = false ]; then
+    echo -e "${CYAN}${STEP}. Add your payout account public key${NC}"
     echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} add address $KEY_PAYOUT $TEZPAY_ACCOUNT_HASH"
     echo ""
+    STEP=$((STEP + 1))
 fi
 
-echo -e "${CYAN}4. Register as delegate${NC}"
-echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} register key $KEY_BAKER as delegate"
-echo ""
-
-if [ "$USE_BLS_TZ4" = true ]; then
-    echo -e "${CYAN}5. Set consensus and companion keys${NC}"
-    echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set consensus key for $KEY_BAKER to $KEY_CONSENSUS_TZ4"
-    echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set companion key for $KEY_BAKER to $KEY_DAL_COMPANION_TZ4"
+# Register as delegate if needed
+if [ "$BAKER_REGISTERED" = false ]; then
+    echo -e "${CYAN}${STEP}. Register as delegate${NC}"
+    echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} register key $KEY_BAKER as delegate"
     echo ""
+    echo "   After registration, verify on tzkt.io/${BAKER_ACCOUNT_HASH} under 'Delegations'"
+    echo ""
+    STEP=$((STEP + 1))
 fi
 
-echo -e "${CYAN}6. Initialize your stake${NC}"
-echo "   Replace NNN with the amount of XTZ to stake (minimum 6000 for baking rights):"
-echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} stake NNN for $KEY_BAKER"
-echo ""
+# Enable BLS/tz4 if needed
+if [ "$USE_BLS_TZ4" = true ] && [ "$BLS_CONFIGURED" = false ]; then
+    echo -e "${CYAN}${STEP}. Enable BLS/tz4 baking${NC}"
+    echo "   Use the CLI to set consensus and companion keys:"
+    echo "   ${GREEN}tezos-baker enable-bls${NC}"
+    echo ""
+    echo "   This will:"
+    echo "   - Set consensus key for $KEY_BAKER to $KEY_CONSENSUS_TZ4"
+    echo "   - Set companion key for $KEY_BAKER to $KEY_DAL_COMPANION_TZ4"
+    echo "   - Verify the registration"
+    echo ""
+    STEP=$((STEP + 1))
+fi
 
-echo -e "${CYAN}7. Set delegate parameters${NC}"
-echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set delegate parameters for $KEY_BAKER --limit-of-staking-over-baking $BAKER_LIMIT_STAKING_OVER_BAKING --edge-of-baking-over-staking $BAKER_EDGE_BAKING_OVER_STAKING"
+# Initialize stake
+echo -e "${CYAN}${STEP}. Initialize your stake (if not already done)${NC}"
+echo "   Check your current stake on tzkt.io/${BAKER_ACCOUNT_HASH}"
 echo ""
-
-echo -e "${CYAN}8. Start DAL node${NC}"
-echo "   mkdir -p $DAL_RUN_DIR"
-echo "   octez-dal-node config init --endpoint http://${NODE_RPC_ADDR} --attester-profiles=\"$BAKER_ACCOUNT_HASH\" --data-dir $DAL_RUN_DIR"
-echo "   nohup octez-dal-node run &>$DAL_LOG_FILE &"
+echo "   If you need to add more stake, use the CLI:"
+echo "   ${GREEN}tezos-baker stake increase <amount>${NC}"
 echo ""
+echo "   Example: tezos-baker stake increase 6000"
+echo "   (Minimum 6000 XTZ for baking rights without external staking)"
+echo ""
+STEP=$((STEP + 1))
 
-echo -e "${CYAN}9. Start baker and accuser${NC}"
-if [ "$USE_BLS_TZ4" = true ]; then
-    echo "   nohup octez-baker --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_CONSENSUS_TZ4 $KEY_DAL_COMPANION_TZ4 $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH --dal-node http://${DAL_ENDPOINT_ADDR} &>$BAKER_LOG_FILE &"
+# Configure DAL if needed
+if [ "$DAL_CONFIGURED" = false ]; then
+    echo -e "${CYAN}${STEP}. Configure DAL node${NC}"
+    echo "   mkdir -p $DAL_RUN_DIR"
+    echo "   octez-dal-node config init --endpoint http://${NODE_RPC_ADDR} --attester-profiles=\"$BAKER_ACCOUNT_HASH\" --data-dir $DAL_RUN_DIR"
+    echo ""
+    STEP=$((STEP + 1))
+fi
+
+# Configure Etherlink if needed
+if [ "$SETUP_ETHERLINK" = true ] && [ "$ETHERLINK_CONFIGURED" = false ]; then
+    echo -e "${CYAN}${STEP}. Configure Etherlink Smart Rollup observer node${NC}"
+    echo "   mkdir -p \"$ETHERLINK_RUN_DIR\""
+    echo "   octez-smart-rollup-node init observer config for $ETHERLINK_ROLLUP_ADDR with operators --data-dir $ETHERLINK_RUN_DIR --pre-images-endpoint $ETHERLINK_PREIMAGES"
+    echo ""
+    echo "   SNAPSHOT=\`echo $ETHERLINK_SNAPSHOT | cut -d \"/\" -f 5\`"
+    echo "   cd /tmp"
+    echo "   wget $ETHERLINK_SNAPSHOT"
+    echo "   octez-smart-rollup-node --endpoint $ETHERLINK_RPC_ENDPOINT snapshot import \$SNAPSHOT --data-dir $ETHERLINK_RUN_DIR"
+    echo "   rm \$SNAPSHOT"
+    echo ""
+    STEP=$((STEP + 1))
+fi
+
+# Configure TezPay if needed
+if [ "$SETUP_TEZPAY" = true ] && [ "$TEZPAY_CONFIGURED" = false ]; then
+    echo -e "${CYAN}${STEP}. Configure TezPay for delegator payments${NC}"
+    echo -e "${YELLOW}   ATTENTION: Only do this after your baker has attestation rights for the current cycle${NC}"
+    echo "   (Check on tzkt.io)"
+    echo ""
+    echo "   mkdir -p $TEZPAY_RUN_DIR"
+    echo "   cd $TEZPAY_RUN_DIR"
+    echo ""
+    echo "   # Install TezPay (if not already installed)"
+    echo "   install-tezpay.sh"
+    echo ""
+    echo "   # Create TezPay configuration file"
+    echo "   cat<<EOF>config.hjson"
+    echo "{"
+    echo "  tezpay_config_version: 0"
+    echo "  disable_analytics: false"
+    echo "  baker: \"${BAKER_ACCOUNT_HASH}\""
+    echo "  payouts: {"
+    echo "    wallet_mode: local-private-key"
+    echo "    payout_mode: actual"
+    echo "    fee: $TEZPAY_FEES"
+    echo "    baker_pays_transaction_fee: true"
+    echo "    baker_pays_allocation_fee: true"
+    echo "    minimum_payout_amount: 0.00"
+    echo "  }"
+    echo "  delegators: {"
+    echo "    requirements: {"
+    echo "      minimum_balance: 0"
+    echo "    }"
+    echo "    overrides: {"
+    echo "      ${TEZPAY_ACCOUNT_HASH}: {"
+    echo "        fee: 1.0"
+    echo "      }"
+    echo "    }"
+    echo "  }"
+    echo "  network: {"
+    echo "    rpc_pool: ["
+    echo "      http://${NODE_RPC_ADDR}/"
+    echo "      https://eu.rpc.tez.capital/"
+    echo "      https://us.rpc.tez.capital/"
+    echo "    ]"
+    echo "    tzkt_url: https://api.tzkt.io/"
+    echo "    protocol_rewards_url: https://protocol-rewards.tez.capital/"
+    echo "    explorer: https://tzkt.io/"
+    echo "    ignore_kt: false"
+    echo "  }"
+    echo "  overdelegation: {"
+    echo "    protect: true"
+    echo "  }"
+    echo "  extensions: ["
+    echo "  ]"
+    echo "}"
+    echo "EOF"
+    echo ""
+    echo "   # Create payout key file (replace placeholder with your actual private key)"
+    echo "   ${YELLOW}# SECURITY WARNING: Store only enough XTZ for payouts in this account${NC}"
+    echo "   ${YELLOW}# Consider using Ledger or remote signer for production${NC}"
+    echo "   ${YELLOW}# See: https://docs.tez.capital/tezpay/tutorials/how-to-setup/${NC}"
+    echo ""
+    echo "   cat<<EOF>payout_wallet_private.key"
+    echo "edskYYYYYYYYYY: YOUR PAYOUTS ACCOUNT PRIVATE KEY"
+    echo "EOF"
+    echo ""
+    echo "   chmod go-rwx payout_wallet_private.key"
+    echo ""
+    echo "   # Delegate payout account to your baker"
+    echo "   octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set delegate for $TEZPAY_ACCOUNT_HASH to $BAKER_ACCOUNT_HASH"
+    echo ""
+    STEP=$((STEP + 1))
+elif [ "$SETUP_TEZPAY" = true ]; then
+    print_warning "TezPay already configured. Manual modifications will not be overwritten."
+fi
+
+# Warn about disabled components
+if [ "$EXISTING_CONFIG" = true ]; then
+    if [ "$ETHERLINK_RUNNING" = true ] && [ "$SETUP_ETHERLINK" = false ]; then
+        echo ""
+        print_warning "Etherlink was running but is now disabled in configuration"
+        echo "   You should stop it manually:"
+        echo "   ${GREEN}stop-etherlink.sh${NC}"
+        echo ""
+    fi
+    
+    if [ "$TEZPAY_RUNNING" = true ] && [ "$SETUP_TEZPAY" = false ]; then
+        echo ""
+        print_warning "TezPay was running but is now disabled in configuration"
+        echo "   You should stop it manually:"
+        echo "   ${GREEN}stop-tezpay.sh${NC}"
+        echo ""
+    fi
+fi
+
+# Start all services (only if not already running)
+if [ "$SERVICES_RUNNING" = false ]; then
+    echo -e "${CYAN}${STEP}. Start all services${NC}"
+    echo "   Once all configuration steps above are complete, start all services:"
+    echo "   ${GREEN}tezos-baker start${NC}"
+    echo ""
+    echo "   This will start (in order):"
+    echo "   - Octez node (if not running)"
+    echo "   - DAL node"
+    echo "   - Baker and Accuser"
+    if [ "$SETUP_ETHERLINK" = true ]; then
+        echo "   - Etherlink Smart Rollup node"
+    fi
+    if [ "$SETUP_TEZPAY" = true ]; then
+        echo "   - TezPay (continual mode)"
+    fi
+    echo ""
+    STEP=$((STEP + 1))
 else
-    echo "   nohup octez-baker --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run with local node $NODE_RUN_DIR $KEY_BAKER --liquidity-baking-toggle-vote $BAKER_LIQUIDITY_BAKING_SWITCH --dal-node http://${DAL_ENDPOINT_ADDR} &>$BAKER_LOG_FILE &"
-fi
-echo "   nohup octez-accuser --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} run &>$ACCUSER_LOG_FILE &"
-echo ""
-
-if [ "$SETUP_ETHERLINK" = true ]; then
-    echo -e "${CYAN}10. Setup Etherlink Smart Rollup node (optional)${NC}"
-    echo "   See the Etherlink section in initial-setup.sh for detailed instructions."
+    print_success "Services are already running. No need to start them again."
     echo ""
-fi
-
-if [ "$SETUP_TEZPAY" = true ]; then
-    echo -e "${CYAN}11. Setup TezPay (optional, only after you have endorsing rights)${NC}"
-    echo "   See the TezPay section in initial-setup.sh for detailed instructions."
+    echo "   If you made configuration changes that require a restart, use:"
+    echo "   ${GREEN}tezos-baker restart${NC}"
     echo ""
 fi
 
