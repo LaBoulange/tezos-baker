@@ -8,6 +8,12 @@
 
 set -e
 
+# Parse command line arguments
+DRY_RUN=false
+if [ "$1" = "--dry-run" ]; then
+    DRY_RUN=true
+fi
+
 # Colors for better UX
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -142,6 +148,142 @@ compare_configs() {
 }
 
 #############################################################################
+# Dry-run wrappers
+#############################################################################
+
+dry_run_write_file() {
+    local file="$1"
+    local content="$2"
+    
+    if [ "$DRY_RUN" = true ]; then
+        print_info "[DRY-RUN] Would write to: $file"
+        echo -e "${MAGENTA}Content preview (first 30 lines):${NC}"
+        echo "$content" | head -30
+        if [ $(echo "$content" | wc -l) -gt 30 ]; then
+            echo -e "${MAGENTA}... ($(echo "$content" | wc -l) total lines)${NC}"
+        fi
+        echo ""
+    else
+        echo "$content" > "$file"
+    fi
+}
+
+dry_run_cp() {
+    local src="$1"
+    local dst="$2"
+    
+    if [ "$DRY_RUN" = true ]; then
+        print_info "[DRY-RUN] Would copy: $src -> $dst"
+    else
+        cp "$src" "$dst"
+    fi
+}
+
+dry_run_chmod() {
+    local perms="$1"
+    local file="$2"
+    
+    if [ "$DRY_RUN" = true ]; then
+        print_info "[DRY-RUN] Would chmod $perms: $file"
+    else
+        chmod "$perms" "$file"
+    fi
+}
+
+dry_run_mkdir() {
+    local dir="$1"
+    
+    if [ "$DRY_RUN" = true ]; then
+        print_info "[DRY-RUN] Would create directory: $dir"
+    else
+        mkdir -p "$dir"
+    fi
+}
+
+dry_run_wget() {
+    local url="$1"
+    
+    if [ "$DRY_RUN" = true ]; then
+        print_info "[DRY-RUN] Would download: $url"
+    else
+        wget -q "$url"
+    fi
+}
+
+dry_run_rm() {
+    local file="$1"
+    
+    if [ "$DRY_RUN" = true ]; then
+        print_info "[DRY-RUN] Would remove: $file"
+    else
+        rm "$file"
+    fi
+}
+
+dry_run_exec_script() {
+    local script="$1"
+    shift
+    local args="$@"
+    
+    if [ "$DRY_RUN" = true ]; then
+        print_info "[DRY-RUN] Would execute: $script $args"
+    else
+        "$script" "$@"
+    fi
+}
+
+dry_run_stop_services() {
+    if [ "$DRY_RUN" = true ]; then
+        print_warning "[DRY-RUN] Would stop all services:"
+        [ "$TEZPAY_RUNNING" = true ] && echo "  - TezPay"
+        [ "$ETHERLINK_RUNNING" = true ] && echo "  - Etherlink"
+        [ "$DAL_RUNNING" = true ] && echo "  - DAL node"
+        [ "$ACCUSER_RUNNING" = true ] && echo "  - Accuser"
+        [ "$BAKER_RUNNING" = true ] && echo "  - Baker"
+        [ "$NODE_RUNNING" = true ] && echo "  - Octez node"
+    else
+        if [ -x "$(which tezos-baker 2>/dev/null)" ]; then
+            print_info "Stopping all services with tezos-baker CLI..."
+            tezos-baker stop
+        else
+            print_info "Stopping services manually..."
+            if [ -x "$(which stop-tezpay.sh 2>/dev/null)" ]; then
+                stop-tezpay.sh 2>/dev/null || true
+            fi
+            if [ -x "$(which stop-etherlink.sh 2>/dev/null)" ]; then
+                stop-etherlink.sh 2>/dev/null || true
+            fi
+            if [ -x "$(which stop-octez.sh 2>/dev/null)" ]; then
+                stop-octez.sh
+            fi
+        fi
+    fi
+}
+
+dry_run_start_node() {
+    if [ "$DRY_RUN" = true ]; then
+        print_info "[DRY-RUN] Would start Octez node"
+        print_info "[DRY-RUN] Would wait for node bootstrap"
+    else
+        nohup octez-node run --config-file="$NODE_CONFIG_FILE" --rpc-addr "$NODE_RPC_ADDR" --log-output="$NODE_LOG_FILE" &>/dev/null &
+        print_info "Waiting for node to bootstrap (this may take several minutes)..."
+        mkdir -p "$CLIENT_BASE_DIR"
+        octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" bootstrapped
+    fi
+}
+
+dry_run_octez_cmd() {
+    local cmd="$1"
+    shift
+    
+    if [ "$DRY_RUN" = true ]; then
+        print_info "[DRY-RUN] Would execute: $cmd $@"
+    else
+        "$cmd" "$@"
+    fi
+}
+
+#############################################################################
 # Main Setup Wizard
 #############################################################################
 
@@ -237,7 +379,7 @@ if [ -f "/usr/local/bin/tezos-env.sh" ]; then
     
     # Create backup
     BACKUP_FILE="/usr/local/bin/tezos-env.sh.backup.$(date +%Y%m%d_%H%M%S)"
-    cp /usr/local/bin/tezos-env.sh "$BACKUP_FILE"
+    dry_run_cp /usr/local/bin/tezos-env.sh "$BACKUP_FILE"
     BACKUP_CREATED=true
     print_success "Backup created: $BACKUP_FILE"
     echo ""
@@ -616,56 +758,56 @@ ENV_FILE="${INSTALL_DIR}/tezos-env.sh"
 
 print_info "Creating $ENV_FILE..."
 
-cat > "$ENV_FILE" << EOF
+ENV_CONTENT=$(cat << 'EOF'
 #!/bin/bash 
 
 ##################################
 # Architecture
 ##################################
 
-export BAKER_ARCH='$BAKER_ARCH'
+export BAKER_ARCH='BAKER_ARCH_PLACEHOLDER'
 
 ##################################
 # Internal - DO NOT EDIT
 ##################################
 
-. \`which tezos-constants.sh\`
+. `which tezos-constants.sh`
 
 ##################################
 # Environment variables for octez
 ##################################
 
-export ZCASH_DIR="\${HOME}/.zcash-params"
-export BUILD_DIR='$BUILD_DIR'
-export INSTALL_DIR="$INSTALL_DIR"
-export DATA_DIR="$DATA_DIR"
+export ZCASH_DIR="${HOME}/.zcash-params"
+export BUILD_DIR='BUILD_DIR_PLACEHOLDER'
+export INSTALL_DIR="INSTALL_DIR_PLACEHOLDER"
+export DATA_DIR="DATA_DIR_PLACEHOLDER"
 
 export NODE_ETC_DIR="/usr/local/etc/octez-node"
-export NODE_RUN_DIR="\${DATA_DIR}/octez-node"
+export NODE_RUN_DIR="${DATA_DIR}/octez-node"
 export NODE_LOG_FILE="/var/log/octez-node.log"
-export NODE_CONFIG_FILE="\${NODE_ETC_DIR}/config.json"
+export NODE_CONFIG_FILE="${NODE_ETC_DIR}/config.json"
 export NODE_RPC_ADDR="127.0.0.1:8732"
-export NODE_NETWORK="$NODE_NETWORK"
-export NODE_MODE="$NODE_MODE"
-export NODE_SNAPSHOT_URL="$NODE_SNAPSHOT_URL"
+export NODE_NETWORK="NODE_NETWORK_PLACEHOLDER"
+export NODE_MODE="NODE_MODE_PLACEHOLDER"
+export NODE_SNAPSHOT_URL="NODE_SNAPSHOT_URL_PLACEHOLDER"
 
-export KEY_BAKER="$KEY_BAKER"
-export KEY_CONSENSUS_TZ4="$KEY_CONSENSUS_TZ4"
-export KEY_DAL_COMPANION_TZ4="$KEY_DAL_COMPANION_TZ4"
-export KEY_PAYOUT="$KEY_PAYOUT"
+export KEY_BAKER="KEY_BAKER_PLACEHOLDER"
+export KEY_CONSENSUS_TZ4="KEY_CONSENSUS_TZ4_PLACEHOLDER"
+export KEY_DAL_COMPANION_TZ4="KEY_DAL_COMPANION_TZ4_PLACEHOLDER"
+export KEY_PAYOUT="KEY_PAYOUT_PLACEHOLDER"
 
-export CLIENT_BASE_DIR="\${DATA_DIR}/octez-client"
+export CLIENT_BASE_DIR="${DATA_DIR}/octez-client"
 export CLIENT_LOG_FILE="/var/log/octez-client.log"
 
-export BAKER_ACCOUNT_HASH="$BAKER_ACCOUNT_HASH"
+export BAKER_ACCOUNT_HASH="BAKER_ACCOUNT_HASH_PLACEHOLDER"
 export BAKER_LOG_FILE="/var/log/octez-baker.log"
-export BAKER_LIQUIDITY_BAKING_SWITCH="$BAKER_LIQUIDITY_BAKING_SWITCH"
-export BAKER_LIMIT_STAKING_OVER_BAKING=$BAKER_LIMIT_STAKING_OVER_BAKING
-export BAKER_EDGE_BAKING_OVER_STAKING=$BAKER_EDGE_BAKING_OVER_STAKING
+export BAKER_LIQUIDITY_BAKING_SWITCH="BAKER_LIQUIDITY_BAKING_SWITCH_PLACEHOLDER"
+export BAKER_LIMIT_STAKING_OVER_BAKING=BAKER_LIMIT_STAKING_OVER_BAKING_PLACEHOLDER
+export BAKER_EDGE_BAKING_OVER_STAKING=BAKER_EDGE_BAKING_OVER_STAKING_PLACEHOLDER
 
 export ACCUSER_LOG_FILE="/var/log/octez-accuser.log"
 
-export DAL_RUN_DIR="\${DATA_DIR}/octez-dal-node"
+export DAL_RUN_DIR="${DATA_DIR}/octez-dal-node"
 export DAL_LOG_FILE="/var/log/octez-dal-node.log"
 export DAL_ENDPOINT_ADDR="127.0.0.1:10732"
 
@@ -673,28 +815,50 @@ export DAL_ENDPOINT_ADDR="127.0.0.1:10732"
 # Environment variables for TezPay (should you wish to pay your delegators, these can be ignored otherwise)
 ############################################################################################################
 
-export TEZPAY_RUN_DIR="\${DATA_DIR}/tezpay"
+export TEZPAY_RUN_DIR="${DATA_DIR}/tezpay"
 export TEZPAY_INSTALL_SCRIPT="/tmp/install.sh"
-export TEZPAY_ACCOUNT_HASH="$TEZPAY_ACCOUNT_HASH"
-export TEZPAY_FEES=$TEZPAY_FEES
-export TEZPAY_INTERVAL=$TEZPAY_INTERVAL
+export TEZPAY_ACCOUNT_HASH="TEZPAY_ACCOUNT_HASH_PLACEHOLDER"
+export TEZPAY_FEES=TEZPAY_FEES_PLACEHOLDER
+export TEZPAY_INTERVAL=TEZPAY_INTERVAL_PLACEHOLDER
 export TEZPAY_LOG_FILE="/var/log/tezpay.log"
 
 ######################################################################################################################
 # Etherlink Smart Rollup node (should you wish to run an Etherlink Smart Rollup node, these can be ignored otherwise)
 ######################################################################################################################
 
-export ETHERLINK_ROLLUP_ADDR=\$(eval echo '\$ETHERLINK_ROLLUP_ADDR_'\`echo \$NODE_NETWORK | tr '[:lower:]' '[:upper:]'\`)
-export ETHERLINK_RUN_DIR="\${DATA_DIR}/octez-smart-rollup-node"
-export ETHERLINK_IMAGES_ENDPOINT="https://snapshots.eu.tzinit.org/etherlink-\${NODE_NETWORK}"
-export ETHERLINK_PREIMAGES="\${ETHERLINK_IMAGES_ENDPOINT}/wasm_2_0_0"
-export ETHERLINK_SNAPSHOT="\${ETHERLINK_IMAGES_ENDPOINT}/eth-\${NODE_NETWORK}.full"
-export ETHERLINK_RPC_ENDPOINT="https://rpc.tzkt.io/\${NODE_NETWORK}"
+export ETHERLINK_ROLLUP_ADDR=$(eval echo '$ETHERLINK_ROLLUP_ADDR_'`echo $NODE_NETWORK | tr '[:lower:]' '[:upper:]'`)
+export ETHERLINK_RUN_DIR="${DATA_DIR}/octez-smart-rollup-node"
+export ETHERLINK_IMAGES_ENDPOINT="https://snapshots.eu.tzinit.org/etherlink-${NODE_NETWORK}"
+export ETHERLINK_PREIMAGES="${ETHERLINK_IMAGES_ENDPOINT}/wasm_2_0_0"
+export ETHERLINK_SNAPSHOT="${ETHERLINK_IMAGES_ENDPOINT}/eth-${NODE_NETWORK}.full"
+export ETHERLINK_RPC_ENDPOINT="https://rpc.tzkt.io/${NODE_NETWORK}"
 export ETHERLINK_RPC_ADDR="127.0.0.1:8932"
 export ETHERLINK_NODE_LOG_FILE="/var/log/octez-smart-rollup-node.log"
 EOF
+)
 
-chmod +x "$ENV_FILE"
+# Replace placeholders with actual values
+ENV_CONTENT="${ENV_CONTENT//BAKER_ARCH_PLACEHOLDER/$BAKER_ARCH}"
+ENV_CONTENT="${ENV_CONTENT//BUILD_DIR_PLACEHOLDER/$BUILD_DIR}"
+ENV_CONTENT="${ENV_CONTENT//INSTALL_DIR_PLACEHOLDER/$INSTALL_DIR}"
+ENV_CONTENT="${ENV_CONTENT//DATA_DIR_PLACEHOLDER/$DATA_DIR}"
+ENV_CONTENT="${ENV_CONTENT//NODE_NETWORK_PLACEHOLDER/$NODE_NETWORK}"
+ENV_CONTENT="${ENV_CONTENT//NODE_MODE_PLACEHOLDER/$NODE_MODE}"
+ENV_CONTENT="${ENV_CONTENT//NODE_SNAPSHOT_URL_PLACEHOLDER/$NODE_SNAPSHOT_URL}"
+ENV_CONTENT="${ENV_CONTENT//KEY_BAKER_PLACEHOLDER/$KEY_BAKER}"
+ENV_CONTENT="${ENV_CONTENT//KEY_CONSENSUS_TZ4_PLACEHOLDER/$KEY_CONSENSUS_TZ4}"
+ENV_CONTENT="${ENV_CONTENT//KEY_DAL_COMPANION_TZ4_PLACEHOLDER/$KEY_DAL_COMPANION_TZ4}"
+ENV_CONTENT="${ENV_CONTENT//KEY_PAYOUT_PLACEHOLDER/$KEY_PAYOUT}"
+ENV_CONTENT="${ENV_CONTENT//BAKER_ACCOUNT_HASH_PLACEHOLDER/$BAKER_ACCOUNT_HASH}"
+ENV_CONTENT="${ENV_CONTENT//BAKER_LIQUIDITY_BAKING_SWITCH_PLACEHOLDER/$BAKER_LIQUIDITY_BAKING_SWITCH}"
+ENV_CONTENT="${ENV_CONTENT//BAKER_LIMIT_STAKING_OVER_BAKING_PLACEHOLDER/$BAKER_LIMIT_STAKING_OVER_BAKING}"
+ENV_CONTENT="${ENV_CONTENT//BAKER_EDGE_BAKING_OVER_STAKING_PLACEHOLDER/$BAKER_EDGE_BAKING_OVER_STAKING}"
+ENV_CONTENT="${ENV_CONTENT//TEZPAY_ACCOUNT_HASH_PLACEHOLDER/$TEZPAY_ACCOUNT_HASH}"
+ENV_CONTENT="${ENV_CONTENT//TEZPAY_FEES_PLACEHOLDER/$TEZPAY_FEES}"
+ENV_CONTENT="${ENV_CONTENT//TEZPAY_INTERVAL_PLACEHOLDER/$TEZPAY_INTERVAL}"
+
+dry_run_write_file "$ENV_FILE" "$ENV_CONTENT"
+dry_run_chmod +x "$ENV_FILE"
 
 print_success "Configuration file created: $ENV_FILE"
 
@@ -766,15 +930,15 @@ fi
 
 # Step 1: Setup ZCASH parameters (always check, but skip if exists)
 print_info "Setting up ZCASH parameters..."
-mkdir -p "$ZCASH_DIR"
+dry_run_mkdir "$ZCASH_DIR"
 cd "$ZCASH_DIR"
 
 for paramFile in 'sprout-groth16.params' 'sapling-output.params' 'sapling-spend.params'
 do
     if [ ! -f "$paramFile" ]; then
         print_info "Downloading $paramFile..."
-        wget -q "${ZCASH_DOWNLOAD_URL}/${paramFile}"
-        chmod u+rw "$paramFile"
+        dry_run_wget "${ZCASH_DOWNLOAD_URL}/${paramFile}"
+        dry_run_chmod u+rw "$paramFile"
     else
         print_success "$paramFile already exists"
     fi
@@ -784,7 +948,7 @@ done
 if [ "$NEED_REINSTALL_OCTEZ" = true ] || [ ! -x "$(which octez-node 2>/dev/null)" ]; then
     print_info "Installing Octez..."
     if [ -x "${INSTALL_DIR}/install-octez.sh" ]; then
-        "${INSTALL_DIR}/install-octez.sh"
+        dry_run_exec_script "${INSTALL_DIR}/install-octez.sh"
     else
         print_error "install-octez.sh not found. Please ensure install-tezos-baker.sh was run first."
         exit 1
@@ -796,45 +960,39 @@ fi
 # Step 3: Setup node only if necessary
 if [ "$NEED_REIMPORT_SNAPSHOT" = true ]; then
     print_info "Setting up RPC node..."
-    mkdir -p "$DATA_DIR"
-    mkdir -p "$NODE_RUN_DIR"
-    mkdir -p "$NODE_ETC_DIR"
+    dry_run_mkdir "$DATA_DIR"
+    dry_run_mkdir "$NODE_RUN_DIR"
+    dry_run_mkdir "$NODE_ETC_DIR"
     
     print_info "Initializing node configuration..."
-    octez-node config init --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR" --network="$NODE_NETWORK" --history-mode="$NODE_MODE"
-    octez-node config update --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR"
+    dry_run_octez_cmd octez-node config init --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR" --network="$NODE_NETWORK" --history-mode="$NODE_MODE"
+    dry_run_octez_cmd octez-node config update --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR"
     
     print_info "Downloading snapshot..."
     cd /tmp
     SNAPSHOT=$(basename "$NODE_SNAPSHOT_URL")
-    wget -q --show-progress "$NODE_SNAPSHOT_URL"
-    octez-node snapshot info "$SNAPSHOT"
+    dry_run_wget "$NODE_SNAPSHOT_URL"
+    dry_run_octez_cmd octez-node snapshot info "$SNAPSHOT"
     
     print_info "Importing snapshot (this will take several minutes, please wait)..."
-    octez-node snapshot import "$SNAPSHOT" --no-check --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR"
-    rm "$SNAPSHOT"
+    dry_run_octez_cmd octez-node snapshot import "$SNAPSHOT" --no-check --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR"
+    dry_run_rm "$SNAPSHOT"
     
     print_success "Snapshot imported successfully!"
     
-    chmod o-rwx "$NODE_RUN_DIR/identity.json"
+    dry_run_chmod o-rwx "$NODE_RUN_DIR/identity.json"
 else
     print_success "Node already configured, skipping snapshot import"
 fi
 
 # Step 4: Start node only if not already running
 if ! check_service_running "octez-node"; then
-    print_info "Starting node..."
-    nohup octez-node run --config-file="$NODE_CONFIG_FILE" --rpc-addr "$NODE_RPC_ADDR" --log-output="$NODE_LOG_FILE" &>/dev/null &
-    
-    print_info "Waiting for node to bootstrap (this may take several minutes)..."
-    mkdir -p "$CLIENT_BASE_DIR"
-    octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" bootstrapped
-    
+    dry_run_start_node
     print_success "Node bootstrapped successfully!"
 else
     print_success "Node already running"
     # Ensure client directory exists
-    mkdir -p "$CLIENT_BASE_DIR"
+    dry_run_mkdir "$CLIENT_BASE_DIR"
 fi
 
 #############################################################################
