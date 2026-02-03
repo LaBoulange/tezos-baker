@@ -20,6 +20,9 @@ A guided wizard that walks you through the initial setup with step-by-step promp
 ```bash
 # Run the wizard for initial setup (or to modify existing configuration)
 tezos-baker-setup.sh
+
+# Preview changes without modifying anything (dry-run mode)
+tezos-baker-setup.sh --dry-run
 ```
 
 ### 🛠️ **Modern CLI Tool** (`tezos-baker`)

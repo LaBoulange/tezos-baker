@@ -15,6 +15,7 @@ A guided wizard that walks you through the initial baker setup with:
 - ✅ Colored output for better readability
 - ✅ Automated installation of Octez and node setup
 - ✅ **Safe for existing installations**: Automatically creates backups and loads current values as defaults
+- ✅ **Dry-run mode**: Preview all changes without modifying anything (`--dry-run`)
 
 ### 2. **Modern CLI Tool** (`tezos-baker`)
 A comprehensive command-line interface for all maintenance operations:
@@ -363,25 +364,123 @@ The new tools are **additions**, not replacements. Use whichever approach you pr
 
 ---
 
+## 🔍 Dry-Run Mode
+
+The setup wizard supports a **dry-run mode** that lets you preview all changes without modifying anything on your system.
+
+### What is Dry-Run Mode?
+
+When you run the wizard with `--dry-run`, it will:
+- ✅ Go through all the interactive prompts normally
+- ✅ Show exactly what files would be created/modified
+- ✅ Display previews of file contents
+- ✅ Show what commands would be executed
+- ❌ **NOT** create or modify any files
+- ❌ **NOT** download anything
+- ❌ **NOT** execute any commands
+- ❌ **NOT** start or stop any services
+
+### Usage
+
+```bash
+# Preview the setup without making any changes
+tezos-baker-setup.sh --dry-run
+```
+
+### Example Output
+
+```bash
+$ tezos-baker-setup.sh --dry-run
+
+# ... interactive prompts ...
+
+Generating Configuration File
+═══════════════════════════════════════════════════════════════
+
+ℹ Creating /usr/local/bin/tezos-env.sh...
+ℹ [DRY-RUN] Would write to: /usr/local/bin/tezos-env.sh
+Content preview (first 30 lines):
+#!/bin/bash 
+
+##################################
+# Architecture
+##################################
+
+export BAKER_ARCH='x86_64'
+...
+(150 total lines)
+
+ℹ [DRY-RUN] Would chmod +x: /usr/local/bin/tezos-env.sh
+
+Smart Installation
+═══════════════════════════════════════════════════════════════
+
+ℹ Setting up ZCASH parameters...
+ℹ [DRY-RUN] Would create directory: /home/user/.zcash-params
+ℹ Downloading sprout-groth16.params...
+ℹ [DRY-RUN] Would download: https://download.z.cash/downloads/sprout-groth16.params
+ℹ [DRY-RUN] Would chmod u+rw: sprout-groth16.params
+
+ℹ Installing Octez...
+ℹ [DRY-RUN] Would execute: /usr/local/bin/install-octez.sh
+
+ℹ Setting up RPC node...
+ℹ [DRY-RUN] Would create directory: /var/tezos
+ℹ [DRY-RUN] Would create directory: /var/tezos/octez-node
+ℹ [DRY-RUN] Would create directory: /usr/local/etc/octez-node
+
+ℹ Initializing node configuration...
+ℹ [DRY-RUN] Would execute: octez-node config init --config-file=/usr/local/etc/octez-node/config.json ...
+
+ℹ Downloading snapshot...
+ℹ [DRY-RUN] Would download: https://snapshots.tzinit.org/mainnet/rolling
+
+ℹ Importing snapshot (this will take several minutes, please wait)...
+ℹ [DRY-RUN] Would execute: octez-node snapshot import rolling --no-check ...
+ℹ [DRY-RUN] Would remove: rolling
+
+✓ Snapshot imported successfully!
+ℹ [DRY-RUN] Would chmod o-rwx: /var/tezos/octez-node/identity.json
+
+ℹ [DRY-RUN] Would start Octez node
+ℹ [DRY-RUN] Would wait for node bootstrap
+```
+
+### When to Use Dry-Run Mode
+
+**Perfect for:**
+- 🔍 **Testing configurations** before applying them
+- 📚 **Learning** what the wizard does step-by-step
+- 🔄 **Reviewing changes** on existing installations
+- 📝 **Documentation** - see what commands would be run
+- 🐛 **Troubleshooting** - understand the setup process
+
+---
+
 ## 💡 Tips & Best Practices
 
-1. **Use the wizard for initial setup** - It's faster and less error-prone than manual configuration
+1. **Use dry-run mode first** - Preview changes before applying them:
+   ```bash
+   tezos-baker-setup.sh --dry-run
+   ```
 
-2. **Use the CLI for daily operations** - Commands are easier to remember than script locations
+2. **Use the wizard for initial setup** - It's faster and less error-prone than manual configuration
 
-3. **Check status regularly:**
+3. **Use the CLI for daily operations** - Commands are easier to remember than script locations
+
+4. **Check status regularly:**
    ```bash
    tezos-baker status
    ```
 
-4. **Monitor logs during upgrades:**
+5. **Monitor logs during upgrades:**
    ```bash
    tezos-baker upgrade
    # In another terminal:
    tezos-baker logs node
    ```
 
-5. **Use tab completion** - The CLI command names are designed to be intuitive
+6. **Use tab completion** - The CLI command names are designed to be intuitive
 
 ---
 
