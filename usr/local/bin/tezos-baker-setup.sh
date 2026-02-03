@@ -254,6 +254,9 @@ if [ -f "/usr/local/bin/tezos-env.sh" ]; then
     OLD_BAKER_LIMIT="$BAKER_LIMIT_STAKING_OVER_BAKING"
     OLD_BAKER_EDGE="$BAKER_EDGE_BAKING_OVER_STAKING"
     
+    # Store old liquidity baking vote
+    OLD_BAKER_LB_SWITCH="$BAKER_LIQUIDITY_BAKING_SWITCH"
+    
     # Store old TezPay address
     OLD_TEZPAY_ACCOUNT_HASH="$TEZPAY_ACCOUNT_HASH"
     
@@ -439,6 +442,14 @@ if [ "$EXISTING_CONFIG" = true ] && [ "$OLD_USE_BLS_TZ4" != "$USE_BLS_TZ4" ]; th
         print_warning "BLS/tz4 enabled - baker restart will be required after key import"
     else
         print_warning "BLS/tz4 disabled - baker restart will be required"
+    fi
+fi
+
+# Detect liquidity baking vote change
+if [ "$EXISTING_CONFIG" = true ] && [ -n "$OLD_BAKER_LB_SWITCH" ]; then
+    if [ "$OLD_BAKER_LB_SWITCH" != "$BAKER_LIQUIDITY_BAKING_SWITCH" ]; then
+        NEED_RESTART_SERVICES=true
+        print_warning "Liquidity baking vote changed - baker restart will be required"
     fi
 fi
 
@@ -1116,8 +1127,8 @@ if [ "$EXISTING_CONFIG" = true ]; then
             echo "   Old values: limit=$OLD_BAKER_LIMIT, edge=$OLD_BAKER_EDGE"
             echo "   New values: limit=$BAKER_LIMIT_STAKING_OVER_BAKING, edge=$BAKER_EDGE_BAKING_OVER_STAKING"
             echo ""
-            echo "   You need to update on-chain parameters:"
-            echo "   ${GREEN}octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set delegate parameters for $KEY_BAKER --limit-of-staking-over-baking $BAKER_LIMIT_STAKING_OVER_BAKING --edge-of-baking-over-staking $BAKER_EDGE_BAKING_OVER_STAKING${NC}"
+            echo "   You need to update on-chain parameters using the CLI:"
+            echo "   ${GREEN}tezos-baker stake params${NC}"
             echo ""
         fi
     fi
