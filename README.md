@@ -6,6 +6,20 @@ This code:
 - optionally installs TezPay on the same machine,
 - provides some basic maintenance tools.
 
+Content of this document:
+- [tezos-baker](#tezos-baker)
+  * [🆕 New User-Friendly Features](#-new-user-friendly-features)
+  * [Disclaimer](#disclaimer)
+  * [Release management](#release-management)
+  * [Prerequisites](#prerequisites)
+  * [Operating instructions](#operating-instructions)
+    + [Initial setup](#initial-setup)
+    + [Upgrade from the previous versions](#upgrade-from-the-previous-versions)
+    + [Maintenance](#maintenance)
+  * [Should you wish to support us](#should-you-wish-to-support-us)
+  * [Contact](#contact)
+
+
 ## 🆕 New User-Friendly Features
 
 **We've made managing your Tezos baker much easier!** 
@@ -40,19 +54,6 @@ tezos-baker logs baker            # View baker logs
 **📖 For complete documentation, see [README-NEW-FEATURES.md](README-NEW-FEATURES.md)**
 
 > **Note:** The traditional workflow (manual configuration and cheat sheets) still works perfectly. The new tools are additions, not replacements!
-
-Content of this document:
-- [tezos-baker](#tezos-baker)
-  * [🆕 New User-Friendly Features](#-new-user-friendly-features)
-  * [Disclaimer](#disclaimer)
-  * [Release management](#release-management)
-  * [Prerequisites](#prerequisites)
-  * [Operating instructions](#operating-instructions)
-    + [Initial setup](#initial-setup)
-    + [Upgrade from the previous versions](#upgrade-from-the-previous-versions)
-    + [Maintenance](#maintenance)
-  * [Should you wish to support us](#should-you-wish-to-support-us)
-  * [Contact](#contact)
 
 
 ## Disclaimer
