@@ -91,7 +91,9 @@ validate_tezos_address() {
     local addr="$1"
     local prefix="$2"
     
-    if [[ ! "$addr" =~ ^${prefix}[1-9A-HJ-NP-Za-km-z]{33}$ ]]; then
+    # Tezos addresses: tz1/tz2/tz3/tz4/tz5 (33 chars after prefix)
+    # Total length: 36 characters (tz + 1 digit + 33 base58 chars)
+    if [[ ! "$addr" =~ ^${prefix}[1-5][1-9A-HJ-NP-Za-km-z]{33}$ ]]; then
         return 1
     fi
     return 0
@@ -553,7 +555,7 @@ while true; do
         print_success "Valid Tezos address"
         break
     fi
-    print_error "Invalid Tezos address. Must start with 'tz' followed by 33 characters."
+    print_error "Invalid Tezos address. Must start with 'tz[1-5]' followed by 33 characters."
 done
 
 #############################################################################
