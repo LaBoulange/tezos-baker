@@ -568,14 +568,28 @@ echo "BLS/tz4 keys provide enhanced security for baking operations."
 echo "You can configure this now or later using the maintenance CLI."
 echo ""
 
-KEY_CONSENSUS_TZ4="consensus-tz4"
-KEY_DAL_COMPANION_TZ4="dal-companion-tz4"
+# Initialize KEY_CONSENSUS_TZ4 and KEY_DAL_COMPANION_TZ4 with values from config if they exist
+KEY_CONSENSUS_TZ4=${KEY_CONSENSUS_TZ4:-consensus-tz4}
+KEY_DAL_COMPANION_TZ4=${KEY_DAL_COMPANION_TZ4:-dal-companion-tz4}
 
 # Store old BLS/tz4 state if existing config
 if [ "$EXISTING_CONFIG" = true ]; then
     # Try to detect if BLS/tz4 was used before by checking if consensus key exists
-    if octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" list known addresses 2>/dev/null | grep -q "^consensus-tz4:"; then
+    if octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" list known addresses 2>/dev/null | grep -q "^${KEY_CONSENSUS_TZ4}:"; then
         OLD_USE_BLS_TZ4=true
+        # Display the existing consensus key address
+        CONSENSUS_ADDR=$(octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" show address "$KEY_CONSENSUS_TZ4" 2>/dev/null | grep '^Hash' | awk '{print $2}')
+        if [ -n "$CONSENSUS_ADDR" ]; then
+            print_info "Existing consensus key '$KEY_CONSENSUS_TZ4': $CONSENSUS_ADDR"
+        fi
+        
+        # Also display DAL companion key if it exists
+        if octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" list known addresses 2>/dev/null | grep -q "^${KEY_DAL_COMPANION_TZ4}:"; then
+            DAL_ADDR=$(octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" show address "$KEY_DAL_COMPANION_TZ4" 2>/dev/null | grep '^Hash' | awk '{print $2}')
+            if [ -n "$DAL_ADDR" ]; then
+                print_info "Existing DAL companion key '$KEY_DAL_COMPANION_TZ4': $DAL_ADDR"
+            fi
+        fi
     else
         OLD_USE_BLS_TZ4=false
     fi
@@ -583,8 +597,8 @@ fi
 
 if prompt_yes_no "Do you want to use BLS/tz4 consensus keys?" "n"; then
     USE_BLS_TZ4=true
-    prompt_input "Consensus key alias" "consensus-tz4" "KEY_CONSENSUS_TZ4"
-    prompt_input "DAL companion key alias" "dal-companion-tz4" "KEY_DAL_COMPANION_TZ4"
+    prompt_input "Consensus key alias" "$KEY_CONSENSUS_TZ4" "KEY_CONSENSUS_TZ4"
+    prompt_input "DAL companion key alias" "$KEY_DAL_COMPANION_TZ4" "KEY_DAL_COMPANION_TZ4"
     print_info "If not already done, you will need to import these keys manually after the setup."
 else
     USE_BLS_TZ4=false
@@ -673,7 +687,7 @@ print_header "Step 6/8: TezPay Configuration (Optional)"
 echo "TezPay allows you to automatically pay your delegators."
 echo ""
 
-if prompt_yes_no "Do you want to configure TezPay for delegator payments?" "n"; then
+if prompt_yes_no "Do you want to use TezPay for delegator payments?" "n"; then
     SETUP_TEZPAY=true
     
     while true; do
