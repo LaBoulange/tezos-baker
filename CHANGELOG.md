@@ -17,6 +17,7 @@ All notable changes are documented in this file.
 - Enhanced `stop-octez.sh` to stop all Octez processes more gracefully (baker, accuser, DAL, node)
 - Added validation checks in `start-tezpay.sh` and `start-etherlink.sh` before launching services
 - Adapted `install-tezos-baker.sh` to properly handle executable files without `.sh` extension
+- Added `--branch` parameter to `install-tezos-baker.sh` for testing unreleased code from specific branches
 - Replaced ghostnet by tallinnnet further to deprecation
 
 ## v24.1 - 2026-01-24

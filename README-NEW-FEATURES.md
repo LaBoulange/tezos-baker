@@ -34,10 +34,20 @@ A comprehensive command-line interface for all maintenance operations:
 Instead of manually editing configuration files and copy-pasting commands, simply run:
 
 ```bash
-# 1. Install the tezos-baker scripts (as before)
+# 1. Install the tezos-baker scripts
 install-tezos-baker.sh
 
 # 2. Run the interactive setup wizard
+tezos-baker-setup.sh
+```
+
+**Testing unreleased code:** If you need to test code from a specific branch before creating an official release:
+
+```bash
+# Install from a test branch
+install-tezos-baker.sh --branch my-test-branch
+
+# Then run the setup wizard
 tezos-baker-setup.sh
 ```
 
