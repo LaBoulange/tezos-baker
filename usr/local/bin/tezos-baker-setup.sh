@@ -53,11 +53,16 @@ prompt_input() {
     local prompt="$1"
     local default="$2"
     local var_name="$3"
+    local input
     
     if [ -n "$default" ]; then
         echo -ne "${CYAN}?${NC} $prompt [${GREEN}$default${NC}]: "
         read input
-        eval "$var_name=\"${input:-$default}\""
+        if [ -z "$input" ]; then
+            eval "$var_name=\"$default\""
+        else
+            eval "$var_name=\"$input\""
+        fi
     else
         echo -ne "${CYAN}?${NC} $prompt: "
         read input
