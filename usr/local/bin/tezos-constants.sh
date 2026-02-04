@@ -13,9 +13,9 @@ OCTEZ_VERSION="24.1"
 TEZOS_BAKER_VERSION="${OCTEZ_VERSION}_2"
 
 case "$BAKER_ARCH" in
-   "amd64") export BAKER_ARCH='x86_64'; echo "Architecture identifier is '$BAKER_ARCH' (deprecated synonym 'amd64')." ; export BAKER_ARCH='x86_64'
+   "amd64") export BAKER_ARCH='x86_64'; echo "Architecture identifier is '$BAKER_ARCH' (deprecated synonym 'amd64')."
    ;;
-   "x86_64" | "arm64") echo "Architecture identifier is '$BAKER_ARCH'"
+   "x86_64" | "arm64") true
    ;;
    *) echo "Unknown architecture identifier '$BAKER_ARCH'. Defaulted to 'x86_64'." ; export BAKER_ARCH='x86_64'
    ;;

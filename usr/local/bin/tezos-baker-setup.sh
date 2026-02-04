@@ -55,10 +55,12 @@ prompt_input() {
     local var_name="$3"
     
     if [ -n "$default" ]; then
-        read -p "$(echo -e ${CYAN}?${NC}) $prompt [${GREEN}$default${NC}]: " input
+        echo -ne "${CYAN}?${NC} $prompt [${GREEN}$default${NC}]: "
+        read input
         eval "$var_name=\"${input:-$default}\""
     else
-        read -p "$(echo -e ${CYAN}?${NC}) $prompt: " input
+        echo -ne "${CYAN}?${NC} $prompt: "
+        read input
         eval "$var_name=\"$input\""
     fi
 }
@@ -68,10 +70,12 @@ prompt_yes_no() {
     local default="$2"
     
     if [ "$default" = "y" ]; then
-        read -p "$(echo -e ${CYAN}?${NC}) $prompt [${GREEN}Y${NC}/n]: " answer
+        echo -ne "${CYAN}?${NC} $prompt [${GREEN}Y${NC}/n]: "
+        read answer
         answer=${answer:-y}
     else
-        read -p "$(echo -e ${CYAN}?${NC}) $prompt [y/${GREEN}N${NC}]: " answer
+        echo -ne "${CYAN}?${NC} $prompt [y/${GREEN}N${NC}]: "
+        read answer
         answer=${answer:-n}
     fi
     
@@ -459,7 +463,8 @@ echo "  3) custom (specify your own)"
 echo ""
 
 while true; do
-    read -p "$(echo -e ${CYAN}?${NC}) Select network [${GREEN}1${NC}]: " network_choice
+    echo -ne "${CYAN}?${NC} Select network [${GREEN}1${NC}]: "
+    read network_choice
     network_choice=${network_choice:-1}
     
     case "$network_choice" in
@@ -491,7 +496,8 @@ echo "  3) rolling with extra cycles (e.g., rolling:10)"
 echo ""
 
 while true; do
-    read -p "$(echo -e ${CYAN}?${NC}) Select history mode [${GREEN}1${NC}]: " mode_choice
+    echo -ne "${CYAN}?${NC} Select history mode [${GREEN}1${NC}]: "
+    read mode_choice
     mode_choice=${mode_choice:-1}
     
     case "$mode_choice" in
@@ -628,7 +634,8 @@ echo "  3) off (oppose)"
 echo ""
 
 while true; do
-    read -p "$(echo -e ${CYAN}?${NC}) Select liquidity baking vote [${GREEN}1${NC}]: " lb_choice
+    echo -ne "${CYAN}?${NC} Select liquidity baking vote [${GREEN}1${NC}]: "
+    read lb_choice
     lb_choice=${lb_choice:-1}
     
     case "$lb_choice" in
