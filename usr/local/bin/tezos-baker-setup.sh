@@ -294,6 +294,60 @@ dry_run_octez_cmd() {
     fi
 }
 
+dry_run_cd() {
+    local dir="$1"
+    
+    if [ "$DRY_RUN" = true ]; then
+        print_info "[DRY-RUN] Would change directory to: $dir"
+    else
+        cd "$dir"
+    fi
+}
+
+generate_tezpay_config() {
+    cat << EOF
+{
+  tezpay_config_version: 0
+  disable_analytics: false
+  baker: "${BAKER_ACCOUNT_HASH}"
+  payouts: {
+    wallet_mode: local-private-key
+    payout_mode: actual
+    fee: $TEZPAY_FEES
+    baker_pays_transaction_fee: true
+    baker_pays_allocation_fee: true
+    minimum_payout_amount: 0.00
+  }
+  delegators: {
+    requirements: {
+      minimum_balance: 0
+    }
+    overrides: {
+      ${TEZPAY_ACCOUNT_HASH}: {
+        fee: 1.0
+      }
+    }
+  }
+  network: {
+    rpc_pool: [
+      http://${NODE_RPC_ADDR}/
+      https://eu.rpc.tez.capital/
+      https://us.rpc.tez.capital/
+    ]
+    tzkt_url: https://api.tzkt.io/
+    protocol_rewards_url: https://protocol-rewards.tez.capital/
+    explorer: https://tzkt.io/
+    ignore_kt: false
+  }
+  overdelegation: {
+    protect: true
+  }
+  extensions: [
+  ]
+}
+EOF
+}
+
 #############################################################################
 # Main Setup Wizard
 #############################################################################
@@ -410,8 +464,10 @@ if [ -f "/usr/local/bin/tezos-env.sh" ]; then
     # Store old liquidity baking vote
     OLD_BAKER_LB_SWITCH="$BAKER_LIQUIDITY_BAKING_SWITCH"
     
-    # Store old TezPay address
+    # Store old TezPay parameters
     OLD_TEZPAY_ACCOUNT_HASH="$TEZPAY_ACCOUNT_HASH"
+    OLD_TEZPAY_FEES="$TEZPAY_FEES"
+    OLD_TEZPAY_INTERVAL="$TEZPAY_INTERVAL"
     
     # Store old optional component states
     # Note: These will be set after user answers questions
@@ -555,7 +611,7 @@ while true; do
         print_success "Valid Tezos address"
         break
     fi
-    print_error "Invalid Tezos address. Must start with 'tz[1-5]' followed by 33 characters."
+    print_error "Invalid Tezos address. Must start with 'tz[1-4]' followed by 33 characters."
 done
 
 #############################################################################
@@ -614,13 +670,6 @@ if [ "$EXISTING_CONFIG" = true ] && [ "$OLD_USE_BLS_TZ4" != "$USE_BLS_TZ4" ]; th
     fi
 fi
 
-# Detect liquidity baking vote change
-if [ "$EXISTING_CONFIG" = true ] && [ -n "$OLD_BAKER_LB_SWITCH" ]; then
-    if [ "$OLD_BAKER_LB_SWITCH" != "$BAKER_LIQUIDITY_BAKING_SWITCH" ]; then
-        NEED_RESTART_SERVICES=true
-        print_warning "Liquidity baking vote changed - baker restart will be required"
-    fi
-fi
 
 #############################################################################
 # Step 5: Staking Parameters
@@ -678,6 +727,15 @@ while true; do
     esac
 done
 
+# Detect liquidity baking vote change
+if [ "$EXISTING_CONFIG" = true ] && [ -n "$OLD_BAKER_LB_SWITCH" ]; then
+    if [ "$OLD_BAKER_LB_SWITCH" != "$BAKER_LIQUIDITY_BAKING_SWITCH" ]; then
+        NEED_RESTART_SERVICES=true
+        print_warning "Liquidity baking vote changed - baker restart will be required"
+    fi
+fi
+
+
 #############################################################################
 # Step 6: TezPay Configuration (Optional)
 #############################################################################
@@ -690,8 +748,13 @@ echo ""
 if prompt_yes_no "Do you want to use TezPay for delegator payments?" "n"; then
     SETUP_TEZPAY=true
     
+    # Use existing values as defaults if available
+    TEZPAY_ACCOUNT_HASH=${TEZPAY_ACCOUNT_HASH:-}
+    TEZPAY_FEES=${TEZPAY_FEES:-0.1}
+    TEZPAY_INTERVAL=${TEZPAY_INTERVAL:-1}
+    
     while true; do
-        prompt_input "Payout account address (tz1/tz2/tz3/tz4...)" "" "TEZPAY_ACCOUNT_HASH"
+        prompt_input "Payout account address (tz1/tz2/tz3/tz4...)" "$TEZPAY_ACCOUNT_HASH" "TEZPAY_ACCOUNT_HASH"
         if validate_tezos_address "$TEZPAY_ACCOUNT_HASH" "tz"; then
             print_success "Valid Tezos address"
             break
@@ -700,7 +763,7 @@ if prompt_yes_no "Do you want to use TezPay for delegator payments?" "n"; then
     done
     
     while true; do
-        prompt_input "Baking fee for delegators (0-1, e.g., 0.1 = 10%)" "0.1" "TEZPAY_FEES"
+        prompt_input "Baking fee for delegators (0-1, e.g., 0.1 = 10%)" "$TEZPAY_FEES" "TEZPAY_FEES"
         if validate_number "$TEZPAY_FEES" "0" "1"; then
             break
         fi
@@ -708,7 +771,7 @@ if prompt_yes_no "Do you want to use TezPay for delegator payments?" "n"; then
     done
     
     while true; do
-        prompt_input "Payout interval in cycles (e.g., 1 = every cycle)" "1" "TEZPAY_INTERVAL"
+        prompt_input "Payout interval in cycles (e.g., 1 = every cycle)" "$TEZPAY_INTERVAL" "TEZPAY_INTERVAL"
         if validate_number "$TEZPAY_INTERVAL" "1" ""; then
             break
         fi
@@ -716,6 +779,14 @@ if prompt_yes_no "Do you want to use TezPay for delegator payments?" "n"; then
     done
     
     KEY_PAYOUT="${KEY_BAKER}-payouts"
+    
+    # Detect TezPay parameter changes
+    if [ "$EXISTING_CONFIG" = true ] && [ -n "$OLD_TEZPAY_FEES" ] && [ -n "$OLD_TEZPAY_INTERVAL" ]; then
+        if [ "$OLD_TEZPAY_FEES" != "$TEZPAY_FEES" ] || [ "$OLD_TEZPAY_INTERVAL" != "$TEZPAY_INTERVAL" ]; then
+            NEED_RECONFIG_TEZPAY=true
+            print_warning "TezPay parameters changed - configuration will be regenerated"
+        fi
+    fi
 else
     SETUP_TEZPAY=false
     TEZPAY_ACCOUNT_HASH="tzYYYYYYYYYY: YOUR PAYOUTS ADDRESS HASH"
@@ -926,40 +997,26 @@ fi
 # Stop services if necessary
 if [ "$NEED_RESTART_SERVICES" = true ] && [ "$SERVICES_RUNNING" = true ]; then
     print_warning "Configuration changes require stopping all services"
+    dry_run_stop_services
     
-    if [ -x "$(which tezos-baker 2>/dev/null)" ]; then
-        print_info "Stopping all services with tezos-baker CLI..."
-        tezos-baker stop
-    else
-        print_info "Stopping services manually..."
-        # Fallback: stop services manually in correct order
-        if [ -x "$(which stop-tezpay.sh 2>/dev/null)" ]; then
-            stop-tezpay.sh 2>/dev/null || true
-        fi
-        if [ -x "$(which stop-etherlink.sh 2>/dev/null)" ]; then
-            stop-etherlink.sh 2>/dev/null || true
-        fi
-        if [ -x "$(which stop-octez.sh 2>/dev/null)" ]; then
-            stop-octez.sh
-        fi
+    if [ "$DRY_RUN" = false ]; then
+        print_success "All services stopped"
+        
+        # Update service status
+        SERVICES_RUNNING=false
+        NODE_RUNNING=false
+        BAKER_RUNNING=false
+        ACCUSER_RUNNING=false
+        DAL_RUNNING=false
+        TEZPAY_RUNNING=false
+        ETHERLINK_RUNNING=false
     fi
-    
-    print_success "All services stopped"
-    
-    # Update service status
-    SERVICES_RUNNING=false
-    NODE_RUNNING=false
-    BAKER_RUNNING=false
-    ACCUSER_RUNNING=false
-    DAL_RUNNING=false
-    TEZPAY_RUNNING=false
-    ETHERLINK_RUNNING=false
 fi
 
 # Step 1: Setup ZCASH parameters (always check, but skip if exists)
 print_info "Setting up ZCASH parameters..."
 dry_run_mkdir "$ZCASH_DIR"
-cd "$ZCASH_DIR"
+dry_run_cd "$ZCASH_DIR"
 
 for paramFile in 'sprout-groth16.params' 'sapling-output.params' 'sapling-spend.params'
 do
@@ -997,7 +1054,7 @@ if [ "$NEED_REIMPORT_SNAPSHOT" = true ]; then
     dry_run_octez_cmd octez-node config update --config-file="$NODE_CONFIG_FILE" --data-dir="$NODE_RUN_DIR"
     
     print_info "Downloading snapshot..."
-    cd /tmp
+    dry_run_cd /tmp
     SNAPSHOT=$(basename "$NODE_SNAPSHOT_URL")
     dry_run_wget "$NODE_SNAPSHOT_URL"
     dry_run_octez_cmd octez-node snapshot info "$SNAPSHOT"
@@ -1212,7 +1269,7 @@ if [ "$SETUP_ETHERLINK" = true ] && [ "$ETHERLINK_CONFIGURED" = false ]; then
     STEP=$((STEP + 1))
 fi
 
-# Configure TezPay if needed
+# Configure TezPay if needed or regenerate if parameters changed
 if [ "$SETUP_TEZPAY" = true ] && [ "$TEZPAY_CONFIGURED" = false ]; then
     echo -e "${CYAN}${STEP}. Configure TezPay for delegator payments${NC}"
     echo -e "${YELLOW}   ATTENTION: Only do this after your baker has attestation rights for the current cycle${NC}"
@@ -1224,47 +1281,10 @@ if [ "$SETUP_TEZPAY" = true ] && [ "$TEZPAY_CONFIGURED" = false ]; then
     echo "   # Install TezPay (if not already installed)"
     echo "   install-tezpay.sh"
     echo ""
+    
     echo "   # Create TezPay configuration file"
     echo "   cat<<EOF>config.hjson"
-    echo "{"
-    echo "  tezpay_config_version: 0"
-    echo "  disable_analytics: false"
-    echo "  baker: \"${BAKER_ACCOUNT_HASH}\""
-    echo "  payouts: {"
-    echo "    wallet_mode: local-private-key"
-    echo "    payout_mode: actual"
-    echo "    fee: $TEZPAY_FEES"
-    echo "    baker_pays_transaction_fee: true"
-    echo "    baker_pays_allocation_fee: true"
-    echo "    minimum_payout_amount: 0.00"
-    echo "  }"
-    echo "  delegators: {"
-    echo "    requirements: {"
-    echo "      minimum_balance: 0"
-    echo "    }"
-    echo "    overrides: {"
-    echo "      ${TEZPAY_ACCOUNT_HASH}: {"
-    echo "        fee: 1.0"
-    echo "      }"
-    echo "    }"
-    echo "  }"
-    echo "  network: {"
-    echo "    rpc_pool: ["
-    echo "      http://${NODE_RPC_ADDR}/"
-    echo "      https://eu.rpc.tez.capital/"
-    echo "      https://us.rpc.tez.capital/"
-    echo "    ]"
-    echo "    tzkt_url: https://api.tzkt.io/"
-    echo "    protocol_rewards_url: https://protocol-rewards.tez.capital/"
-    echo "    explorer: https://tzkt.io/"
-    echo "    ignore_kt: false"
-    echo "  }"
-    echo "  overdelegation: {"
-    echo "    protect: true"
-    echo "  }"
-    echo "  extensions: ["
-    echo "  ]"
-    echo "}"
+    generate_tezpay_config
     echo "EOF"
     echo ""
     echo "   # Create payout key file (replace placeholder with your actual private key)"
@@ -1305,7 +1325,7 @@ if [ "$EXISTING_CONFIG" = true ]; then
         echo ""
     fi
     
-    # Warn about staking parameter changes
+    # Handle staking parameter changes (automatic update)
     if [ -n "$OLD_BAKER_LIMIT" ] && [ -n "$OLD_BAKER_EDGE" ]; then
         if [ "$OLD_BAKER_LIMIT" != "$BAKER_LIMIT_STAKING_OVER_BAKING" ] || [ "$OLD_BAKER_EDGE" != "$BAKER_EDGE_BAKING_OVER_STAKING" ]; then
             echo ""
@@ -1313,13 +1333,22 @@ if [ "$EXISTING_CONFIG" = true ]; then
             echo "   Old values: limit=$OLD_BAKER_LIMIT, edge=$OLD_BAKER_EDGE"
             echo "   New values: limit=$BAKER_LIMIT_STAKING_OVER_BAKING, edge=$BAKER_EDGE_BAKING_OVER_STAKING"
             echo ""
-            echo "   You need to update on-chain parameters using the CLI:"
-            echo "   ${GREEN}tezos-baker stake params${NC}"
+            print_info "Updating on-chain parameters..."
+            
+            if [ "$DRY_RUN" = true ]; then
+                print_info "[DRY-RUN] Would execute: octez-client set delegate parameters for $KEY_BAKER --limit-of-staking-over-baking $BAKER_LIMIT_STAKING_OVER_BAKING --edge-of-baking-over-staking $BAKER_EDGE_BAKING_OVER_STAKING"
+            else
+                octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" \
+                    set delegate parameters for "$KEY_BAKER" \
+                    --limit-of-staking-over-baking "$BAKER_LIMIT_STAKING_OVER_BAKING" \
+                    --edge-of-baking-over-staking "$BAKER_EDGE_BAKING_OVER_STAKING"
+                print_success "Staking parameters updated on-chain"
+            fi
             echo ""
         fi
     fi
     
-    # Warn about TezPay address change
+    # Warn about TezPay address change (manual action required)
     if [ "$SETUP_TEZPAY" = true ] && [ -n "$OLD_TEZPAY_ACCOUNT_HASH" ] && [ "$OLD_TEZPAY_ACCOUNT_HASH" != "tzYYYYYYYYYY: YOUR PAYOUTS ADDRESS HASH" ]; then
         if [ "$OLD_TEZPAY_ACCOUNT_HASH" != "$TEZPAY_ACCOUNT_HASH" ]; then
             echo ""
@@ -1336,6 +1365,42 @@ if [ "$EXISTING_CONFIG" = true ]; then
             echo "      ${GREEN}octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} add address $KEY_PAYOUT $TEZPAY_ACCOUNT_HASH${NC}"
             echo "   5. Restart TezPay: ${GREEN}start-tezpay.sh${NC}"
             echo ""
+        fi
+    fi
+    
+    # Handle TezPay fees or interval change (automatic regeneration)
+    if [ "$SETUP_TEZPAY" = true ] && [ "$NEED_RECONFIG_TEZPAY" = true ] && [ "$TEZPAY_CONFIGURED" = true ]; then
+        # Stop TezPay if running and not already stopped by general restart
+        if [ "$TEZPAY_RUNNING" = true ] && [ "$NEED_RESTART_SERVICES" = false ]; then
+            print_info "Stopping TezPay to update configuration..."
+            if [ "$DRY_RUN" = true ]; then
+                print_info "[DRY-RUN] Would stop TezPay"
+            else
+                if [ -x "$(which stop-tezpay.sh 2>/dev/null)" ]; then
+                    stop-tezpay.sh 2>/dev/null || true
+                fi
+            fi
+        fi
+        
+        # Regenerate TezPay config
+        print_info "Regenerating TezPay configuration with new parameters..."
+        
+        TEZPAY_CONFIG_CONTENT=$(generate_tezpay_config)
+        
+        dry_run_write_file "${TEZPAY_RUN_DIR}/config.hjson" "$TEZPAY_CONFIG_CONTENT"
+        print_success "TezPay configuration updated"
+        
+        # Restart TezPay if it was running and not part of general restart
+        if [ "$TEZPAY_RUNNING" = true ] && [ "$NEED_RESTART_SERVICES" = false ]; then
+            print_info "Restarting TezPay..."
+            if [ "$DRY_RUN" = true ]; then
+                print_info "[DRY-RUN] Would restart TezPay"
+            else
+                if [ -x "$(which start-tezpay.sh 2>/dev/null)" ]; then
+                    start-tezpay.sh 2>/dev/null || true
+                    print_success "TezPay restarted"
+                fi
+            fi
         fi
     fi
 fi
