@@ -392,36 +392,48 @@ if [ -f "/usr/local/bin/tezos-env.sh" ]; then
         NODE_RUNNING=true
         SERVICES_RUNNING=true
         print_success "Octez node is running"
+    else
+        print_warning "Octez node is not running"
     fi
     
     if check_service_running "octez-baker"; then
         BAKER_RUNNING=true
         SERVICES_RUNNING=true
         print_success "Octez baker is running"
+    else
+        print_warning "Octez baker is not running"
     fi
     
     if check_service_running "octez-accuser"; then
         ACCUSER_RUNNING=true
         SERVICES_RUNNING=true
         print_success "Octez accuser is running"
+    else
+        print_warning "Octez accuser is not running"
     fi
     
     if check_service_running "octez-dal-node"; then
         DAL_RUNNING=true
         SERVICES_RUNNING=true
         print_success "Octez DAL node is running"
+    else
+        print_warning "Octez DAL node is not running"
     fi
     
     if check_service_running "tezpay"; then
         TEZPAY_RUNNING=true
         SERVICES_RUNNING=true
         print_success "TezPay is running"
+    else
+        print_info "TezPay is not running"
     fi
     
     if check_service_running "etherlink"; then
         ETHERLINK_RUNNING=true
         SERVICES_RUNNING=true
         print_success "Etherlink is running"
+    else
+        print_info "Etherlink is not running"
     fi
     
     if [ "$SERVICES_RUNNING" = false ]; then
@@ -651,7 +663,7 @@ if [ "$EXISTING_CONFIG" = true ]; then
     fi
 fi
 
-if prompt_yes_no "Do you want to use BLS/tz4 consensus keys?" "n"; then
+if prompt_yes_no "Do you want to use BLS/tz4 consensus keys?" "y"; then
     USE_BLS_TZ4=true
     prompt_input "Consensus key alias" "$KEY_CONSENSUS_TZ4" "KEY_CONSENSUS_TZ4"
     prompt_input "DAL companion key alias" "$KEY_DAL_COMPANION_TZ4" "KEY_DAL_COMPANION_TZ4"
@@ -681,7 +693,7 @@ echo "Configure your baker's staking parameters:"
 echo ""
 
 while true; do
-    prompt_input "Limit of staking over baking (0-9, how many times your stake others can stake)" "9" "BAKER_LIMIT_STAKING_OVER_BAKING"
+    prompt_input "Limit of staking over baking (0-9, how many times your stake others can stake)" "$BAKER_LIMIT_STAKING_OVER_BAKING" "BAKER_LIMIT_STAKING_OVER_BAKING"
     if validate_number "$BAKER_LIMIT_STAKING_OVER_BAKING" "0" "9"; then
         break
     fi
@@ -689,7 +701,7 @@ while true; do
 done
 
 while true; do
-    prompt_input "Edge of baking over staking (0-1, proportion of rewards from stakers, e.g., 0.1 = 10%)" "0.1" "BAKER_EDGE_BAKING_OVER_STAKING"
+    prompt_input "Edge of baking over staking (0-1, proportion of rewards from stakers, e.g., 0.1 = 10%)" "$BAKER_EDGE_BAKING_OVER_STAKING" "BAKER_EDGE_BAKING_OVER_STAKING"
     if validate_number "$BAKER_EDGE_BAKING_OVER_STAKING" "0" "1"; then
         break
     fi
