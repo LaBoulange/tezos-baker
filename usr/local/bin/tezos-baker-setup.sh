@@ -1013,21 +1013,34 @@ if [ "$NEED_RESTART_SERVICES" = true ] && [ "$SERVICES_RUNNING" = true ]; then
     fi
 fi
 
-# Step 1: Setup ZCASH parameters (always check, but skip if exists)
-print_info "Setting up ZCASH parameters..."
-dry_run_mkdir "$ZCASH_DIR"
-dry_run_cd "$ZCASH_DIR"
-
+# Step 1: Setup ZCASH parameters (only if not all present)
+ZCASH_COMPLETE=true
 for paramFile in 'sprout-groth16.params' 'sapling-output.params' 'sapling-spend.params'
 do
-    if [ ! -f "$paramFile" ]; then
-        print_info "Downloading $paramFile..."
-        dry_run_wget "${ZCASH_DOWNLOAD_URL}/${paramFile}"
-        dry_run_chmod u+rw "$paramFile"
-    else
-        print_success "$paramFile already exists"
+    if [ ! -f "$ZCASH_DIR/$paramFile" ]; then
+        ZCASH_COMPLETE=false
+        break
     fi
 done
+
+if [ "$ZCASH_COMPLETE" = false ]; then
+    print_info "Setting up ZCASH parameters..."
+    dry_run_mkdir "$ZCASH_DIR"
+    dry_run_cd "$ZCASH_DIR"
+    
+    for paramFile in 'sprout-groth16.params' 'sapling-output.params' 'sapling-spend.params'
+    do
+        if [ ! -f "$paramFile" ]; then
+            print_info "Downloading $paramFile..."
+            dry_run_wget "${ZCASH_DOWNLOAD_URL}/${paramFile}"
+            dry_run_chmod u+rw "$paramFile"
+        else
+            print_success "$paramFile already exists"
+        fi
+    done
+else
+    print_success "ZCASH parameters already configured, skipping"
+fi
 
 # Step 2: Install Octez only if necessary
 if [ "$NEED_REINSTALL_OCTEZ" = true ] || [ ! -x "$(which octez-node 2>/dev/null)" ]; then
@@ -1076,8 +1089,6 @@ if ! check_service_running "octez-node"; then
     print_success "Node bootstrapped successfully!"
 else
     print_success "Node already running"
-    # Ensure client directory exists
-    dry_run_mkdir "$CLIENT_BASE_DIR"
 fi
 
 #############################################################################
@@ -1424,7 +1435,7 @@ else
     print_success "Services are already running. No need to start them again."
     echo ""
     echo "   If you made configuration changes that require a restart, use:"
-    echo "   ${GREEN}tezos-baker restart${NC}"
+    echo -e "   ${GREEN}tezos-baker restart${NC}"
     echo ""
 fi
 
