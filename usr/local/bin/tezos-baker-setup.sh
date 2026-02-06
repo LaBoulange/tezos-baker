@@ -425,7 +425,7 @@ if [ -f "/usr/local/bin/tezos-env.sh" ]; then
         SERVICES_RUNNING=true
         print_success "TezPay is running"
     else
-        print_info "TezPay is not running"
+        print_warning "TezPay is not running"
     fi
     
     if check_service_running "etherlink"; then
@@ -433,7 +433,7 @@ if [ -f "/usr/local/bin/tezos-env.sh" ]; then
         SERVICES_RUNNING=true
         print_success "Etherlink is running"
     else
-        print_info "Etherlink is not running"
+        print_warning "Etherlink is not running"
     fi
     
     if [ "$SERVICES_RUNNING" = false ]; then
