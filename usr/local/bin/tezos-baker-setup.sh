@@ -313,7 +313,7 @@ generate_tezpay_config() {
   payouts: {
     wallet_mode: local-private-key
     payout_mode: actual
-    fee: $TEZPAY_FEES
+    fee: 0.10
     baker_pays_transaction_fee: true
     baker_pays_allocation_fee: true
     minimum_payout_amount: 0.00
@@ -478,7 +478,6 @@ if [ -f "/usr/local/bin/tezos-env.sh" ]; then
     
     # Store old TezPay parameters
     OLD_TEZPAY_ACCOUNT_HASH="$TEZPAY_ACCOUNT_HASH"
-    OLD_TEZPAY_FEES="$TEZPAY_FEES"
     OLD_TEZPAY_INTERVAL="$TEZPAY_INTERVAL"
     
     # Store old optional component states
@@ -757,12 +756,12 @@ print_header "Step 6/8: TezPay Configuration (Optional)"
 echo "TezPay allows you to automatically pay your delegators."
 echo ""
 
-if prompt_yes_no "Do you want to use TezPay for delegator payments?" "n"; then
+RESTART_TEZPAY=false
+if prompt_yes_no "Do you want to use TezPay for delegator payments?" "y"; then
     SETUP_TEZPAY=true
     
     # Use existing values as defaults if available
     TEZPAY_ACCOUNT_HASH=${TEZPAY_ACCOUNT_HASH:-}
-    TEZPAY_FEES=${TEZPAY_FEES:-0.1}
     TEZPAY_INTERVAL=${TEZPAY_INTERVAL:-1}
     
     while true; do
@@ -772,14 +771,6 @@ if prompt_yes_no "Do you want to use TezPay for delegator payments?" "n"; then
             break
         fi
         print_error "Invalid Tezos address."
-    done
-    
-    while true; do
-        prompt_input "Baking fee for delegators (0-1, e.g., 0.1 = 10%)" "$TEZPAY_FEES" "TEZPAY_FEES"
-        if validate_number "$TEZPAY_FEES" "0" "1"; then
-            break
-        fi
-        print_error "Must be a number between 0 and 1."
     done
     
     while true; do
@@ -793,16 +784,15 @@ if prompt_yes_no "Do you want to use TezPay for delegator payments?" "n"; then
     KEY_PAYOUT="${KEY_BAKER}-payouts"
     
     # Detect TezPay parameter changes
-    if [ "$EXISTING_CONFIG" = true ] && [ -n "$OLD_TEZPAY_FEES" ] && [ -n "$OLD_TEZPAY_INTERVAL" ]; then
-        if [ "$OLD_TEZPAY_FEES" != "$TEZPAY_FEES" ] || [ "$OLD_TEZPAY_INTERVAL" != "$TEZPAY_INTERVAL" ]; then
-            NEED_RECONFIG_TEZPAY=true
-            print_warning "TezPay parameters changed - configuration will be regenerated"
+    if [ "$EXISTING_CONFIG" = true ] && [ -n "$OLD_TEZPAY_INTERVAL" ]; then
+        if [ "$OLD_TEZPAY_INTERVAL" != "$TEZPAY_INTERVAL" ]; then
+            print_warning "TezPay parameters changed - restart will be required"
+            RESTART_TEZPAY=true
         fi
     fi
 else
     SETUP_TEZPAY=false
     TEZPAY_ACCOUNT_HASH="tzYYYYYYYYYY: YOUR PAYOUTS ADDRESS HASH"
-    TEZPAY_FEES=0.1
     TEZPAY_INTERVAL=1
     KEY_PAYOUT="${KEY_BAKER}-payouts"
 fi
@@ -850,7 +840,7 @@ echo "  Staking edge: $BAKER_EDGE_BAKING_OVER_STAKING"
 echo "  Liquidity baking: $BAKER_LIQUIDITY_BAKING_SWITCH"
 echo ""
 echo -e "${CYAN}Optional Components:${NC}"
-echo "  TezPay: $([ "$SETUP_TEZPAY" = true ] && echo "Yes (fee: $TEZPAY_FEES, interval: $TEZPAY_INTERVAL cycles)" || echo 'No')"
+echo "  TezPay: $([ "$SETUP_TEZPAY" = true ] && echo "Yes (interval: $TEZPAY_INTERVAL cycles)" || echo 'No')"
 echo "  Etherlink: $([ "$SETUP_ETHERLINK" = true ] && echo 'Yes' || echo 'No')"
 echo ""
 
@@ -929,7 +919,6 @@ export DAL_ENDPOINT_ADDR="127.0.0.1:10732"
 export TEZPAY_RUN_DIR="${DATA_DIR}/tezpay"
 export TEZPAY_INSTALL_SCRIPT="/tmp/install.sh"
 export TEZPAY_ACCOUNT_HASH="TEZPAY_ACCOUNT_HASH_PLACEHOLDER"
-export TEZPAY_FEES=TEZPAY_FEES_PLACEHOLDER
 export TEZPAY_INTERVAL=TEZPAY_INTERVAL_PLACEHOLDER
 export TEZPAY_LOG_FILE="/var/log/tezpay.log"
 
@@ -965,7 +954,6 @@ ENV_CONTENT="${ENV_CONTENT//BAKER_LIQUIDITY_BAKING_SWITCH_PLACEHOLDER/$BAKER_LIQ
 ENV_CONTENT="${ENV_CONTENT//BAKER_LIMIT_STAKING_OVER_BAKING_PLACEHOLDER/$BAKER_LIMIT_STAKING_OVER_BAKING}"
 ENV_CONTENT="${ENV_CONTENT//BAKER_EDGE_BAKING_OVER_STAKING_PLACEHOLDER/$BAKER_EDGE_BAKING_OVER_STAKING}"
 ENV_CONTENT="${ENV_CONTENT//TEZPAY_ACCOUNT_HASH_PLACEHOLDER/$TEZPAY_ACCOUNT_HASH}"
-ENV_CONTENT="${ENV_CONTENT//TEZPAY_FEES_PLACEHOLDER/$TEZPAY_FEES}"
 ENV_CONTENT="${ENV_CONTENT//TEZPAY_INTERVAL_PLACEHOLDER/$TEZPAY_INTERVAL}"
 
 dry_run_write_file "$ENV_FILE" "$ENV_CONTENT"
@@ -1294,7 +1282,7 @@ if [ "$SETUP_TEZPAY" = true ] && [ "$TEZPAY_CONFIGURED" = false ]; then
     echo "   install-tezpay.sh"
     echo ""
     
-    echo "   # Create TezPay configuration file"
+    echo "   # Create TezPay configuration file (example below)"
     echo "   cat<<EOF>config.hjson"
     generate_tezpay_config
     echo "EOF"
@@ -1380,35 +1368,16 @@ if [ "$EXISTING_CONFIG" = true ]; then
         fi
     fi
     
-    # Handle TezPay fees or interval change (automatic regeneration)
-    if [ "$SETUP_TEZPAY" = true ] && [ "$NEED_RECONFIG_TEZPAY" = true ] && [ "$TEZPAY_CONFIGURED" = true ]; then
+    # Handle TezPay interval change
+    if [ "$RESTART_TEZPAY" = true ]; then
         # Stop TezPay if running and not already stopped by general restart
         if [ "$TEZPAY_RUNNING" = true ] && [ "$NEED_RESTART_SERVICES" = false ]; then
-            print_info "Stopping TezPay to update configuration..."
-            if [ "$DRY_RUN" = true ]; then
-                print_info "[DRY-RUN] Would stop TezPay"
-            else
-                if [ -x "$(which stop-tezpay.sh 2>/dev/null)" ]; then
-                    stop-tezpay.sh 2>/dev/null || true
-                fi
-            fi
-        fi
-        
-        # Regenerate TezPay config
-        print_info "Regenerating TezPay configuration with new parameters..."
-        
-        TEZPAY_CONFIG_CONTENT=$(generate_tezpay_config)
-        
-        dry_run_write_file "${TEZPAY_RUN_DIR}/config.hjson" "$TEZPAY_CONFIG_CONTENT"
-        print_success "TezPay configuration updated"
-        
-        # Restart TezPay if it was running and not part of general restart
-        if [ "$TEZPAY_RUNNING" = true ] && [ "$NEED_RESTART_SERVICES" = false ]; then
-            print_info "Restarting TezPay..."
+            print_info "Restarting TezPay to update interval configuration..."
             if [ "$DRY_RUN" = true ]; then
                 print_info "[DRY-RUN] Would restart TezPay"
             else
-                if [ -x "$(which start-tezpay.sh 2>/dev/null)" ]; then
+                if [ -x "$(which stop-tezpay.sh 2>/dev/null)" ]; then
+                    stop-tezpay.sh 2>/dev/null || true
                     start-tezpay.sh 2>/dev/null || true
                     print_success "TezPay restarted"
                 fi
