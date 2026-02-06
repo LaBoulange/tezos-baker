@@ -1146,7 +1146,7 @@ fi
 # Check if TezPay is already configured
 TEZPAY_CONFIGURED=false
 if [ "$SETUP_TEZPAY" = true ]; then
-    if [ -f "$TEZPAY_RUN_DIR/config.hjson" ] && [ -f "$TEZPAY_RUN_DIR/payout_wallet_private.key" ]; then
+    if [ -f "$TEZPAY_RUN_DIR/config.hjson" ] && ([ -f "$TEZPAY_RUN_DIR/payout_wallet_private.key" ] || [ -f "$TEZPAY_RUN_DIR/remote_signer.hjson" ]); then
         TEZPAY_CONFIGURED=true
         print_success "TezPay already configured"
     fi
@@ -1233,17 +1233,33 @@ if [ "$USE_BLS_TZ4" = true ] && [ "$BLS_CONFIGURED" = false ]; then
     STEP=$((STEP + 1))
 fi
 
-# Initialize stake
-echo -e "${CYAN}${STEP}. Initialize your stake (if not already done)${NC}"
-echo "   Check your current stake on tzkt.io/${BAKER_ACCOUNT_HASH}"
-echo ""
-echo "   If you need to add more stake, use the CLI:"
-echo "   ${GREEN}tezos-baker stake increase <amount>${NC}"
-echo ""
-echo "   Example: tezos-baker stake increase 6000"
-echo "   (Minimum 6000 XTZ for baking rights without external staking)"
-echo ""
-STEP=$((STEP + 1))
+# Initialize stake (only if current stake is below 6000 XTZ)
+CURRENT_STAKE=0
+if [ -n "$BAKER_HASH" ]; then
+    # Try to get current staked balance
+    STAKE_OUTPUT=$(octez-client --base-dir "$CLIENT_BASE_DIR" --endpoint "http://${NODE_RPC_ADDR}" get staked balance for "$BAKER_ACCOUNT_HASH" 2>/dev/null | grep "ꜩ" || echo "0 ꜩ")
+    CURRENT_STAKE=$(echo "$STAKE_OUTPUT" | grep -o '[0-9.]*' | head -1)
+    
+    # Default to 0 if empty
+    CURRENT_STAKE=${CURRENT_STAKE:-0}
+fi
+
+# Only show stake initialization step if stake is below 6000 XTZ
+if (( $(echo "$CURRENT_STAKE < 6000" | bc -l) )); then
+    echo -e "${CYAN}${STEP}. Ensure your stake is sufficient${NC}"
+    echo "   Current own stake: ${CURRENT_STAKE} ꜩ"
+    echo "   Check your current external stake on tzkt.io/${BAKER_ACCOUNT_HASH}"
+    echo ""
+    echo "   If you need to add more stake using the CLI:"
+    echo "   ${GREEN}tezos-baker stake increase <amount>${NC}"
+    echo ""
+    echo "   Example: tezos-baker stake increase 6000"
+    echo "   (The minimum is 6000 XTZ for baking rights, including external staking)"
+    echo ""
+    STEP=$((STEP + 1))
+else
+    print_success "Own stake is already sufficient: ${CURRENT_STAKE} ꜩ"
+fi
 
 # Configure DAL if needed
 if [ "$DAL_CONFIGURED" = false ]; then
