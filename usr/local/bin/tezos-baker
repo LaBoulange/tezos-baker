@@ -67,43 +67,42 @@ load_env() {
 
 cmd_help() {
     # Load constants to get version
+    load_env
     . $(which tezos-constants.sh 2>/dev/null) || TEZOS_BAKER_VERSION="unknown"
     
-    cat << EOF
-${CYAN}Tezos Baker CLI${NC} - v${TEZOS_BAKER_VERSION}
-
-${YELLOW}USAGE:${NC}
-    tezos-baker <command> [options]
-
-${YELLOW}COMMANDS:${NC}
-    ${GREEN}setup${NC}              Run the initial setup wizard
-    ${GREEN}start${NC}              Start all baker services
-    ${GREEN}stop${NC}               Stop all baker services
-    ${GREEN}restart${NC}            Restart all baker services
-    ${GREEN}upgrade${NC}            Upgrade Octez to the latest version
-    ${GREEN}upgrade-tezpay${NC}     Upgrade TezPay to the latest version
-    ${GREEN}stake${NC}              Manage staking operations
-    ${GREEN}vote${NC}               Participate in Tezos governance voting
-    ${GREEN}history-mode${NC}       Switch node history mode
-    ${GREEN}enable-bls${NC}         Enable BLS/tz4 baking
-    ${GREEN}status${NC}             Show baker status and logs
-    ${GREEN}logs${NC}               View logs for baker components
-    ${GREEN}version${NC}            Show version information
-    ${GREEN}help${NC}               Show this help message
-
-${YELLOW}EXAMPLES:${NC}
-    tezos-baker setup              # Run initial setup wizard
-    tezos-baker restart            # Restart all services
-    tezos-baker upgrade            # Upgrade Octez
-    tezos-baker stake increase 100 # Stake 100 XTZ
-    tezos-baker logs baker         # View baker logs
-    tezos-baker status             # Show current status
-
-${YELLOW}MORE INFO:${NC}
-    For detailed documentation, see README.md
-    Report issues: https://github.com/LaBoulange/tezos-baker/issues
-
-EOF
+    echo -e "${CYAN}Tezos Baker CLI${NC} - v${TEZOS_BAKER_VERSION}"
+    echo ""
+    echo -e "${YELLOW}USAGE:${NC}"
+    echo "    tezos-baker <command> [options]"
+    echo ""
+    echo -e "${YELLOW}COMMANDS:${NC}"
+    echo -e "    ${GREEN}setup${NC}              Run the initial setup wizard"
+    echo -e "    ${GREEN}start${NC}              Start all baker services"
+    echo -e "    ${GREEN}stop${NC}               Stop all baker services"
+    echo -e "    ${GREEN}restart${NC}            Restart all baker services"
+    echo -e "    ${GREEN}upgrade${NC}            Upgrade Octez to the latest version"
+    echo -e "    ${GREEN}upgrade-tezpay${NC}     Upgrade TezPay to the latest version"
+    echo -e "    ${GREEN}stake${NC}              Manage staking operations"
+    echo -e "    ${GREEN}vote${NC}               Participate in Tezos governance voting"
+    echo -e "    ${GREEN}history-mode${NC}       Switch node history mode"
+    echo -e "    ${GREEN}enable-bls${NC}         Enable BLS/tz4 baking"
+    echo -e "    ${GREEN}status${NC}             Show baker status and logs"
+    echo -e "    ${GREEN}logs${NC}               View logs for baker components"
+    echo -e "    ${GREEN}version${NC}            Show version information"
+    echo -e "    ${GREEN}help${NC}               Show this help message"
+    echo ""
+    echo -e "${YELLOW}EXAMPLES:${NC}"
+    echo "    tezos-baker setup              # Run initial setup wizard"
+    echo "    tezos-baker restart            # Restart all services"
+    echo "    tezos-baker upgrade            # Upgrade Octez"
+    echo "    tezos-baker stake increase 100 # Stake 100 XTZ"
+    echo "    tezos-baker logs baker         # View baker logs"
+    echo "    tezos-baker status             # Show current status"
+    echo ""
+    echo -e "${YELLOW}MORE INFO:${NC}"
+    echo "    For detailed documentation, see README.md"
+    echo "    Report issues: https://github.com/LaBoulange/tezos-baker/issues"
+    echo ""
 }
 
 #############################################################################
@@ -286,25 +285,23 @@ cmd_stake() {
     local amount="$2"
     
     if [ -z "$action" ]; then
-        cat << EOF
-${YELLOW}USAGE:${NC}
-    tezos-baker stake <action> [amount]
-
-${YELLOW}ACTIONS:${NC}
-    ${GREEN}increase <amount>${NC}    Stake additional XTZ
-    ${GREEN}decrease <amount>${NC}    Unstake XTZ (takes 2 cycles)
-    ${GREEN}finalize${NC}             Finalize unstaked balance (after 4 cycles)
-    ${GREEN}params${NC}               Update staking parameters
-    ${GREEN}info${NC}                 Show current staking information
-
-${YELLOW}EXAMPLES:${NC}
-    tezos-baker stake increase 1000
-    tezos-baker stake decrease 500
-    tezos-baker stake finalize
-    tezos-baker stake params
-    tezos-baker stake info
-
-EOF
+        echo -e "${YELLOW}USAGE:${NC}"
+        echo "    tezos-baker stake <action> [amount]"
+        echo ""
+        echo -e "${YELLOW}ACTIONS:${NC}"
+        echo -e "    ${GREEN}increase <amount>${NC}    Stake additional XTZ"
+        echo -e "    ${GREEN}decrease <amount>${NC}    Unstake XTZ (takes 2 cycles)"
+        echo -e "    ${GREEN}finalize${NC}             Finalize unstaked balance (after 4 cycles)"
+        echo -e "    ${GREEN}params${NC}               Update staking parameters"
+        echo -e "    ${GREEN}info${NC}                 Show current staking information"
+        echo ""
+        echo -e "${YELLOW}EXAMPLES:${NC}"
+        echo "    tezos-baker stake increase 1000"
+        echo "    tezos-baker stake decrease 500"
+        echo "    tezos-baker stake finalize"
+        echo "    tezos-baker stake params"
+        echo "    tezos-baker stake info"
+        echo ""
         exit 0
     fi
     
@@ -394,21 +391,19 @@ cmd_vote() {
     shift
     
     if [ -z "$action" ]; then
-        cat << EOF
-${YELLOW}USAGE:${NC}
-    tezos-baker vote <action> [options]
-
-${YELLOW}ACTIONS:${NC}
-    ${GREEN}info${NC}                      Show current voting period information
-    ${GREEN}propose <proposal...>${NC}     Submit proposal(s) (proposal period only)
-    ${GREEN}ballot <proposal> <vote>${NC}  Vote yay/nay/pass (exploration/promotion periods)
-
-${YELLOW}EXAMPLES:${NC}
-    tezos-baker vote info
-    tezos-baker vote propose PtXXXXXX
-    tezos-baker vote ballot PtXXXXXX yay
-
-EOF
+        echo -e "${YELLOW}USAGE:${NC}"
+        echo "    tezos-baker vote <action> [options]"
+        echo ""
+        echo -e "${YELLOW}ACTIONS:${NC}"
+        echo -e "    ${GREEN}info${NC}                      Show current voting period information"
+        echo -e "    ${GREEN}propose <proposal...>${NC}     Submit proposal(s) (proposal period only)"
+        echo -e "    ${GREEN}ballot <proposal> <vote>${NC}  Vote yay/nay/pass (exploration/promotion periods)"
+        echo ""
+        echo -e "${YELLOW}EXAMPLES:${NC}"
+        echo "    tezos-baker vote info"
+        echo "    tezos-baker vote propose PtXXXXXX"
+        echo "    tezos-baker vote ballot PtXXXXXX yay"
+        echo ""
         exit 0
     fi
     
@@ -474,24 +469,22 @@ cmd_history_mode() {
     local new_mode="$1"
     
     if [ -z "$new_mode" ]; then
-        cat << EOF
-${YELLOW}USAGE:${NC}
-    tezos-baker history-mode <mode>
-
-${YELLOW}MODES:${NC}
-    ${GREEN}rolling${NC}              Rolling mode (~120GB)
-    ${GREEN}rolling:N${NC}            Rolling mode with N extra cycles
-    ${GREEN}full${NC}                 Full mode (~500GB)
-
-${YELLOW}CURRENT MODE:${NC}
-    $NODE_MODE
-
-${YELLOW}EXAMPLES:${NC}
-    tezos-baker history-mode rolling
-    tezos-baker history-mode rolling:10
-    tezos-baker history-mode full
-
-EOF
+        echo -e "${YELLOW}USAGE:${NC}"
+        echo "    tezos-baker history-mode <mode>"
+        echo ""
+        echo -e "${YELLOW}MODES:${NC}"
+        echo -e "    ${GREEN}rolling${NC}              Rolling mode (~120GB)"
+        echo -e "    ${GREEN}rolling:N${NC}            Rolling mode with N extra cycles"
+        echo -e "    ${GREEN}full${NC}                 Full mode (~500GB)"
+        echo ""
+        echo -e "${YELLOW}CURRENT MODE:${NC}"
+        echo "    $NODE_MODE"
+        echo ""
+        echo -e "${YELLOW}EXAMPLES:${NC}"
+        echo "    tezos-baker history-mode rolling"
+        echo "    tezos-baker history-mode rolling:10"
+        echo "    tezos-baker history-mode full"
+        echo ""
         exit 0
     fi
     
@@ -612,24 +605,22 @@ cmd_logs() {
     local lines="${2:-50}"
     
     if [ -z "$component" ]; then
-        cat << EOF
-${YELLOW}USAGE:${NC}
-    tezos-baker logs <component> [lines]
-
-${YELLOW}COMPONENTS:${NC}
-    ${GREEN}node${NC}         RPC node logs
-    ${GREEN}baker${NC}        Baker logs
-    ${GREEN}accuser${NC}      Accuser logs
-    ${GREEN}dal${NC}          DAL node logs
-    ${GREEN}tezpay${NC}       TezPay logs (if configured)
-    ${GREEN}etherlink${NC}    Etherlink logs (if configured)
-
-${YELLOW}EXAMPLES:${NC}
-    tezos-baker logs baker
-    tezos-baker logs node 100
-    tezos-baker logs dal
-
-EOF
+        echo -e "${YELLOW}USAGE:${NC}"
+        echo "    tezos-baker logs <component> [lines]"
+        echo ""
+        echo -e "${YELLOW}COMPONENTS:${NC}"
+        echo -e "    ${GREEN}node${NC}         RPC node logs"
+        echo -e "    ${GREEN}baker${NC}        Baker logs"
+        echo -e "    ${GREEN}accuser${NC}      Accuser logs"
+        echo -e "    ${GREEN}dal${NC}          DAL node logs"
+        echo -e "    ${GREEN}tezpay${NC}       TezPay logs (if configured)"
+        echo -e "    ${GREEN}etherlink${NC}    Etherlink logs (if configured)"
+        echo ""
+        echo -e "${YELLOW}EXAMPLES:${NC}"
+        echo "    tezos-baker logs baker"
+        echo "    tezos-baker logs node 100"
+        echo "    tezos-baker logs dal"
+        echo ""
         exit 0
     fi
     
