@@ -1,7 +1,8 @@
 All notable changes are documented in this file.
 
-## v24.1_2 - XXXX-XX-XX
+## v24.2 - XXXX-XX-XX
 
+- New version of `octez` (bugfixes): Tallinn protocol.
 - Introduced interactive setup wizard (`tezos-baker-setup.sh`) for guided initial configuration
   - Safe for existing installations: automatically creates backups and loads current values as defaults
   - Step-by-step prompts with input validation (Tezos addresses, numbers, etc.)
@@ -22,7 +23,7 @@ All notable changes are documented in this file.
 
 ## v24.1 - 2026-01-24
 
-- New version of `octez`: (bugfixes): Tallinn protocol.
+- New version of `octez` (bugfixes): Tallinn protocol.
 
 ## v24.0 - 2026-01-08
 
