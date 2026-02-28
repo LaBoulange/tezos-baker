@@ -1,5 +1,5 @@
 # tezos-baker
-Boilerplate code to set up a minimalistic Tezos baker capable of baking, accusing, participating in the DAL, and optionally paying its delegators and running an Etherlink Smart Rollup observer node.
+Boilerplate code to set up a Tezos baker capable of baking, accusing, participating in the DAL, and optionally paying its delegators and running an Etherlink Smart Rollup observer node.
 
 This code:
 - installs the needed executables from the octez suite,
@@ -106,7 +106,7 @@ If you prefer to set up manually:
 
 ### Upgrade from the previous versions
 
-#### From tezos-baker v24.0 or v24.1
+#### From tezos-baker v24.0, v24.1 or v24.2
 
 Simply run:
 ```bash
