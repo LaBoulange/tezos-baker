@@ -2,7 +2,8 @@ All notable changes are documented in this file.
 
 ## v24.2 - XXXX-XX-XX
 
-- New version of `octez` (bugfixes): Tallinn protocol.
+- New version of `octez` (bugfixes): Tallinn protocol
+- Made Tezpay double-check the previous `$TEZPAY_INTERVAL` cycles to prevent missed payouts after downtime.
 - Introduced interactive setup wizard (`tezos-baker-setup.sh`) for guided initial configuration
   - Safe for existing installations: automatically creates backups and loads current values as defaults
   - Step-by-step prompts with input validation (Tezos addresses, numbers, etc.)

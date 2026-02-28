@@ -189,7 +189,7 @@ EOF
 chmod go-rwx payout_wallet_private.key
 
 # Run TezPay in continual mode
-nohup tezpay continual -p $TEZPAY_RUN_DIR --interval $TEZPAY_INTERVAL --disable-donation-prompt &>$TEZPAY_LOG_FILE &
+nohup tezpay continual -p $TEZPAY_RUN_DIR --include-previous-cycles $TEZPAY_INTERVAL --interval $TEZPAY_INTERVAL --disable-donation-prompt &>$TEZPAY_LOG_FILE &
 
 # Delegate your payouts account to your baker
 octez-client --base-dir $CLIENT_BASE_DIR --endpoint http://${NODE_RPC_ADDR} set delegate for $TEZPAY_ACCOUNT_HASH to $BAKER_ACCOUNT_HASH
