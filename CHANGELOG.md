@@ -4,6 +4,11 @@ All notable changes are documented in this file.
 
 - Documentation: The new interactive tools (wizard and CLI) are now the default workflow
 - tezos-baker: Clarified the "help" command
+- Added shell auto-completion for bash and zsh
+  - Completion files installed automatically by `install-tezos-baker.sh` into system-wide directories (`/usr/local/share/`)
+  - Works for all users (root or dedicated account), with or without `bash-completion` installed
+  - New `tezos-baker completion bash|zsh` command for manual activation via `eval`
+  - Covers all commands, sub-commands, and key arguments (including `yay|nay|pass` for `vote ballot`)
 
 ## v24.2 - 2026-02-28
 
@@ -40,7 +45,7 @@ All notable changes are documented in this file.
 
 - Added BLS/tz4 signing support (initial setup and maintenance)
 - Updated outdated OpenTezos reference URLs to use docs.tezos.com tutorials instead
-- Fixed the restarting process of the “Switch history mode from full to rolling” section in the maintenance cheat sheet
+- Fixed the restarting process of the "Switch history mode from full to rolling" section in the maintenance cheat sheet
 
 ## v23.3 - 2025-12-15
 

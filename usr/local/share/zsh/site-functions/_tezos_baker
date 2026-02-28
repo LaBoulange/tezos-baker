@@ -1,0 +1,108 @@
+#compdef tezos-baker
+
+# Zsh completion for tezos-baker
+
+_tezos_baker() {
+    local state
+
+    _arguments \
+        '1: :->command' \
+        '*: :->args'
+
+    case "$state" in
+        command)
+            local -a commands
+            commands=(
+                'help:Show help message'
+                'version:Show version information'
+                'setup:Run the interactive setup wizard'
+                'start:Start all baker services'
+                'stop:Stop all baker services'
+                'restart:Restart all baker services'
+                'upgrade:Upgrade Octez to the latest version'
+                'upgrade-tezpay:Upgrade TezPay to the latest version'
+                'stake:Manage staking operations'
+                'vote:Participate in Tezos governance voting'
+                'history-mode:Switch node history mode'
+                'enable-bls:Enable BLS/tz4 baking'
+                'status:Show baker status and running processes'
+                'logs:View logs for selected baker components'
+                'completion:Output shell completion script'
+            )
+            _describe 'command' commands
+            ;;
+
+        args)
+            case "${words[2]}" in
+                stake)
+                    if (( CURRENT == 3 )); then
+                        local -a stake_actions
+                        stake_actions=(
+                            'increase:Stake additional XTZ'
+                            'decrease:Unstake XTZ (takes 2 cycles)'
+                            'finalize:Finalize unstaked balance (after 4 cycles)'
+                            'params:Update staking parameters'
+                            'info:Show current staking information'
+                        )
+                        _describe 'stake action' stake_actions
+                    fi
+                    ;;
+
+                vote)
+                    if (( CURRENT == 3 )); then
+                        local -a vote_actions
+                        vote_actions=(
+                            'info:Show current voting period information'
+                            'propose:Submit proposal(s) (proposal period only)'
+                            'ballot:Vote yay/nay/pass (exploration/promotion periods)'
+                        )
+                        _describe 'vote action' vote_actions
+                    elif (( CURRENT == 5 )) && [[ "${words[3]}" == "ballot" ]]; then
+                        local -a votes
+                        votes=('yay:Vote in favor' 'nay:Vote against' 'pass:Abstain')
+                        _describe 'vote' votes
+                    fi
+                    ;;
+
+                history-mode)
+                    if (( CURRENT == 3 )); then
+                        local -a modes
+                        modes=(
+                            'rolling:Rolling mode (~120GB)'
+                            'full:Full mode (~500GB)'
+                            'rolling\:5:Rolling mode with 5 extra cycles'
+                            'rolling\:10:Rolling mode with 10 extra cycles'
+                            'rolling\:20:Rolling mode with 20 extra cycles'
+                        )
+                        _describe 'history mode' modes
+                    fi
+                    ;;
+
+                logs)
+                    if (( CURRENT == 3 )); then
+                        local -a components
+                        components=(
+                            'node:RPC node logs'
+                            'baker:Baker logs'
+                            'accuser:Accuser logs'
+                            'dal:DAL node logs'
+                            'tezpay:TezPay logs (if configured)'
+                            'etherlink:Etherlink logs (if configured)'
+                        )
+                        _describe 'component' components
+                    fi
+                    ;;
+
+                completion)
+                    if (( CURRENT == 3 )); then
+                        local -a shells
+                        shells=('bash:Output bash completion script' 'zsh:Output zsh completion script')
+                        _describe 'shell' shells
+                    fi
+                    ;;
+            esac
+            ;;
+    esac
+}
+
+_tezos_baker "$@"

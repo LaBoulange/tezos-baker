@@ -53,7 +53,8 @@ ARCHIVE=${ARCHIVE::-3}
 tar -xvf $ARCHIVE
 rm $ARCHIVE
 
-cd `ls`/usr/local/bin
+EXTRACTED_DIR=`ls`
+cd ${EXTRACTED_DIR}/usr/local/bin
 
 # Set ownership and permissions for all executable files
 chown $INSTALL_USER:$INSTALL_GROUP *.sh tezos-baker 2>/dev/null || true
@@ -66,6 +67,27 @@ mv $THIS_FILE_NAME ${INSTALL_DIR}/${THIS_FILE_NAME}.new
 # Move all executable files to install directory
 mv *.sh $INSTALL_DIR 2>/dev/null || true
 mv tezos-baker $INSTALL_DIR 2>/dev/null || true
+
+cd ${BUILD_DIR}/${EXTRACTED_DIR}
+
+# Install shell completion files
+SHARE_DIR="${INSTALL_DIR%/bin}/share"
+
+BASH_COMPLETION_DIR="${SHARE_DIR}/bash-completion/completions"
+mkdir -p "$BASH_COMPLETION_DIR"
+if [ -f "usr/local/share/bash-completion/completions/tezos-baker" ]; then
+    cp usr/local/share/bash-completion/completions/tezos-baker "$BASH_COMPLETION_DIR/tezos-baker"
+    chown $INSTALL_USER:$INSTALL_GROUP "$BASH_COMPLETION_DIR/tezos-baker" 2>/dev/null || true
+    chmod u+rw,go+r "$BASH_COMPLETION_DIR/tezos-baker"
+fi
+
+ZSH_COMPLETION_DIR="${SHARE_DIR}/zsh/site-functions"
+mkdir -p "$ZSH_COMPLETION_DIR"
+if [ -f "usr/local/share/zsh/site-functions/_tezos_baker" ]; then
+    cp usr/local/share/zsh/site-functions/_tezos_baker "$ZSH_COMPLETION_DIR/_tezos_baker"
+    chown $INSTALL_USER:$INSTALL_GROUP "$ZSH_COMPLETION_DIR/_tezos_baker" 2>/dev/null || true
+    chmod u+rw,go+r "$ZSH_COMPLETION_DIR/_tezos_baker"
+fi
 
 cd /
 rm -rf $BUILD_DIR
