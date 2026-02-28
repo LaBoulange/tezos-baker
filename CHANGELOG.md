@@ -2,7 +2,8 @@ All notable changes are documented in this file.
 
 ## v24.2_2 - XXXX-XX-XX
 
-- Documentation: the new interactive tools (wizard and CLI) are now the default workflow. The traditional workflow (manual configuration and cheat sheets) remains available as an alternative for advanced users.
+- Documentation: The new interactive tools (wizard and CLI) are now the default workflow
+- tezos-baker: Clarified the "help" command
 
 ## v24.2 - 2026-02-28
 
