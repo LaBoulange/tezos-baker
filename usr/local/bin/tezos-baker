@@ -42,10 +42,10 @@ prompt_yes_no() {
     local default="$2"
     
     if [ "$default" = "y" ]; then
-        read -p "$(echo -e ${CYAN}?${NC}) $prompt [${GREEN}Y${NC}/n]: " answer
+        read -p "$(echo -e "${CYAN}?${NC} $prompt [${GREEN}Y${NC}/n]: ")" answer
         answer=${answer:-y}
     else
-        read -p "$(echo -e ${CYAN}?${NC}) $prompt [y/${GREEN}N${NC}]: " answer
+        read -p "$(echo -e "${CYAN}?${NC} $prompt [y/${GREEN}N${NC}]: ")" answer
         answer=${answer:-n}
     fi
     
