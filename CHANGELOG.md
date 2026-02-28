@@ -1,5 +1,9 @@
 All notable changes are documented in this file.
 
+## v24.2_2 - XXXX-XX-XX
+
+- Documentation: the new interactive tools (wizard and CLI) are now the default workflow. The traditional workflow (manual configuration and cheat sheets) remains available as an alternative for advanced users.
+
 ## v24.2 - 2026-02-28
 
 - New version of `octez` (bugfixes): Tallinn protocol
