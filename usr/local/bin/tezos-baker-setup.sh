@@ -1058,6 +1058,17 @@ fi
 # Step 3: Setup node only if necessary
 if [ "$NEED_REIMPORT_SNAPSHOT" = true ]; then
     print_info "Setting up RPC node..."
+    
+    # Wipe existing node data if it exists (required when changing network or history mode)
+    if [ -d "$NODE_RUN_DIR" ]; then
+        print_warning "Wiping existing node data directory: $NODE_RUN_DIR"
+        if [ "$DRY_RUN" = true ]; then
+            print_info "[DRY-RUN] Would remove directory: $NODE_RUN_DIR"
+        else
+            rm -rf "$NODE_RUN_DIR"
+        fi
+    fi
+    
     dry_run_mkdir "$DATA_DIR"
     dry_run_mkdir "$NODE_RUN_DIR"
     dry_run_mkdir "$NODE_ETC_DIR"
