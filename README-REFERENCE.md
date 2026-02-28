@@ -72,6 +72,8 @@ tezos-baker vote ballot PtXXXXXX yay
 ```bash
 tezos-baker setup              # Run the interactive setup wizard
 tezos-baker --version          # Show version information
+tezos-baker completion bash    # Output bash completion script
+tezos-baker completion zsh     # Output zsh completion script
 ```
 
 ### Service Management
@@ -278,6 +280,8 @@ Jan 24 12:00:30 baker: Waiting for next baking slot
 - **Setup Wizard:** `/usr/local/bin/tezos-baker-setup.sh`
 - **CLI Tool:** `/usr/local/bin/tezos-baker`
 - **Generated Config:** `/usr/local/bin/tezos-env.sh`
+- **Bash completion:** `/usr/local/share/bash-completion/completions/tezos-baker`
+- **Zsh completion:** `/usr/local/share/zsh/site-functions/_tezos_baker`
 
 ### Compatibility
 
@@ -387,6 +391,36 @@ Smart Installation
 
 ---
 
+## 🔧 Shell Auto-Completion
+
+Tab completion is installed automatically by `install-tezos-baker.sh` into system-wide directories, making it available to all users (whether running as `root` or a dedicated account).
+
+### Automatic Activation
+
+If `bash-completion` is installed and properly sourced in your shell profile, completion will work out of the box after running `install-tezos-baker.sh`.
+
+### Manual Activation
+
+If auto-completion is not working (e.g. `bash-completion` is not installed, or your shell profile does not source it), you can activate it manually:
+
+**Bash** — add to `~/.bashrc` (or `/root/.bashrc` for root):
+```bash
+eval "$(tezos-baker completion bash)"
+```
+
+**Zsh** — add to `~/.zshrc` (or `/root/.zshrc` for root):
+```zsh
+eval "$(tezos-baker completion zsh)"
+```
+
+### What Gets Completed
+
+- **Level 1** — all commands: `start`, `stop`, `restart`, `upgrade`, `stake`, `vote`, `logs`, etc.
+- **Level 2** — sub-commands: `stake increase|decrease|finalize|params|info`, `vote info|propose|ballot`, `logs node|baker|accuser|dal|tezpay|etherlink`, `history-mode rolling|full|rolling:N`
+- **Level 3** — arguments: `vote ballot <proposal> yay|nay|pass`
+
+---
+
 ## 💡 Tips & Best Practices
 
 1. **Use dry-run mode first** - Preview changes before applying them:
@@ -449,7 +483,6 @@ For questions or issues:
 ## 🎯 Future Enhancements
 
 Potential future improvements:
-- [ ] Auto-completion for bash/zsh
 - [ ] Configuration file editor (interactive tezos-env.sh updates)
 - [ ] Health checks and diagnostics
 - [ ] Automated backup/restore

@@ -1,0 +1,74 @@
+# Bash completion for tezos-baker
+
+_tezos_baker_completions() {
+    local cur prev words cword
+    _init_completion || return
+
+    local commands="help version setup start stop restart upgrade upgrade-tezpay stake vote history-mode enable-bls status logs completion"
+
+    case "$cword" in
+        1)
+            COMPREPLY=($(compgen -W "$commands" -- "$cur"))
+            return
+            ;;
+        2)
+            case "${words[1]}" in
+                stake)
+                    COMPREPLY=($(compgen -W "increase decrease finalize params info" -- "$cur"))
+                    return
+                    ;;
+                vote)
+                    COMPREPLY=($(compgen -W "info propose ballot" -- "$cur"))
+                    return
+                    ;;
+                history-mode)
+                    COMPREPLY=($(compgen -W "rolling full rolling:5 rolling:10 rolling:20" -- "$cur"))
+                    return
+                    ;;
+                logs)
+                    COMPREPLY=($(compgen -W "node baker accuser dal tezpay etherlink" -- "$cur"))
+                    return
+                    ;;
+                completion)
+                    COMPREPLY=($(compgen -W "bash zsh" -- "$cur"))
+                    return
+                    ;;
+            esac
+            ;;
+        3)
+            case "${words[1]}" in
+                vote)
+                    case "${words[2]}" in
+                        ballot)
+                            # <proposal> — no completion for free-form hash
+                            return
+                            ;;
+                    esac
+                    ;;
+                stake)
+                    case "${words[2]}" in
+                        increase|decrease)
+                            # <amount> — no completion for numeric value
+                            return
+                            ;;
+                    esac
+                    ;;
+            esac
+            ;;
+        4)
+            case "${words[1]}" in
+                vote)
+                    case "${words[2]}" in
+                        ballot)
+                            # vote ballot <proposal> <yay|nay|pass>
+                            COMPREPLY=($(compgen -W "yay nay pass" -- "$cur"))
+                            return
+                            ;;
+                    esac
+                    ;;
+            esac
+            ;;
+    esac
+}
+
+complete -F _tezos_baker_completions tezos-baker

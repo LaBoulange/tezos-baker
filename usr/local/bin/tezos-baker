@@ -88,6 +88,7 @@ cmd_help() {
     echo -e "    ${GREEN}enable-bls${NC}         Enable BLS/tz4 baking"
     echo -e "    ${GREEN}status${NC}             Show baker status and logs"
     echo -e "    ${GREEN}logs${NC}               View logs for selected baker components"
+    echo -e "    ${GREEN}completion${NC}         Output shell completion script (bash or zsh)"
     echo -e "    ${GREEN}version${NC}            Show version information"
     echo -e "    ${GREEN}help${NC}               Show this help message"
     echo ""
@@ -116,6 +117,55 @@ cmd_version() {
     echo "Octez version: ${OCTEZ_VERSION}"
     echo "Network: ${NODE_NETWORK}"
     echo "Baker: ${BAKER_ACCOUNT_HASH}"
+}
+
+#############################################################################
+# Command: completion
+#############################################################################
+
+cmd_completion() {
+    local shell="${1:-bash}"
+
+    local install_dir
+    install_dir="$(dirname "$(which tezos-baker 2>/dev/null)")"
+    local share_dir="${install_dir%/bin}/share"
+
+    local bash_completion_file="${share_dir}/bash-completion/completions/tezos-baker"
+    local zsh_completion_file="${share_dir}/zsh/site-functions/_tezos_baker"
+
+    case "$shell" in
+        bash)
+            if [ -f "$bash_completion_file" ]; then
+                cat "$bash_completion_file"
+            else
+                print_error "Bash completion file not found: $bash_completion_file"
+                exit 1
+            fi
+            ;;
+        zsh)
+            if [ -f "$zsh_completion_file" ]; then
+                cat "$zsh_completion_file"
+            else
+                print_error "Zsh completion file not found: $zsh_completion_file"
+                exit 1
+            fi
+            ;;
+        *)
+            print_error "Unknown shell: $shell"
+            echo ""
+            echo -e "${YELLOW}USAGE:${NC}"
+            echo "    tezos-baker completion <shell>"
+            echo ""
+            echo -e "${YELLOW}SHELLS:${NC}"
+            echo -e "    ${GREEN}bash${NC}    Output bash completion script"
+            echo -e "    ${GREEN}zsh${NC}     Output zsh completion script"
+            echo ""
+            echo -e "${YELLOW}EXAMPLES:${NC}"
+            echo "    eval \"\$(tezos-baker completion bash)\""
+            echo "    eval \"\$(tezos-baker completion zsh)\""
+            exit 1
+            ;;
+    esac
 }
 
 #############################################################################
@@ -671,6 +721,9 @@ main() {
             ;;
         version|--version|-v)
             cmd_version
+            ;;
+        completion)
+            cmd_completion "$@"
             ;;
         setup)
             cmd_setup "$@"
