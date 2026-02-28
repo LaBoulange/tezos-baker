@@ -8,7 +8,6 @@ This code:
 
 Content of this document:
 - [tezos-baker](#tezos-baker)
-  * [🆕 New User-Friendly Features](#-new-user-friendly-features)
   * [Disclaimer](#disclaimer)
   * [Release management](#release-management)
   * [Prerequisites](#prerequisites)
@@ -19,42 +18,6 @@ Content of this document:
   * [Testing unreleased code](#testing-unreleased-code)
   * [Should you wish to support us](#should-you-wish-to-support-us)
   * [Contact](#contact)
-
-
-## 🆕 New User-Friendly Features
-
-**We've made managing your Tezos baker much easier!** 
-
-Instead of manually editing configuration files and copy-pasting commands from cheat sheets, you can now use:
-
-### 🧙 **Interactive Setup Wizard** (`tezos-baker-setup.sh`)
-A guided wizard that walks you through the initial setup with step-by-step prompts, input validation, and automatic configuration file generation.
-
-**Safe for existing installations:** The wizard automatically detects existing configurations, creates backups, and loads current values as defaults.
-
-```bash
-# Run the wizard for initial setup (or to modify existing configuration)
-tezos-baker-setup.sh
-
-# Preview changes without modifying anything (dry-run mode)
-tezos-baker-setup.sh --dry-run
-```
-
-### 🛠️ **Modern CLI Tool** (`tezos-baker`)
-A comprehensive command-line interface for all maintenance operations with simple, intuitive commands.
-
-```bash
-# Examples:
-tezos-baker help                  # Show all available commands
-tezos-baker status                # Check baker status
-tezos-baker upgrade               # Upgrade Octez
-tezos-baker stake increase 1000   # Stake 1000 XTZ
-tezos-baker logs baker            # View baker logs
-```
-
-**📖 For complete documentation, see [README-NEW-FEATURES.md](README-NEW-FEATURES.md)**
-
-> **Note:** The traditional workflow (manual configuration and cheat sheets) still works perfectly. The new tools are additions, not replacements!
 
 
 ## Disclaimer
@@ -98,8 +61,6 @@ Because user management configurations can vary widely, we've opted not to make 
 
 ### Initial setup
 
-#### 🆕 Recommended: Interactive Setup Wizard
-
 The easiest way to set up your baker is using the interactive wizard:
 
 ```bash
@@ -110,11 +71,11 @@ install-tezos-baker.sh
 tezos-baker-setup.sh
 ```
 
-The wizard will guide you through all configuration steps, validate your inputs, and automatically generate the `tezos-env.sh` file. See [README-NEW-FEATURES.md](README-NEW-FEATURES.md) for details.
+The wizard will guide you through all configuration steps, validate your inputs, and automatically generate the `tezos-env.sh` file. See [README-REFERENCE.md](README-REFERENCE.md) for the complete CLI reference.
 
-#### Traditional: Manual Setup
+#### Alternative: Manual Setup
 
-Alternatively, you can set up manually as before:
+If you prefer to set up manually:
 
 - Choose a directory where the executable files for your baker will be installed (typically `/usr/local/bin`). This directory will be referred to as `BAKER_INSTALLATION_DIR` later in this document.
 - Ensure this `BAKER_INSTALLATION_DIR` is part of the `PATH` environment variable the user intended to run or service the baker (see [Operating instructions](#operating-instructions) section above).
@@ -147,22 +108,16 @@ Alternatively, you can set up manually as before:
 
 #### From tezos-baker v24.0 or v24.1
 
-**🆕 Recommended: Using the CLI**
-
 Simply run:
 ```bash
 tezos-baker upgrade
 ```
 
-**Traditional: Manual upgrade**
+**Alternative: Manual upgrade**
 
 Follow the "Upgrade octez" procedure from the [Maintenance](#maintenance) section below.
 
-> **Note:** This version introduces new user-friendly tools (interactive setup wizard and CLI). See [README-NEW-FEATURES.md](README-NEW-FEATURES.md) for details. Your existing configuration will continue to work without any changes.
-
 ### Maintenance
-
-#### 🆕 Recommended: Modern CLI Tool
 
 The easiest way to perform maintenance operations is using the `tezos-baker` CLI:
 
@@ -182,9 +137,9 @@ tezos-baker status              # Check status
 tezos-baker help
 ```
 
-See [README-NEW-FEATURES.md](README-NEW-FEATURES.md) for detailed documentation and examples.
+See [README-REFERENCE.md](README-REFERENCE.md) for detailed documentation and examples.
 
-#### Traditional: Manual Maintenance
+#### Alternative: Manual Maintenance
 
 The `maintenance-cheat-sheet.sh` file includes the following sections:
 - **Restart/Reboot**: Instructions for when you need to restart, possibly due to reasons such as Linux distribution maintenance.
@@ -223,7 +178,7 @@ You can send a donation:
 
 Or just click here: 
 
-[![Button Support]][Link Support] 
+[![Button Support]][Link Support] 
 
 This is not mandatory, but it is greatly appreciated!
 

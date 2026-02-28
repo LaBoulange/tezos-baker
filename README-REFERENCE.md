@@ -1,37 +1,12 @@
-# 🎉 New User-Friendly Features
+# CLI Reference
 
-This document describes the new interactive tools that make managing your Tezos baker much easier!
+This document is the complete reference for the interactive tools provided with `tezos-baker`:
+- 🧙 **Interactive Setup Wizard** (`tezos-baker-setup.sh`)
+- 🛠️ **CLI Tool** (`tezos-baker`)
 
-## 🆕 What's New?
-
-We've added two powerful new tools to improve the user experience:
-
-### 1. **Interactive Setup Wizard** (`tezos-baker-setup.sh`)
-A guided wizard that walks you through the initial baker setup with:
-- ✅ Step-by-step configuration prompts
-- ✅ Input validation (Tezos addresses, numbers, etc.)
-- ✅ Automatic `tezos-env.sh` generation
-- ✅ Optional components (TezPay, Etherlink, BLS/tz4)
-- ✅ Colored output for better readability
-- ✅ Automated installation of Octez and node setup
-- ✅ **Safe for existing installations**: Automatically creates backups and loads current values as defaults
-- ✅ **Dry-run mode**: Preview all changes without modifying anything (`--dry-run`)
-
-### 2. **Modern CLI Tool** (`tezos-baker`)
-A comprehensive command-line interface for all maintenance operations:
-- ✅ Simple, intuitive commands
-- ✅ Built-in help and documentation
-- ✅ Colored output and progress indicators
-- ✅ Safe operations with confirmations
-- ✅ Replaces manual copy-paste from cheat sheets
-
----
-
-## ⚡Quick Start
+## ⚡ Quick Start
 
 ### Initial Setup (New Installations)
-
-Instead of manually editing configuration files and copy-pasting commands, simply run:
 
 ```bash
 # 1. Install the tezos-baker scripts
@@ -60,7 +35,7 @@ The wizard will:
 
 ### Daily Operations (Maintenance)
 
-Use the new `tezos-baker` CLI for all maintenance tasks:
+Use the `tezos-baker` CLI for all maintenance tasks:
 
 ```bash
 # View all available commands
@@ -139,49 +114,6 @@ tezos-baker vote ballot <proposal> <vote>  # Vote yay/nay/pass
 ```bash
 tezos-baker history-mode <mode>    # Switch node history mode (rolling, full, rolling:N)
 tezos-baker enable-bls             # Enable BLS/tz4 baking
-```
-
----
-
-## 🔄 Migration Guide
-
-### For Existing Users
-
-If you already have a working baker setup, you can start using the new CLI immediately:
-
-1. **Update your scripts:**
-   ```bash
-   install-tezos-baker.sh
-   ```
-
-2. **Start using the CLI:**
-   ```bash
-   # Instead of manually running commands from maintenance-cheat-sheet.sh
-   tezos-baker upgrade
-   
-   # Instead of manually managing stake
-   tezos-baker stake increase 500
-   ```
-
-3. **Your existing `tezos-env.sh` will continue to work** - no need to regenerate it unless you want to.
-
-### Comparison: Old vs New
-
-#### Old Way (Manual)
-```bash
-# Open maintenance-cheat-sheet.sh
-# Copy commands one by one
-. `which tezos-env.sh`
-stop-tezpay.sh
-stop-etherlink.sh
-stop-octez.sh
-install-octez.sh
-# ... many more commands
-```
-
-#### New Way (CLI)
-```bash
-tezos-baker upgrade
 ```
 
 ---
@@ -359,18 +291,6 @@ Jan 24 12:00:30 baker: Waiting for next baking slot
 - Bash 4.0+
 - Standard Unix utilities (`grep`, `awk`, `sed`, `wget`, etc.)
 - `bc` (for numeric validation)
-
----
-
-## 🤝 Backward Compatibility
-
-**The old workflow still works!** You can continue to:
-- Manually edit `tezos-env.sh`
-- Use `initial-setup.sh` as a reference
-- Use `maintenance-cheat-sheet.sh` for copy-paste commands
-- Run individual scripts (`start-octez.sh`, `stop-octez.sh`, etc.)
-
-The new tools are **additions**, not replacements. Use whichever approach you prefer!
 
 ---
 
