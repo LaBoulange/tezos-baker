@@ -1,6 +1,6 @@
 All notable changes are documented in this file.
 
-## v24.2 - XXXX-XX-XX
+## v24.2 - 2026-02-28
 
 - New version of `octez` (bugfixes): Tallinn protocol
 - Made Tezpay double-check the previous `$TEZPAY_INTERVAL` cycles to prevent missed payouts after downtime.
