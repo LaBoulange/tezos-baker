@@ -89,7 +89,7 @@ tezos-baker upgrade
 
 **Alternative: Manual upgrade**
 
-Follow the "Upgrade octez" procedure from the [Maintenance](#maintenance) section below.
+Follow the "Upgrade octez" procedure from the [manual-ops-cheat-sheet](manual-ops-cheat-sheet.sh#L16). See [CLI-REFERENCE.md](CLI-REFERENCE.md) for further details.
 
 
 ### Maintenance
