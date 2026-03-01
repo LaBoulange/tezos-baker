@@ -9,13 +9,13 @@ This repository provides:
 Content of this document:
 - [tezos-baker](#tezos-baker)
   * [Disclaimer](#disclaimer)
-  * [Release management](#release-management)
   * [Prerequisites](#prerequisites)
   * [Operating instructions](#operating-instructions)
     + [Initial setup](#initial-setup)
     + [Upgrade from the previous versions](#upgrade-from-the-previous-versions)
     + [Maintenance](#maintenance)
   * [Testing unreleased code](#testing-unreleased-code)
+  * [Release management](#release-management)
   * [Should you wish to support us](#should-you-wish-to-support-us)
   * [Contact](#contact)
 
@@ -29,13 +29,6 @@ As a result, it is not state-of-the-art in terms of automation, high availabilit
 Additionally, this code doesn't leverage all the options provided by octez and TezPay. We encourage you to read the documentation for these tools and enhance your setup, transforming this basic configuration into something remarkable.
 - octez: https://tezos.gitlab.io/index.html
 - TezPay: https://docs.tez.capital/tezpay/tutorials/ 
-
-
-## Release management
-
-- Versions are numbered in the same way as those of the Tezos Gitlab repository, on which they are based. (See https://gitlab.com/tezos/tezos/-/releases). Before v20.0, they were based on Serokell's 'tezos-packaging' repository (See https://github.com/serokell/tezos-packaging).
-- Underlying tags are named according to the same version number, with references to the active and replaced protocol names. Before v18.1-1, only the major version number was used.
-- In the case of a change not tied to a new release of octez, a minor version number prefixed by an underscore is appended to both versions and tags.
 
 
 ## Prerequisites
@@ -73,7 +66,7 @@ tezos-baker-setup.sh
 
 The wizard will guide you through all configuration steps, validate your inputs, and automatically generate the `tezos-env.sh` file. See [CLI-REFERENCE.md](CLI-REFERENCE.md) for the complete CLI reference.
 
-#### Alternative: Manual Setup
+**Alternative: Manual Setup**
 
 For advanced users who prefer manual configuration: copy `tezos-env.sh.template` to `tezos-env.sh`, fill in the required variables (baker address, data directory, network, etc.), run `install-tezos-baker.sh`, then follow `initial-setup.sh` step by step. See [MANUAL-OPS-REFERENCE.md](MANUAL-OPS-REFERENCE.md) for the full variable reference and detailed instructions.
 
@@ -114,8 +107,7 @@ tezos-baker help
 
 See [CLI-REFERENCE.md](CLI-REFERENCE.md) for detailed documentation and examples.
 
-
-#### Alternative: Manual Maintenance
+**Alternative: Manual Maintenance**
 
 For manual operations, `manual-ops-cheat-sheet.sh` covers: restart/reboot, Octez upgrade, TezPay upgrade, stake management, governance voting, history mode switch, and BLS/tz4 setup. Run commands one at a time — do not execute the file as a script. See [MANUAL-OPS-REFERENCE.md](MANUAL-OPS-REFERENCE.md) for details.
 
@@ -136,6 +128,13 @@ install-tezos-baker.sh
 ```
 
 This is particularly useful for testing changes on your baker without publishing a GitHub release.
+
+
+## Release management
+
+- Versions are numbered in the same way as those of the Tezos Gitlab repository, on which they are based. (See https://gitlab.com/tezos/tezos/-/releases). Before v20.0, they were based on Serokell's 'tezos-packaging' repository (See https://github.com/serokell/tezos-packaging).
+- Underlying tags are named according to the same version number, with references to the active and replaced protocol names. Before v18.1-1, only the major version number was used.
+- In the case of a change not tied to a new release of octez, a minor version number prefixed by an underscore is appended to both versions and tags.
 
 
 ## Should you wish to support us
