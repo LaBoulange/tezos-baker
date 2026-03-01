@@ -80,7 +80,7 @@ cmd_help() {
     echo -e "    ${GREEN}start${NC}              Start all baker services"
     echo -e "    ${GREEN}stop${NC}               Stop all baker services"
     echo -e "    ${GREEN}restart${NC}            Restart all baker services"
-    echo -e "    ${GREEN}upgrade${NC}            Upgrade tezos-baker to the latest version"
+    echo -e "    ${GREEN}upgrade${NC}            Upgrade Octez to the latest supported version"
     echo -e "    ${GREEN}upgrade-tezpay${NC}     Upgrade TezPay to the latest version"
     echo -e "    ${GREEN}stake${NC}              Manage staking operations"
     echo -e "    ${GREEN}vote${NC}               Participate in Tezos governance voting"
