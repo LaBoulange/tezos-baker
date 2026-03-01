@@ -91,6 +91,7 @@ tezos-baker upgrade
 
 Follow the "Upgrade octez" procedure from the [Maintenance](#maintenance) section below.
 
+
 ### Maintenance
 
 The easiest way to perform maintenance operations is using the `tezos-baker` CLI:
@@ -113,9 +114,11 @@ tezos-baker help
 
 See [CLI-REFERENCE.md](CLI-REFERENCE.md) for detailed documentation and examples.
 
+
 #### Alternative: Manual Maintenance
 
 For manual operations, `manual-ops-cheat-sheet.sh` covers: restart/reboot, Octez upgrade, TezPay upgrade, stake management, governance voting, history mode switch, and BLS/tz4 setup. Run commands one at a time — do not execute the file as a script. See [MANUAL-OPS-REFERENCE.md](MANUAL-OPS-REFERENCE.md) for details.
+
 
 ## Testing unreleased code
 
@@ -149,6 +152,7 @@ This is not mandatory, but it is greatly appreciated!
 
 [Button Support]: https://img.shields.io/badge/Support_La_Boulange!_(5_XTZ)-007bff?style=for-the-badge
 [Link Support]: https://tezos-share.stroep.nl/?id=tfLn0 'Support La Boulange (5 XTZ)'
+
 
 ## Contact
 
