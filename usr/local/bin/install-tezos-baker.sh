@@ -92,6 +92,17 @@ if [ -f "${EXTRACTED_ABS_DIR}/usr/local/share/zsh/site-functions/_tezos_baker" ]
     chmod u+rw,go+r "$ZSH_COMPLETION_DIR/_tezos_baker"
 fi
 
+# Ensure bash completion is sourced at shell startup.
+# If bash-completion is not active (i.e. _init_completion is not available),
+# add a direct source line to /etc/bash.bashrc so the completion works for all users.
+BASH_COMPLETION_MARKER="# tezos-baker shell completion"
+BASH_COMPLETION_LINE="[ -f ${BASH_COMPLETION_DIR}/tezos-baker ] && source ${BASH_COMPLETION_DIR}/tezos-baker"
+if ! grep -qF "$BASH_COMPLETION_MARKER" /etc/bash.bashrc 2>/dev/null; then
+    echo "" >> /etc/bash.bashrc
+    echo "$BASH_COMPLETION_MARKER" >> /etc/bash.bashrc
+    echo "$BASH_COMPLETION_LINE" >> /etc/bash.bashrc
+fi
+
 cd /
 rm -rf $BUILD_DIR
 
