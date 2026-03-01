@@ -397,19 +397,41 @@ Tab completion is installed automatically by `install-tezos-baker.sh` into syste
 
 ### Automatic Activation
 
-If `bash-completion` is installed and properly sourced in your shell profile, completion will work out of the box after running `install-tezos-baker.sh`.
+For completion to activate automatically at every new shell session (like `git` does), the `bash-completion` package must be installed:
+
+```bash
+apt install bash-completion
+```
+
+Once installed, bash will automatically load all completion files from `/usr/local/share/bash-completion/completions/` at startup — no further configuration needed.
 
 ### Manual Activation
 
-If auto-completion is not working (e.g. `bash-completion` is not installed, or your shell profile does not source it), you can activate it manually:
+If you prefer not to install `bash-completion`, you can activate completion manually for the current session:
+
+```bash
+source /usr/local/share/bash-completion/completions/tezos-baker
+```
+
+Or permanently for all sessions by adding it to your shell profile:
 
 **Bash** — add to `~/.bashrc` (or `/root/.bashrc` for root):
 ```bash
-eval "$(tezos-baker completion bash)"
+source /usr/local/share/bash-completion/completions/tezos-baker
 ```
 
 **Zsh** — add to `~/.zshrc` (or `/root/.zshrc` for root):
 ```zsh
+source /usr/local/share/zsh/site-functions/_tezos_baker
+```
+
+Alternatively, you can use the `eval` form which reads the file via `tezos-baker` itself:
+
+```bash
+# Bash
+eval "$(tezos-baker completion bash)"
+
+# Zsh
 eval "$(tezos-baker completion zsh)"
 ```
 
@@ -468,6 +490,14 @@ Most commands need to be run with appropriate permissions (see [Operating instru
 ```bash
 sudo tezos-baker upgrade
 ```
+
+### Tab completion not working
+
+Install the `bash-completion` package to enable automatic loading:
+```bash
+apt install bash-completion
+```
+Then open a new shell session. If you prefer not to install it, activate completion manually (see [Manual Activation](#manual-activation) above).
 
 ---
 
