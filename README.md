@@ -24,7 +24,7 @@ Content of this document:
 
 This repository is not intended to provide perfect code, but code as simple as possible and sufficient to start a baking activity. It can be used as a tutorial.
 
-As a result, it is not state-of-the-art in terms of automation, high availability, or security. We will address these aspects throughout this documentation when relevant. In any case, we decline all responsibility in the event of damages, theft of crypto-assets, operational or security incidents, as detailed further in the LICENSE.txt file.
+As a result, it is not state-of-the-art in terms of automation, high availability, or security. We will address these aspects throughout this documentation when relevant. In any case, we decline all responsibility in the event of damages, theft of crypto-assets, operational or security incidents, as detailed further in the [LICENSE.txt](LICENSE.txt) file.
 
 Additionally, this code doesn't leverage all the options provided by octez and TezPay. We encourage you to read the documentation for these tools and enhance your setup, transforming this basic configuration into something remarkable.
 - octez: https://tezos.gitlab.io/index.html
