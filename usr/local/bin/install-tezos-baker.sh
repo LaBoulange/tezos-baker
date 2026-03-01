@@ -73,9 +73,9 @@ mv *.sh $INSTALL_DIR 2>/dev/null || true
 mv tezos-baker $INSTALL_DIR 2>/dev/null || true
 
 # Install shell completion files (using absolute path)
-SHARE_DIR="${INSTALL_DIR%/bin}/share"
-
-BASH_COMPLETION_DIR="${SHARE_DIR}/bash-completion/completions"
+# Bash: install into /usr/share/bash-completion/completions/ so that bash-completion
+# picks it up automatically at shell startup (same location used by apt packages like git)
+BASH_COMPLETION_DIR="/usr/share/bash-completion/completions"
 mkdir -p "$BASH_COMPLETION_DIR"
 if [ -f "${EXTRACTED_ABS_DIR}/usr/local/share/bash-completion/completions/tezos-baker" ]; then
     cp "${EXTRACTED_ABS_DIR}/usr/local/share/bash-completion/completions/tezos-baker" "$BASH_COMPLETION_DIR/tezos-baker"
@@ -83,7 +83,8 @@ if [ -f "${EXTRACTED_ABS_DIR}/usr/local/share/bash-completion/completions/tezos-
     chmod u+rw,go+r "$BASH_COMPLETION_DIR/tezos-baker"
 fi
 
-ZSH_COMPLETION_DIR="${SHARE_DIR}/zsh/site-functions"
+# Zsh: install into /usr/local/share/zsh/site-functions/ (standard location for zsh)
+ZSH_COMPLETION_DIR="/usr/local/share/zsh/site-functions"
 mkdir -p "$ZSH_COMPLETION_DIR"
 if [ -f "${EXTRACTED_ABS_DIR}/usr/local/share/zsh/site-functions/_tezos_baker" ]; then
     cp "${EXTRACTED_ABS_DIR}/usr/local/share/zsh/site-functions/_tezos_baker" "$ZSH_COMPLETION_DIR/_tezos_baker"

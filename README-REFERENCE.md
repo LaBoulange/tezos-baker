@@ -280,7 +280,7 @@ Jan 24 12:00:30 baker: Waiting for next baking slot
 - **Setup Wizard:** `/usr/local/bin/tezos-baker-setup.sh`
 - **CLI Tool:** `/usr/local/bin/tezos-baker`
 - **Generated Config:** `/usr/local/bin/tezos-env.sh`
-- **Bash completion:** `/usr/local/share/bash-completion/completions/tezos-baker`
+- **Bash completion:** `/usr/share/bash-completion/completions/tezos-baker`
 - **Zsh completion:** `/usr/local/share/zsh/site-functions/_tezos_baker`
 
 ### Compatibility
@@ -403,21 +403,21 @@ For completion to activate automatically at every new shell session (like `git` 
 apt install bash-completion
 ```
 
-Once installed, bash will automatically load all completion files from `/usr/local/share/bash-completion/completions/` at startup — no further configuration needed.
+Once installed, bash will automatically load all completion files from `/usr/share/bash-completion/completions/` at startup — no further configuration needed. Just open a new shell session after running `install-tezos-baker.sh`.
 
 ### Manual Activation
 
 If you prefer not to install `bash-completion`, you can activate completion manually for the current session:
 
 ```bash
-source /usr/local/share/bash-completion/completions/tezos-baker
+source /usr/share/bash-completion/completions/tezos-baker
 ```
 
 Or permanently for all sessions by adding it to your shell profile:
 
 **Bash** — add to `~/.bashrc` (or `/root/.bashrc` for root):
 ```bash
-source /usr/local/share/bash-completion/completions/tezos-baker
+source /usr/share/bash-completion/completions/tezos-baker
 ```
 
 **Zsh** — add to `~/.zshrc` (or `/root/.zshrc` for root):
