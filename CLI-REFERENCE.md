@@ -513,9 +513,8 @@ For questions or issues:
 ## 🎯 Future Enhancements
 
 Potential future improvements:
-- [ ] Configuration file editor (interactive tezos-env.sh updates)
 - [ ] Health checks and diagnostics
-- [ ] Automated backup/restore
+- [ ] User-defined `user:group` management
 - [ ] Web dashboard
 
 ---
