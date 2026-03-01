@@ -1,10 +1,10 @@
 # tezos-baker
-Boilerplate code to set up a Tezos baker capable of baking, accusing, participating in the DAL, and optionally paying its delegators and running an Etherlink Smart Rollup observer node.
+Tools and scripts to set up and operate a Tezos baker capable of baking, accusing, participating in the DAL, and optionally paying its delegators and running an Etherlink Smart Rollup observer node.
 
-This code:
-- installs the needed executables from the octez suite,
-- optionally installs TezPay on the same machine,
-- provides some basic maintenance tools.
+This repository provides:
+- an interactive setup wizard (`tezos-baker-setup.sh`) for guided initial configuration,
+- a CLI tool (`tezos-baker`) for day-to-day operations,
+- for advanced users, installation scripts for the octez suite and optionally TezPay.
 
 Content of this document:
 - [tezos-baker](#tezos-baker)
