@@ -72,38 +72,71 @@ mv $THIS_FILE_NAME ${INSTALL_DIR}/${THIS_FILE_NAME}.new
 mv *.sh $INSTALL_DIR 2>/dev/null || true
 mv tezos-baker $INSTALL_DIR 2>/dev/null || true
 
-# Install shell completion files (using absolute path)
-# Bash: install into /usr/share/bash-completion/completions/ so that bash-completion
-# picks it up automatically at shell startup (same location used by apt packages like git)
+# Install shell completion files
 BASH_COMPLETION_DIR="/usr/share/bash-completion/completions"
-mkdir -p "$BASH_COMPLETION_DIR"
-if [ -f "${EXTRACTED_ABS_DIR}/usr/local/share/bash-completion/completions/tezos-baker" ]; then
-    cp "${EXTRACTED_ABS_DIR}/usr/local/share/bash-completion/completions/tezos-baker" "$BASH_COMPLETION_DIR/tezos-baker"
-    chown $INSTALL_USER:$INSTALL_GROUP "$BASH_COMPLETION_DIR/tezos-baker" 2>/dev/null || true
-    chmod u+rw,go+r "$BASH_COMPLETION_DIR/tezos-baker"
-fi
-
-# Zsh: install into /usr/local/share/zsh/site-functions/ (standard location for zsh)
 ZSH_COMPLETION_DIR="/usr/local/share/zsh/site-functions"
-mkdir -p "$ZSH_COMPLETION_DIR"
-if [ -f "${EXTRACTED_ABS_DIR}/usr/local/share/zsh/site-functions/_tezos_baker" ]; then
-    cp "${EXTRACTED_ABS_DIR}/usr/local/share/zsh/site-functions/_tezos_baker" "$ZSH_COMPLETION_DIR/_tezos_baker"
-    chown $INSTALL_USER:$INSTALL_GROUP "$ZSH_COMPLETION_DIR/_tezos_baker" 2>/dev/null || true
-    chmod u+rw,go+r "$ZSH_COMPLETION_DIR/_tezos_baker"
-fi
-
-# Ensure bash completion is sourced at shell startup.
-# If bash-completion is not active (i.e. _init_completion is not available),
-# add a direct source line to /etc/bash.bashrc so the completion works for all users.
 BASH_COMPLETION_MARKER="# tezos-baker shell completion"
 BASH_COMPLETION_LINE="[ -f ${BASH_COMPLETION_DIR}/tezos-baker ] && source ${BASH_COMPLETION_DIR}/tezos-baker"
-if ! grep -qF "$BASH_COMPLETION_MARKER" /etc/bash.bashrc 2>/dev/null; then
-    echo "" >> /etc/bash.bashrc
-    echo "$BASH_COMPLETION_MARKER" >> /etc/bash.bashrc
-    echo "$BASH_COMPLETION_LINE" >> /etc/bash.bashrc
+
+BASH_COMPLETION_SRC="${EXTRACTED_ABS_DIR}/usr/local/share/bash-completion/completions/tezos-baker"
+ZSH_COMPLETION_SRC="${EXTRACTED_ABS_DIR}/usr/local/share/zsh/site-functions/_tezos_baker"
+
+# Determine what needs to be done
+INSTALL_BASH_COMPLETION=false
+INSTALL_ZSH_COMPLETION=false
+ADD_BASHRC_LINE=false
+
+[ -f "$BASH_COMPLETION_SRC" ] && INSTALL_BASH_COMPLETION=true
+[ -f "$ZSH_COMPLETION_SRC" ] && INSTALL_ZSH_COMPLETION=true
+if $INSTALL_BASH_COMPLETION && ! grep -qF "$BASH_COMPLETION_MARKER" /etc/bash.bashrc 2>/dev/null; then
+    ADD_BASHRC_LINE=true
+fi
+
+# Only prompt if there is something to write
+if $INSTALL_BASH_COMPLETION || $INSTALL_ZSH_COMPLETION || $ADD_BASHRC_LINE; then
+    echo ""
+    echo "Shell auto-completion can be installed for tezos-baker."
+    echo "This will:"
+    $INSTALL_BASH_COMPLETION && echo "  - Copy bash completion file to ${BASH_COMPLETION_DIR}/"
+    $INSTALL_ZSH_COMPLETION  && echo "  - Copy zsh completion file to ${ZSH_COMPLETION_DIR}/"
+    $ADD_BASHRC_LINE         && echo "  - Add a source line to /etc/bash.bashrc for automatic activation"
+    echo ""
+    read -p "Install shell completion? [Y/n]: " answer
+    answer=${answer:-y}
+    if [[ "$answer" =~ ^[Yy]$ ]]; then
+        # Bash completion
+        if $INSTALL_BASH_COMPLETION; then
+            mkdir -p "$BASH_COMPLETION_DIR"
+            cp "$BASH_COMPLETION_SRC" "$BASH_COMPLETION_DIR/tezos-baker"
+            chown $INSTALL_USER:$INSTALL_GROUP "$BASH_COMPLETION_DIR/tezos-baker" 2>/dev/null || true
+            chmod u+rw,go+r "$BASH_COMPLETION_DIR/tezos-baker"
+        fi
+
+        # Zsh completion
+        if $INSTALL_ZSH_COMPLETION; then
+            mkdir -p "$ZSH_COMPLETION_DIR"
+            cp "$ZSH_COMPLETION_SRC" "$ZSH_COMPLETION_DIR/_tezos_baker"
+            chown $INSTALL_USER:$INSTALL_GROUP "$ZSH_COMPLETION_DIR/_tezos_baker" 2>/dev/null || true
+            chmod u+rw,go+r "$ZSH_COMPLETION_DIR/_tezos_baker"
+        fi
+
+        # Add source line to /etc/bash.bashrc if needed
+        if $ADD_BASHRC_LINE; then
+            echo "" >> /etc/bash.bashrc
+            echo "$BASH_COMPLETION_MARKER" >> /etc/bash.bashrc
+            echo "$BASH_COMPLETION_LINE" >> /etc/bash.bashrc
+        fi
+
+        echo "Shell completion installed. Open a new shell session to activate it."
+    else
+        echo "Shell completion installation skipped."
+        echo "You can activate it manually at any time:"
+        echo "  eval \"\$(tezos-baker completion bash)\""
+    fi
 fi
 
 cd /
 rm -rf $BUILD_DIR
 
+# Update this file after execution terminates
 (sleep 2 ; mv ${INSTALL_DIR}/${THIS_FILE_NAME}.new ${INSTALL_DIR}/${THIS_FILE_NAME}) &
