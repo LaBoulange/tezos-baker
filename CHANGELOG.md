@@ -2,9 +2,14 @@ All notable changes are documented in this file.
 
 ## v24.2_2 - XXXX-XX-XX
 
-- Documentation: The new interactive tools (wizard and CLI) are now the default workflow
-- tezos-baker: Clarified the "help" command
-- Added shell auto-completion for bash and zsh
+- Documentation: set the new interactive tools (wizard and CLI) as the default workflow
+  - Streamlined `README.md`: alternative (manual) sections now link to `MANUAL-OPS-REFERENCE.md` instead of inlining all details
+  - Renamed `README-NEW-FEATURES.md` to `CLI-REFERENCE.md`
+  - Renamed `maintenance-cheat-sheet.sh` to `manual-ops-cheat-sheet.sh`
+  - Added `MANUAL-OPS-REFERENCE.md` as the reference document for the manual workflow
+
+- `tezos-baker`: clarified the "help" command
+- `tezos-baker`: added shell auto-completion for bash and zsh
   - Completion files installed automatically by `install-tezos-baker.sh` into system-wide directories (`/usr/local/share/`)
   - Works for all users (root or dedicated account), with or without `bash-completion` installed
   - New `tezos-baker completion bash|zsh` command for manual activation via `eval`
