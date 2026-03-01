@@ -71,7 +71,7 @@ install-tezos-baker.sh
 tezos-baker-setup.sh
 ```
 
-The wizard will guide you through all configuration steps, validate your inputs, and automatically generate the `tezos-env.sh` file. See [README-REFERENCE.md](README-REFERENCE.md) for the complete CLI reference.
+The wizard will guide you through all configuration steps, validate your inputs, and automatically generate the `tezos-env.sh` file. See [CLI-REFERENCE.md](CLI-REFERENCE.md) for the complete CLI reference.
 
 #### Alternative: Manual Setup
 
@@ -137,11 +137,11 @@ tezos-baker status              # Check status
 tezos-baker help
 ```
 
-See [README-REFERENCE.md](README-REFERENCE.md) for detailed documentation and examples.
+See [CLI-REFERENCE.md](CLI-REFERENCE.md) for detailed documentation and examples.
 
 #### Alternative: Manual Maintenance
 
-The `maintenance-cheat-sheet.sh` file includes the following sections:
+The `manual-ops-cheat-sheet.sh` file includes the following sections:
 - **Restart/Reboot**: Instructions for when you need to restart, possibly due to reasons such as Linux distribution maintenance.
 - **Upgrade octez**: Steps for updating when a new version of octez is released. This section also covers Tezos protocol upgrades.
 - **Upgrade TezPay**: Should you wish to pay your delegators: procedures for when a new version of TezPay is available.
