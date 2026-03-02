@@ -73,13 +73,13 @@ For advanced users who prefer manual configuration: copy `tezos-env.sh.template`
 
 ### Upgrade from the previous versions
 
-#### from v24.2
+#### from tezos-baker v24.2
 
 ```bash
 install-tezos-baker.sh
 ```
 
-#### From tezos-baker v24.0, v24.1
+#### From tezos-baker v24.0 and v24.1
 
 ```bash
 install-tezos-baker.sh
