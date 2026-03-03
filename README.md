@@ -64,11 +64,11 @@ install-tezos-baker.sh
 tezos-baker-setup.sh
 ```
 
-The wizard will guide you through all configuration steps, validate your inputs, and automatically generate the `tezos-env.sh` file. See [CLI-REFERENCE.md](CLI-REFERENCE.md) for the complete CLI reference.
+The wizard will guide you through all configuration steps, validate your inputs, and automatically generate the `tezos-env.sh` file. See [CLI-REFERENCE.md](documentation/CLI-REFERENCE.md) for the complete CLI reference.
 
 **Alternative: Manual Setup**
 
-For advanced users who prefer manual configuration: copy `tezos-env.sh.template` to `tezos-env.sh`, fill in the required variables (baker address, data directory, network, etc.), run `install-tezos-baker.sh`, then follow `initial-setup.sh` step by step. See [MANUAL-OPS-REFERENCE.md](MANUAL-OPS-REFERENCE.md) for the full variable reference and detailed instructions.
+For advanced users who prefer manual configuration: copy `tezos-env.sh.template` to `tezos-env.sh`, fill in the required variables (baker address, data directory, network, etc.), run `install-tezos-baker.sh`, then follow `initial-setup.sh` step by step. See [MANUAL-OPS-REFERENCE.md](documentation/MANUAL-OPS-REFERENCE.md) for the full variable reference and detailed instructions.
 
 
 ### Upgrade from the previous versions
@@ -88,7 +88,7 @@ tezos-baker upgrade
 
 **Alternative: Manual upgrade**
 
-Follow the "Upgrade octez" procedure from the [manual-ops-cheat-sheet](manual-ops-cheat-sheet.sh#L16) (see [MANUAL-OPS-REFERENCE.md](MANUAL-OPS-REFERENCE.md)  for further details).
+Follow the "Upgrade octez" procedure from the [manual-ops-cheat-sheet](manual-ops-cheat-sheet.sh#L16) (see [MANUAL-OPS-REFERENCE.md](documentation/MANUAL-OPS-REFERENCE.md)  for further details).
 
 
 ### Maintenance
@@ -111,11 +111,11 @@ tezos-baker status              # Check status
 tezos-baker help
 ```
 
-See [CLI-REFERENCE.md](CLI-REFERENCE.md) for detailed documentation and examples.
+See [CLI-REFERENCE.md](documentation/CLI-REFERENCE.md) for detailed documentation and examples.
 
 **Alternative: Manual Maintenance**
 
-For manual operations, `manual-ops-cheat-sheet.sh` covers: restart/reboot, Octez upgrade, TezPay upgrade, stake management, governance voting, history mode switch, and BLS/tz4 setup. Run commands one at a time — do not execute the file as a script. See [MANUAL-OPS-REFERENCE.md](MANUAL-OPS-REFERENCE.md) for details.
+For manual operations, `manual-ops-cheat-sheet.sh` covers: restart/reboot, Octez upgrade, TezPay upgrade, stake management, governance voting, history mode switch, and BLS/tz4 setup. Run commands one at a time — do not execute the file as a script. See [MANUAL-OPS-REFERENCE.md](documentation/MANUAL-OPS-REFERENCE.md) for details.
 
 
 ## Testing unreleased code

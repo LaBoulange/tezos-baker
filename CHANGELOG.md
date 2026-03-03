@@ -1,5 +1,9 @@
 All notable changes are documented in this file.
 
+## XX.X - XXXX-XX-XX
+
+- Moved documentation pages to `documentation/`
+
 ## v24.2_2 - 2026-03-01
 
 - Documentation: set the new interactive tools (wizard and CLI) as the default workflow
