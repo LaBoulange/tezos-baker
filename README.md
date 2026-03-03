@@ -162,6 +162,7 @@ This is not mandatory, but it is greatly appreciated!
 ## Contact
 
 Feel free to contact us with any questions or suggestions. We can be reached through the following channels:
+- GitHub Issues: https://github.com/LaBoulange/tezos-baker/issues
 - E-mail: la.boulange.tezos@gmail.com
 - TwitterX: https://x.com/LaBoulangeTezos
 - Telegram: https://t.me/laboulangetezos

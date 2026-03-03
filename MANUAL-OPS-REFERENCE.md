@@ -84,6 +84,7 @@ Guidelines on setting up your baker's tz4 consensus and DAL companion keys.
 ## 📞 Support
 
 For questions or issues:
+- GitHub Issues: https://github.com/LaBoulange/tezos-baker/issues
 - Email: la.boulange.tezos@gmail.com
 - Twitter: https://x.com/LaBoulangeTezos
 - Telegram: https://t.me/laboulangetezos

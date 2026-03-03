@@ -504,6 +504,7 @@ Then open a new shell session. If you prefer not to install it, activate complet
 ## 📞 Support
 
 For questions or issues:
+- GitHub Issues: https://github.com/LaBoulange/tezos-baker/issues
 - Email: la.boulange.tezos@gmail.com
 - Twitter: https://x.com/LaBoulangeTezos
 - Telegram: https://t.me/laboulangetezos
