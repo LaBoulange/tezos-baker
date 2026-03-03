@@ -33,7 +33,7 @@ Create a file `BAKER_INSTALLATION_DIR/tezos-env.sh` by copying the file `usr/loc
 - `INSTALL_DIR`: The directory `BAKER_INSTALLATION_DIR` where executables files will be stored. Default: `/usr/local/bin`.
 - `NODE_NETWORK`: The Tezos network that your bakery belongs to: `mainnet`, `tallinnnet`, or any other network. Default: `mainnet`.
 - `NODE_MODE`: The history mode of your node (`full`, `rolling`, or `rolling:<number_of_extra_cycles>`). See https://tezos.gitlab.io/user/history_modes.html for more details. Default: `rolling`.
-- `NODE_SNAPSHOT_URL`: The URL of the Tezos data snapshot to download to initialize your node. Default: Lambs on Acid's URL corresponding to your `NODE_NETWORK` and `NODE_MODE` (See https://lambsonacid.nl/).
+- `NODE_SNAPSHOT_URL`: The URL of the Tezos data snapshot to download to initialize your node. Default: TZInit's URL corresponding to your `NODE_NETWORK` and `NODE_MODE` (See https://snapshots.tzinit.org).
 - `BAKER_LIQUIDITY_BAKING_SWITCH`: The liquidity baking vote (`off`, `on`, or `pass`). See https://tezos.gitlab.io/active/liquidity_baking.html for more details. Default: `pass`.
 - `BAKER_LIMIT_STAKING_OVER_BAKING`: How many times your stake, ranging from 0 (no staking) to 9 (max allowed by the protocol), you allow others to stake with your baker. Default: 9.
 - `BAKER_EDGE_BAKING_OVER_STAKING`: Proportion from 0 (0%) to 1 (100%) of the reward that your baker receives from the amount staked by stakers. Default: 0.1 (10%).
