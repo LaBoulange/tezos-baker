@@ -2,7 +2,7 @@
 
 This document is the complete reference for users who prefer to configure and operate their baker manually, without using the interactive wizard or the `tezos-baker` CLI.
 
-> **Note:** The interactive wizard (`tezos-baker-setup.sh`) and the `tezos-baker` CLI are the recommended approach for most users. See [CLI-REFERENCE.md](documentation/CLI-REFERENCE.md) for details.
+> **Note:** The interactive wizard (`tezos-baker-setup.sh`) and the `tezos-baker` CLI are the recommended approach for most users. See [CLI-REFERENCE.md](CLI-REFERENCE.md) for details.
 
 ---
 

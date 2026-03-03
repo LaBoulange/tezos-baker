@@ -486,7 +486,7 @@ export PATH="/usr/local/bin:$PATH"
 
 ### "Permission denied"
 
-Most commands need to be run with appropriate permissions (see [Operating instructions](README.md#operating-instructions)):
+Most commands need to be run with appropriate permissions (see [Operating instructions](/README.md#operating-instructions)):
 ```bash
 sudo tezos-baker upgrade
 ```
