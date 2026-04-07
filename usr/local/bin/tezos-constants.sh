@@ -4,13 +4,13 @@
 # Version variables for octez
 ##############################
 
-OCTEZ_VERSION="24.2"
+OCTEZ_VERSION="24.3"
 
 #####################################
 # Version variables for tezos-baker
 #####################################
 
-TEZOS_BAKER_VERSION_SUFFIX="_2"
+TEZOS_BAKER_VERSION_SUFFIX=""
 
 TEZOS_BAKER_VERSION="${OCTEZ_VERSION}${TEZOS_BAKER_VERSION_SUFFIX}"
 

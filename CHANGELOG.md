@@ -1,7 +1,8 @@
 All notable changes are documented in this file.
 
-## XX.X - XXXX-XX-XX
+## 24.3 - 2026-04-07
 
+- New version of `octez` (security fix): Tallinn protocol
 - Moved documentation pages to `documentation/`
 
 ## v24.2_2 - 2026-03-01
