@@ -1,5 +1,10 @@
 All notable changes are documented in this file.
 
+## 24.4 - 2026-04-17
+
+- New version of `octez` (bugfixes): Tallinn protocol
+- Documentation: corrected a mistake (useless command in section "Upgrade from the previous versions")
+
 ## 24.3 - 2026-04-07
 
 - New version of `octez` (security fix): Tallinn protocol
