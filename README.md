@@ -73,6 +73,8 @@ For advanced users who prefer manual configuration: copy `tezos-env.sh.template`
 
 ### Upgrade from the previous versions
 
+Simply run:
+
 ```bash
 tezos-baker upgrade
 ```
