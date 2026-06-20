@@ -1,5 +1,9 @@
 All notable changes are documented in this file.
 
+## 25.0 - 2026-06-20
+
+- New version of `octez`: Ushuaia protocol (Tallinn still active).
+
 ## 24.4 - 2026-04-17
 
 - New version of `octez` (bugfixes): Tallinn protocol
