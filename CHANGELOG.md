@@ -1,5 +1,9 @@
 All notable changes are documented in this file.
 
+## 2XX.X - 2026-XX-XX
+
+- Made DAL node directory explicit to fix some errors encountered with Ushuaia
+
 ## 25.0 - 2026-06-20
 
 - New version of `octez`: Ushuaia protocol (Tallinn still active).

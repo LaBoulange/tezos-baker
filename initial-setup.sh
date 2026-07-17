@@ -96,7 +96,7 @@ mkdir -p "$DAL_RUN_DIR"
 octez-dal-node config init --endpoint http://${NODE_RPC_ADDR} --attester-profiles="$BAKER_ACCOUNT_HASH" --data-dir $DAL_RUN_DIR
 
 # Run the DAL node
-nohup octez-dal-node run &>$DAL_LOG_FILE &
+nohup octez-dal-node run --data-dir $DAL_RUN_DIR &>$DAL_LOG_FILE &
 
 ############################
 # Start baking and accusing     
