@@ -4,7 +4,7 @@
 # Version variables for octez
 ##############################
 
-OCTEZ_VERSION="25.0"
+OCTEZ_VERSION="25.2"
 
 #####################################
 # Version variables for tezos-baker

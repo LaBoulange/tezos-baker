@@ -1,7 +1,8 @@
 All notable changes are documented in this file.
 
-## 2XX.X - 2026-XX-XX
+## 25.2 - 2026-09-04
 
+- New version of `octez`: (security and robustness fixes): Ushuaia protocol
 - Made DAL node directory explicit to fix some errors encountered with Ushuaia
 
 ## 25.0 - 2026-06-20
