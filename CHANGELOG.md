@@ -1,5 +1,9 @@
 All notable changes are documented in this file.
 
+## 25.3 - 2026-10-20
+
+- New version of `octez`: (robustness and reliability fixes): Ushuaia protocol
+
 ## 25.2 - 2026-09-04
 
 - New version of `octez`: (security and robustness fixes): Ushuaia protocol
